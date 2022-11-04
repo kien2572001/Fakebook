@@ -1,0 +1,20 @@
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
+
+# PHPUnit artifacts
+/.phpunit.result.cache
+/coverage
+/coverage.xml
+/testdox.txt
