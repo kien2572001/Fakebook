@@ -22,6 +22,9 @@ devrun:
 devmigrate:
 	USER=$$(id -u):$$(id -g) docker exec -it -u $$(id -u):$$(id -g) $(COMPOSE_PROJECT_NAME)-php-1 php artisan migrate
 
+devfresh:
+	USER=$$(id -u):$$(id -g) docker exec -it -u $$(id -u):$$(id -g) $(COMPOSE_PROJECT_NAME)-php-1 php artisan migrate:fresh --seed
+
 devdown:
 	docker compose down --remove-orphans
 
