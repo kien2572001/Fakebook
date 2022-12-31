@@ -47,9 +47,7 @@ const Register = () => {
             autoComplete="off"
           >
             <Form.Item
-              name="name"
-              placeholder="Your Name"
-              className="flex text-red-700 font-extralight text-sm"
+              name="username"
               rules={[
                 {
                   required: true,
@@ -57,56 +55,45 @@ const Register = () => {
                 },
               ]}
             >
-              <div className="flex place-content-between border border-gray-300 rounded p-2 my-4 active:border-sky-600 focus-within:border-sky-600 pr-[24px]">
-                <UserOutlined className="p-1 pt-[8px] leading-[0] text-[#094067]" />
-                <Input
-                  className="leading-none outline-none font-normal text-base text-[#094067]"
-                  placeholder="Your Name"
-                />
-              </div>
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                placeholder="Your Name"
+              />
             </Form.Item>
+
             <Form.Item
-              name="username"
-              placeholder="Your Email Address"
-              className="flex text-red-700 font-extralight text-sm"
+              name="email"
               rules={[
                 {
                   required: true,
-                  message: "Please input your username!",
+                  message: "Please input your Email!",
                 },
               ]}
             >
-              <div className="flex place-content-between border border-gray-300 rounded p-2 my-4 active:border-sky-600 focus-within:border-sky-600 pr-[24px]">
-                <MailOutlined className="p-1 pt-[8px] leading-[0] text-[#094067]" />
-                <Input
-                  className="leading-none outline-none font-normal text-base text-[#094067]"
-                  placeholder="Your Email Address"
-                />
-              </div>
+              <Input
+                prefix={<MailOutlined className="site-form-item-icon" />}
+                placeholder="Your Email Address"
+              />
             </Form.Item>
+
             <Form.Item
               name="password"
-              className="flex text-red-700 font-extralight text-sm"
               rules={[
                 {
                   required: true,
-                  message: "Please input your password!",
+                  message: "Please input your Password!",
                 },
               ]}
             >
-              <div className="flex border border-gray-300 rounded p-2 my-4 active:border-sky-600 focus-within:border-sky-600 pr-[24px]">
-                <LockOutlined className="p-1 pt-[8px] text-[#094067]" />
-                <Input
-                  className="leading-none flex outline-none font-normal text-base text-[#094067]"
-                  type="password"
-                  placeholder="Password"
-                  ref={passwordInput}
-                />
-              </div>
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password"
+              />
             </Form.Item>
             <Form.Item
               name="confirm"
-              className="flex text-red-700 font-extralight text-sm"
+              label="Confirm Password"
               dependencies={["password"]}
               hasFeedback
               rules={[
@@ -128,14 +115,11 @@ const Register = () => {
                 }),
               ]}
             >
-              <div className="flex border border-gray-300 rounded p-2 my-4 active:border-sky-600 focus-within:border-sky-600">
-                <LockOutlined className="p-1 pt-[8px] text-[#094067]" />
-                <Input
-                  className="leading-none flex outline-none font-normal text-base text-[#094067] "
-                  placeholder="Confirm password"
-                  ref={passwordInput}
-                />
-              </div>
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password"
+              />
             </Form.Item>
             <Form.Item
               name="remember"
@@ -168,8 +152,9 @@ const Register = () => {
                   className="w-full text-white font-semibold border-0 p-4 rounded hover:bg-[#57616b]"
                   type="primary"
                   htmlType="submit"
+                  blocked
                 >
-                  Login
+                  Register
                 </Button>
               </div>
             </Form.Item>
