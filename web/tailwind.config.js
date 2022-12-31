@@ -16,6 +16,7 @@ module.exports = {
         'primary': "#05f",
         'white': "#ffffff",
         'background': "#f5f5f5",
+        'gray-text': "#adb5bd",
         'danger': "#ef4565",
         'warning': "#ffc53d",
         'success': "#73c42d",

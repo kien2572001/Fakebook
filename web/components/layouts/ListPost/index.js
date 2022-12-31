@@ -7,6 +7,7 @@ export default function ListPost() {
   return (
     <div className="px-[15px]">
         <CreatePostCard />
+        <PostCard />
     </div>
   );
 }
