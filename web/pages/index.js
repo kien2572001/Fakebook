@@ -13,7 +13,6 @@ export default function Index() {
 
   return (
     <MainLayout>
-      <h1>Index</h1>
       <ListPost />
     </MainLayout>
   );

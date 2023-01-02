@@ -10,6 +10,7 @@ module.exports = {
         mplus1: ['"M PLUS 1"', "sans-serif"],
         fredoka: ['"Fredoka One"', "cursive"],
         montserrat: ['"Montserrat"', "sans-serif"],
+        openSans: ['"Open Sans"', "sans-serif"],
       },
       colors: {
         'default': "#111111",

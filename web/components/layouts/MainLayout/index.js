@@ -4,16 +4,16 @@ import Sidebar from "~/components/layouts/Sidebar";
 
 export default function MainLayout({ children }) {
   return (
-    <div className=" w-screen">
+    <div className=" w-screen ">
       <div className="nav-container shadow-xs">
         <Navbar />
       </div>
-      <div className="content-container flex">
+      <div className=" bg-background w-screen flex">
         {/* Sidebar */}
-        <div className="hidden laptop:inline-block laptop:w-[280px] bg-red-500">
+        <div className="hidden laptop:block laptop:min-w-[280px]">
           <Sidebar />
         </div>
-        <div className="bg-background w-screen h-screen ">{children}</div>
+        <div className="h-screen ">{children}</div>
       </div>
     </div>
   );
