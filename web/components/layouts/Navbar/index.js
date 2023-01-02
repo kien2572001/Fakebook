@@ -13,7 +13,7 @@ import {
 
 export default function Navbar() {
   return (
-    <div className="navbar-container flex w-screen h-[96px] justify-between	 justify-items-center">
+    <div className="navbar-container flex w-full h-[96px] justify-between	 justify-items-center">
       <div className="navbar-container flex h-full justify-items-center">
         <div className="flex w-[280px] h-full] justify-items-center">
           {/* Nav logo box */}

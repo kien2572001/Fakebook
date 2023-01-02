@@ -7,8 +7,9 @@
 @tailwind utilities;
 
 @layer base {
+
     body {
-        @apply font-montserrat text-default overflow-y-scroll;
+        @apply font-montserrat text-default overflow-y-scroll overflow-x-hidden;
         scrollbar-gutter: stable both-edges;
     }
     h1 {
