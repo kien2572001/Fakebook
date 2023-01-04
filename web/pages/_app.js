@@ -1,25 +1,25 @@
-import App from 'next/app';
-import { useState } from 'react';
-import ky from '~/api/ky'
+import App from "next/app";
+import { useState } from "react";
 
-import '~/styles/globals.css'
-import AuthContext from '~/contexts/AuthContext';
+import AuthContext from "~/contexts/AuthContext";
+import "~/styles/globals.css";
 
 NextApp.getInitialProps = async (ctx) => {
   // Is SSR
   if (ctx?.ctx?.req) {
-    const response = await ky.get(`api/web-init`);
-    const { data } = await response.json();
+    // const response = await ky.get(`api/web-init`);
+    // const { data } = await response.json();
+    const { data } = { data: null };
     const appData = App.getInitialProps(ctx);
 
     return {
       ...appData,
       data,
-    }
+    };
   }
 
-  return {}
-}
+  return {};
+};
 
 function NextApp({ Component, pageProps, data }) {
   const [authUser] = useState(data);
@@ -28,7 +28,7 @@ function NextApp({ Component, pageProps, data }) {
     <AuthContext.Provider value={authUser}>
       <Component {...pageProps} />
     </AuthContext.Provider>
-  )
+  );
 }
 
 export default NextApp;
