@@ -99,6 +99,16 @@ return [
         ],
     ],
 
+
+
+    /*
+    Add socialite providers
+    */
+    'socialite' => [
+        'drivers' => [
+            'google',
+        ],
+    ],
     /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout
