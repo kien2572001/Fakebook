@@ -27,6 +27,8 @@ class UserSeeder extends Seeder
                 'avatar' => 'https://phunugioi.com/wp-content/uploads/2022/03/Avatar-Gau.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'social_id' => null,
+                'social_type' => null,
             ],
             [
                 'email' => 'duy@gmail.com',
@@ -40,6 +42,8 @@ class UserSeeder extends Seeder
                 'avatar' => 'https://phunugioi.com/wp-content/uploads/2022/03/Avatar-Gau.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'social_id' => null,
+                'social_type' => null,
             ],
             [
                 'email' => 'vietanh@gmail.com',
@@ -53,6 +57,8 @@ class UserSeeder extends Seeder
                 'avatar' => 'https://phunugioi.com/wp-content/uploads/2022/03/Avatar-Gau.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'social_id' => null,
+                'social_type' => null,
             ],
             [
                 'email' => 'manh@gmail.com',
@@ -66,6 +72,8 @@ class UserSeeder extends Seeder
                 'avatar' => 'https://phunugioi.com/wp-content/uploads/2022/03/Avatar-Gau.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                'social_id' => null,
+                'social_type' => null,
             ],
         ]);
     }

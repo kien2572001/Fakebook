@@ -22,18 +22,22 @@ export default function login() {
     console.log(response);
 
     if (response.status === 200) {
-      localStorage.setItem('userInfor', JSON.stringify(response.data.user));
+      localStorage.setItem("userInfo", JSON.stringify(response.data.user));
       router.push("/");
     }
+    else{
+      alert("Login failed");
+    }
+  };
 
+  const handleLoginWithGoogle = async () => {
+    const response = await axios.get("/auth/google");
+    router.push(response.data.data);
+    console.log(response);
   };
 
   useEffect(() => {
-    // let temp = async () => {
-    //   let res = await axios.get("/web-init");
-    //   console.log(res);
-    // };
-    // temp();
+    console.log('Router: ',router);
   }, []);
 
   return (
@@ -127,7 +131,10 @@ export default function login() {
               Or, Sign in with your social account
             </h6>
             {/* Google */}
-            <div className="w-full h-[60px] flex items-center bg-[#0d66ff] rounded-[7px] cursor-pointer mb-2">
+            <div
+              className="w-full h-[60px] flex items-center bg-[#0d66ff] rounded-[7px] cursor-pointer mb-2"
+              onClick={handleLoginWithGoogle}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <div className="flex items-center mr-[60px] mb-1 ml-2">
                 <Image src={Google} alt="Google" width={40} height={40} />
