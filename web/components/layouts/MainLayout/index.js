@@ -1,4 +1,3 @@
-import React from "react";
 import Navbar from "~/components/layouts/Navbar";
 import Sidebar from "~/components/layouts/Sidebar";
 import BottomBar from "../BottomBar";
@@ -14,7 +13,7 @@ export default function MainLayout({ children }) {
         <div className="hidden laptop:block laptop:min-w-[280px]">
           <Sidebar />
         </div>
-        <div className="h-screen ">{children}</div>
+        <div className="h-screen grow">{children}</div>
       </div>
       <div className="sticky bottom-0">
         <BottomBar />
