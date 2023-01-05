@@ -4,7 +4,9 @@ import { useState } from "react";
 import ky from "~/api/ky";
 
 import AuthContext from "~/contexts/AuthContext";
+
 import "antd/dist/antd.css";
+import "~/styles/globals.css";
 
 
 NextApp.getInitialProps = async (ctx) => {
