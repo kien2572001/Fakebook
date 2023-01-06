@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -31,7 +32,7 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-
+        $tokenCookies = Cookie::make('token', $token, 60)->withHttpOnly(true);
         return response()->json(
             [
                 'status' => 'success',
@@ -42,7 +43,7 @@ class AuthController extends Controller
                 ],
             ],
             200
-        );
+        )->withCookie($tokenCookies);
     }
 
     public function register(Request $request)
