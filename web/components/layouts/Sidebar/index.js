@@ -1,6 +1,7 @@
 import react from "react";
 import { Tv, Globe, Award, Zap, User } from "react-feather";
 import { Inbox, Home, MapPin, Youtube } from "react-feather";
+import { Settings,PieChart,MessageSquare } from "react-feather";
 
 export default function Sidebar() {
   return (
@@ -105,6 +106,42 @@ export default function Sidebar() {
         </div>
       </div>
       {/* End more pages */}
+      {/* Account box */}
+      <div className="w-full flex flex-col my-2 pt-4 pb-1 bg-white rounded-[15px] shadow-[0_8px_30px_8px_rgba(0,0,0,0.05)]">
+        <div className="text-xs text-gray-text font-semibold pl-[25px] mb-[5px] font-montserrat leading-[21px]">
+          Account
+        </div>
+        <div className="flex flex-col mb-4">
+          {/* Settings button */}
+          <div className="flex px-[20px] py-2 items-center min-h-[44px]">
+            <div className="w-[20px] h-[20px] flex justify-center items-center mr-4 ">
+              <Settings size="20" color="#adb5bd" />
+            </div>
+            <div className="text-[15px] text-[#888888] font-semibold">
+              Settings
+            </div>
+          </div>
+          {/* Analytics button */}
+          <div className="flex px-[20px] py-2 items-center min-h-[44px]">
+            <div className="w-[20px] h-[20px] flex justify-center items-center mr-4 ">
+              <PieChart size="20" color="#adb5bd" />
+            </div>
+            <div className="text-[15px] text-[#888888] font-semibold">
+              Analytics
+            </div>
+          </div>
+          {/* Chat button */}
+          <div className="flex px-[20px] py-2 items-center min-h-[44px]">
+            <div className="w-[20px] h-[20px] flex justify-center items-center mr-4 ">
+              <MessageSquare size="20" color="#adb5bd" />
+            </div>
+            <div className="text-[15px] text-[#888888] font-semibold">
+              Chat
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* End of account box */}
     </div>
   );
 }
