@@ -31,6 +31,11 @@ class GoogleController extends Controller
             $user->social_type = 'google';
             $user->save();
         }
+        else {
+            $user->social_id = $userData['id'];
+            $user->social_type = 'google';
+            $user->save();
+        }
 
         $token = auth()->login($user);
 
@@ -38,13 +43,8 @@ class GoogleController extends Controller
             [
                 'status' => 'success',
                 'user' => $user,
-                'googleUser' => $userData,
-                'authorisation' => [
-                    'token' => $token,
-                    'type' => 'bearer',
-                ],
             ],
             200
-        );
+        )->withCookie(cookie('token', $token, 60)->withHttpOnly(true));
     }
 }

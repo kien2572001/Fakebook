@@ -3,6 +3,7 @@ import { getCookie } from "cookies-next";
 
 const privateRouter = {
   home: true,
+  "/auth/google": true,
 };
 
 export function middleware(req) {
@@ -10,6 +11,7 @@ export function middleware(req) {
   const verifyToken = req.cookies.get("token");
   const url = req.url;
   //console.log('middleware', req)
+
   if (!verifyToken && !pathname.includes("/auth/login")) {
     return NextResponse.redirect(new URL("/auth/login", url));
   }
@@ -24,5 +26,5 @@ export function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/", "/profile", "/auth/:path*"],
+  matcher: ["/", "/profile", "/defaultsettings", "/auth/login"],
 };

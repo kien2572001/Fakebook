@@ -1,8 +1,8 @@
 import react from "react";
 import { Tv, Globe, Award, Zap, User } from "react-feather";
 import { Inbox, Home, MapPin, Youtube } from "react-feather";
-import { Settings,PieChart,MessageSquare } from "react-feather";
-
+import { Settings, PieChart, MessageSquare } from "react-feather";
+import Link from "next/link";
 export default function Sidebar() {
   return (
     // Sidebar
@@ -113,14 +113,16 @@ export default function Sidebar() {
         </div>
         <div className="flex flex-col mb-4">
           {/* Settings button */}
-          <div className="flex px-[20px] py-2 items-center min-h-[44px]">
-            <div className="w-[20px] h-[20px] flex justify-center items-center mr-4 ">
-              <Settings size="20" color="#adb5bd" />
+          <Link href="/defaultsettings">
+            <div className="flex px-[20px] py-2 items-center min-h-[44px]">
+              <div className="w-[20px] h-[20px] flex justify-center items-center mr-4 ">
+                <Settings size="20" color="#adb5bd" />
+              </div>
+              <div className="text-[15px] text-[#888888] font-semibold">
+                Settings
+              </div>
             </div>
-            <div className="text-[15px] text-[#888888] font-semibold">
-              Settings
-            </div>
-          </div>
+          </Link>
           {/* Analytics button */}
           <div className="flex px-[20px] py-2 items-center min-h-[44px]">
             <div className="w-[20px] h-[20px] flex justify-center items-center mr-4 ">
@@ -135,9 +137,7 @@ export default function Sidebar() {
             <div className="w-[20px] h-[20px] flex justify-center items-center mr-4 ">
               <MessageSquare size="20" color="#adb5bd" />
             </div>
-            <div className="text-[15px] text-[#888888] font-semibold">
-              Chat
-            </div>
+            <div className="text-[15px] text-[#888888] font-semibold">Chat</div>
           </div>
         </div>
       </div>

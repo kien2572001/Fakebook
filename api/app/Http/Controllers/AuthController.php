@@ -96,7 +96,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully logged out',
-        ]);
+        ], 200)->withCookie(Cookie::forget('token'));
     }
 
     public function refresh()

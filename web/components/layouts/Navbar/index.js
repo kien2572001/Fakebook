@@ -10,12 +10,13 @@ import {
   MessageSquare,
   Moon,
 } from "react-feather";
+import Link from "next/link";
 
 export default function Navbar() {
   return (
     <div className="navbar-container flex w-full h-[96px] justify-between	 justify-items-center">
       <div className="navbar-container flex h-full justify-items-center">
-        <div className="flex w-[280px] h-full] justify-items-center">
+        <Link href="/" className="flex w-[280px] h-full] justify-items-center">
           {/* Nav logo box */}
           <div className="navbar-logo flex pl-[10px] justify-start">
             <div className="flex items-center mr-4">
@@ -30,7 +31,7 @@ export default function Navbar() {
               </span>
             </div>
           </div>
-        </div>
+        </Link>
         {/* Input box */}
         <div className="ml-4 flex items-center">
           <div className="relative text-gray-400 bg-gray overflow-hidden">
@@ -46,9 +47,11 @@ export default function Navbar() {
         </div>
         {/* Menu icon */}
         <div className="text-gray-500 flex items-center p-2 ml-4">
-          <div className="flex items-center w-[50px] h-[50px] rounded-[50px]   bg-background justify-center ">
-            <Home color="#adb5bd" size={25} />
-          </div>
+          <Link href="/">
+            <div className="flex items-center w-[50px] h-[50px] rounded-[50px]   bg-background justify-center ">
+              <Home color="#adb5bd" size={25} />
+            </div>
+          </Link>
         </div>
         {/* Menu icon */}
         <div className="text-gray-500 flex items-center p-2 ">
@@ -87,14 +90,16 @@ export default function Navbar() {
           <Moon color="#05f" size={28} />
         </div>
         {/* Avatar */}
-        <div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="http://sociala.uitheme.net/assets/images/profile-4.png"
-            alt="avatar"
-            className="w-[40px] h-[40px] rounded-[40px] ml-4"
-          />
-        </div>
+        <Link href="/defaultsettings">
+          <div className="cursor-pointer">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="http://sociala.uitheme.net/assets/images/profile-4.png"
+              alt="avatar"
+              className="w-[40px] h-[40px] rounded-[40px] ml-4"
+            />
+          </div>
+        </Link>
       </div>
     </div>
   );
