@@ -15,7 +15,8 @@
 }
 
 .form-control:focus{
-    border-color: #05f;
-    outline: 0;
-    box-shadow: 0 0 0 0 0  rgba(30, 116, 253, 0.25);
+    border-color: #05f!important;
+    outline: 0!important;
+    box-shadow: 0 0 0 0 0  rgba(30, 116, 253, 0.25)!important;
+    border-right-width: 2px!important;
 }

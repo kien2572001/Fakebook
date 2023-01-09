@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WebInit;
 use Illuminate\Support\Facades\Route;
 /*
@@ -30,3 +31,8 @@ Route::prefix('auth')->group(function () {
     Route::get('/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 });
+
+Route::resource('users', UserController::class)->only([
+    'show',
+]);
+
