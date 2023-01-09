@@ -1,6 +1,3 @@
-
-
-import Login from "~/components/auth/Login";
 import axios from "~/api/axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -104,8 +101,8 @@ export default function login() {
   }
   };
   return (
-    <div className="w-full h-screen laptop:grid laptop:grid-cols-12 relative">
-      <div className="fixed top-0 w-full flex justify-between items-center px-[15px] py-[9px] z-50 laptop:h-[90px] laptop:py-[0px]">
+    <div className="w-full h-screen mini-desktop:grid mini-desktop:grid-cols-12 relative">
+      <div className="fixed top-0 w-full flex justify-between items-center px-[15px] py-[9px] z-50 mini-desktop:h-[90px] mini-desktop:py-[0px]">
         <div className="flex items-center">
           {/* {width < 992 ? (
             <Zap size="28" className="text-[#10d876]" />
@@ -113,7 +110,7 @@ export default function login() {
             <Zap size="36" className="text-[#10d876]" />
           )} */}
 
-          <span className="text-2xl laptop:text-[32px] font-semibold  ml-[5px] text-[#0055ff] font-fredoka tracking-[1px]">
+          <span className="text-2xl mini-desktop:text-[32px] font-semibold  ml-[5px] text-[#0055ff] font-fredoka tracking-[1px]">
             Sociala.
           </span>
         </div>
@@ -125,16 +122,16 @@ export default function login() {
       <img
         src={LoginBackground.src}
         alt="avatar"
-        className="absolute hidden laptop:inline-block scale-105 h-full"
+        className="absolute hidden mini-desktop:inline-block scale-100 h-full"
       />
       {/* Left block */}
-      <div className="hidden laptop:block laptop:col-span-5 h-full overflow-x-hidden"></div>
+      <div className="hidden mini-desktop:block mini-desktop:col-span-5 h-full overflow-x-hidden"></div>
       {/* Right block */}
-      <div className="flex items-center h-screen laptop:col-span-7 bg-white z-10">
+      <div className="flex items-center h-full mini-desktop:col-span-7 bg-white z-10">
         {/* Login form */}
-        <div className="flex flex-col min-w-[320px] laptop:min-w-[380px] laptop:max-w-[400px] mx-auto p-4">
+        <div className="flex flex-col min-w-[320px] mini-desktop:min-w-[380px] mini-desktop:max-w-[400px] mx-auto p-4">
           {/* Header */}
-          <div className="mb-4 text-3xl font-bold laptop:text-4xl">
+          <div className="mb-4 text-3xl font-bold mini-desktop:text-4xl">
             Login into <br></br> your account
           </div>
           {/* Input email */}

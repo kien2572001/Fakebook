@@ -168,12 +168,12 @@ const handlerRegister = async (e) => {
       <img
         src={registerBackground.src}
         alt="avatar"
-        className="absolute hidden laptop:inline-block scale-105 h-full"
+        className="absolute hidden laptop:inline-block scale-100 h-full"
       />
       {/* Left block */}
       <div className="hidden laptop:block laptop:col-span-5 h-full  overflow-x-hidden"></div>
       {/* Right block */}
-      <div className="flex items-center h-screen laptop:col-span-7 bg-white z-10">
+      <div className="flex items-center h-full laptop:col-span-7 bg-white z-10">
         {/* register form */}
         <div className="flex flex-col min-w-[320px] laptop:min-w-[380px] laptop:max-w-[400px] mx-auto p-4">
           {/* Header */}
