@@ -32,6 +32,7 @@ module.exports = {
       'mobile': '576px',
       'tablet': '768px',
       'laptop': '992px',
+      'mini-desktop': '1200px',
       'desktop': '1600px',
     },
   },

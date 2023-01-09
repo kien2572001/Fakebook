@@ -5,7 +5,7 @@ import CreatePostCard from "./CreatePostCard";
 
 export default function ListPost() {
   return (
-    <div className="px-[15px] mt-3">
+    <div className="px-[15px] mt-3 laptop:px-0 laptop:mx-auto laptop:max-w-[960px]">
         <CreatePostCard />
         <PostCard />
     </div>
