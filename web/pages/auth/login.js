@@ -1,3 +1,5 @@
+
+
 import Login from "~/components/auth/Login";
 import axios from "~/api/axios";
 import { useEffect, useState } from "react";
@@ -12,8 +14,79 @@ export default function login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const [emailError, setEmailError] = useState([]);
+  const [passwordError, setPasswordError] = useState([]);
+  const [isErrorEmail, setIsErrorEmail] = useState(false)
+  const [isErrorPassword, setIsErrorPassword] = useState(false)
+  const errorPasswords = [
+  "Password is required", 
+  "Password is too short (minimum is 6 characters)", 
+  "Password is too long (maximum is 128 characters)",
+  "secial characters are not allowed"];
+  const errorEmails = [
+  "Email is required",
+  "Email is invalid",
+  ];
+
+  const handleLoginWithGoogle = async () => {
+    const response = await axios.get("/auth/google");
+    router.push(response.data.data);
+    console.log(response);
+  };
+ 
+  useEffect(() => {
+    console.log('Router: ',router);
+  }, []);
+
+  const validateEmail = () => {
+    setEmailError([]);
+    setIsErrorEmail(false);
+    let error = [];
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if(!email){
+      error.push(errorEmails[0]);
+    }else{
+    if(!regex.test(email)){
+      error.push(errorEmails[1]);
+    }
+    }
+    if(error.length > 0){
+      setEmailError(error);
+      setIsErrorEmail(true);
+      return false;
+    }
+    return true;
+  }
+  
+  const validatePassword = () => {
+    setPasswordError([]);
+    setIsErrorPassword(false);
+    let error = [];
+    if(!password){
+      error.push(errorPasswords[0]);
+    }else{
+      if(password.length < 6){
+        error.push(errorPasswords[1]);
+      }
+      if(password.length > 128){
+        error.push(errorPasswords[2]);
+      }
+      if(!password.match(/^[a-zA-Z0-9]+$/)){
+        error.push(errorPasswords[3]);
+      }
+    }
+    if(error.length > 0){
+      setPasswordError(error);
+      setIsErrorPassword(true);
+      return false;
+    }
+    return true;
+  }
 
   const handleLogin = async () => {
+    let check1 = validateEmail();
+    let check2 = validatePassword();
+    if(check1 && check2){
     const data = {
       email: email,
       password: password,
@@ -28,18 +101,8 @@ export default function login() {
     else{
       alert("Login failed");
     }
+  }
   };
-
-  const handleLoginWithGoogle = async () => {
-    const response = await axios.get("/auth/google");
-    router.push(response.data.data);
-    console.log(response);
-  };
-
-  useEffect(() => {
-    console.log('Router: ',router);
-  }, []);
-
   return (
     <div className="w-full h-screen laptop:grid laptop:grid-cols-12 relative">
       <div className="fixed top-0 w-full flex justify-between items-center px-[15px] py-[9px] z-50 laptop:h-[90px] laptop:py-[0px]">
@@ -62,10 +125,10 @@ export default function login() {
       <img
         src={LoginBackground.src}
         alt="avatar"
-        className="absolute hidden laptop:inline-block scale-105"
+        className="absolute hidden laptop:inline-block scale-105 h-full"
       />
       {/* Left block */}
-      <div className="hidden laptop:block laptop:col-span-5 h-screen  overflow-x-hidden"></div>
+      <div className="hidden laptop:block laptop:col-span-5 h-full overflow-x-hidden"></div>
       {/* Right block */}
       <div className="flex items-center h-screen laptop:col-span-7 bg-white z-10">
         {/* Login form */}
@@ -86,7 +149,11 @@ export default function login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            {isErrorEmail && emailError.map((error, index) => (
+            <div key={index} className="text-red-500 text-sm mb-2">{error}</div>
+          ))}
           </div>
+          
           {/* Input password */}
           <div className="m-[2px] w-full relative mb-4">
             <div className="absolute top-[18px] left-[18px]">
@@ -97,9 +164,14 @@ export default function login() {
               className="w-full h-[60px] rounded-[7px] leading-[60px] font-semibold py-[6px] pl-12 pr-3 border-2 border-[#eee] border-solid text-[#212529] text-sm "
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
+              required
               value={password}
             />
+            {isErrorPassword&& passwordError.map((error, index) => (
+            <div key={index} className="text-red-500 text-sm mb-2">{error}</div>
+            ))}
           </div>
+          
           {/* Remember and forgot */}
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center">
@@ -123,7 +195,7 @@ export default function login() {
           {/* Register button */}
           <div className="text-sm font-medium leading-[32px] text-gray-text">
             Don't have an account?{" "}
-            <span className="text-[#1E74FD] font-bold ml-1">Register</span>
+            <a onClick={()=>router.push('/auth/register')} className="text-[#1E74FD] font-bold ml-1">Register</a>
           </div>
           {/* Social sign in */}
           <div className="mt-2 flex flex-col">
