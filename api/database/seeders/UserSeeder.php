@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -16,6 +17,7 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
+                'id' => Str::uuid(),
                 'email' => 'kien@gmail.com',
                 'password' => bcrypt('123456'),
                 'first_name' => 'Kien',
@@ -33,6 +35,7 @@ class UserSeeder extends Seeder
                 'about' => 'I am Kien Nguyen'
             ],
             [
+                'id' => Str::uuid(),
                 'email' => 'duy@gmail.com',
                 'password' => bcrypt('123456'),
                 'first_name' => 'Duy',
@@ -50,6 +53,7 @@ class UserSeeder extends Seeder
                 'about' => 'I am Duy Nguyen'
             ],
             [
+                'id' => Str::uuid(),
                 'email' => 'vietanh@gmail.com',
                 'password' => bcrypt('123456'),
                 'first_name' => 'Viet Anh',
@@ -67,6 +71,7 @@ class UserSeeder extends Seeder
                 'about' => 'I am Viet Anh Nguyen'
             ],
             [
+                'id' => Str::uuid(),
                 'email' => 'manh@gmail.com',
                 'password' => bcrypt('123456'),
                 'first_name' => 'Manh',

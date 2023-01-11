@@ -7,13 +7,11 @@ import AuthContext from "~/contexts/AuthContext";
 
 import "antd/dist/antd.css";
 import "~/styles/globals.css";
-
-
 NextApp.getInitialProps = async (ctx) => {
   // Is SSR
   if (ctx?.ctx?.req) {
     // const response = await ky.get(`api/web-init`);
-    // const { data } = await response.json();
+    // console.log("response", response.data);
     const { data } = { data: null };
     const appData = App.getInitialProps(ctx);
 

@@ -4,8 +4,47 @@ import { ArrowLeft } from "react-feather";
 import styles from "~/styles/customCommon.module.css";
 import ImageUpload from "./ImageUpload";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import axios from "~/api/axios";
+import Toast from "~/components/common/Toast";
+import { toast } from "react-toastify";
 
-const AccountInformation = () => {
+const AccountInformation = ({ userData }) => {
+  const [firstName, setFirstName] = useState(userData?.firstName || "");
+  const [lastName, setLastName] = useState(userData?.lastName || "");
+  const [email, setEmail] = useState(userData?.email || "");
+  const [phone, setPhone] = useState(userData?.phone || "");
+  const [avatar, setAvatar] = useState(userData?.avatar || "");
+  const [address, setAddress] = useState(userData?.address || "");
+  const [city, setCity] = useState(userData?.city || "");
+  const [country, setCountry] = useState(userData?.country || "");
+  const [about, setAbout] = useState(userData?.about || "");
+
+  useEffect(() => {
+    console.log("userData", userData);
+  }, []);
+
+  const handleSave = async () => {
+
+    const data = new FormData();
+    data.append("firstName", firstName);
+    data.append("lastName", lastName);
+    data.append("email", email);
+    data.append("phone", phone);
+    data.append("avatar", avatar);
+    data.append("address", address);
+    data.append("city", city);
+    data.append("country", country);
+    data.append("about", about);
+
+    const res = await axios.post("/users/modify-account-information", data);
+    if (res?.status === 200) {
+      alert("Update success")
+    } else {
+      alert("Update failed")
+    }
+  };
+
   return (
     <MainLayout>
       <div className="px-[15px] mt-3 laptop:px-0 laptop:mx-auto laptop:max-w-[800px]">
@@ -23,7 +62,7 @@ const AccountInformation = () => {
           <div className="flex flex-col p-6 laptop:p-12">
             {/* Avatar box */}
             <div className="px-[15px] flex items-center justify-center mb-6">
-              <ImageUpload />
+              <ImageUpload avatar={avatar} setAvatar={setAvatar} />
             </div>
             {/* Group last name first name */}
             <div className="flex flex-col laptop:flex-row">
@@ -32,15 +71,12 @@ const AccountInformation = () => {
                 <label htmlFor="first-name" className="mb-2 font-semibold">
                   First Name
                 </label>
-                {/* <input
-                  id="first-name"
-                  type="text"
-                  className={`${styles["form-control"]} ${styles["custom-input"]}`}
-                /> */}
                 <input
                   id="first-name"
                   type="text"
                   className={`${styles["form-control"]} ${styles["custom-input"]}`}
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
                 />
               </div>
               {/* Last name box */}
@@ -52,6 +88,8 @@ const AccountInformation = () => {
                   id="last-name"
                   type="text"
                   className={`${styles["form-control"]} ${styles["custom-input"]}`}
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
                 />
               </div>
             </div>
@@ -66,6 +104,8 @@ const AccountInformation = () => {
                   id="email"
                   type="text"
                   className={`${styles["form-control"]} ${styles["custom-input"]}`}
+                  disabled
+                  value={email}
                 />
               </div>
               {/* Phone */}
@@ -77,6 +117,8 @@ const AccountInformation = () => {
                   id="phone"
                   type="text"
                   className={`${styles["form-control"]} ${styles["custom-input"]}`}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
             </div>
@@ -89,6 +131,8 @@ const AccountInformation = () => {
                 id="address"
                 type="text"
                 className={`${styles["form-control"]} ${styles["custom-input"]}`}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
               />
             </div>
             <div className="flex flex-col laptop:flex-row">
@@ -101,6 +145,8 @@ const AccountInformation = () => {
                   id="country"
                   type="text"
                   className={`${styles["form-control"]} ${styles["custom-input"]}`}
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
                 />
               </div>
 
@@ -113,6 +159,8 @@ const AccountInformation = () => {
                   id="city"
                   type="text"
                   className={`${styles["form-control"]} ${styles["custom-input"]}`}
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
                 />
               </div>
             </div>
@@ -126,11 +174,16 @@ const AccountInformation = () => {
                 type="text"
                 className={`${styles["form-control"]} ${styles["custom-input"]} min-h-[100px] p-4 bg-[#f5f5f5]`}
                 placeholder="Write something about yourself"
+                value={about}
+                onChange={(e) => setAbout(e.target.value)}
               />
             </div>
             {/* Save button */}
             <div className="flex justify-start">
-              <button className="font-semibold rounded-[0.3rem] text-center w-[175px] bg-[#05f] p-4 text-white">
+              <button
+                className="font-semibold rounded-[0.3rem] text-center w-[175px] bg-[#05f] p-4 text-white"
+                onClick={handleSave}
+              >
                 Save
               </button>
             </div>

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Resources\User as UserResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 class UserController extends Controller
 {
@@ -20,6 +23,50 @@ class UserController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'User not found'
+            ], 404);
+        }
+    }
+
+    public function modifyAccountInfomation(Request $request){
+        $isAuth = Auth::check();
+        if ($isAuth){
+            $user = Auth::user();
+            $user->last_name = $request->lastName;
+            $user->first_name = $request->firstName;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->address = $request->address;
+            $user->city = $request->city;
+            $user->country = $request->country;
+            $user->about = $request->about;
+
+            //save image object to AWS
+            if ($request->hasFile('avatar')) {
+                $avatar = $request->file('avatar');
+                $avatarName = time() . '.' . $avatar->getClientOriginalExtension();
+                $avatarPath = 'images/avatars/'.$avatarName;
+                $path = Storage::disk('s3')->put($avatarPath, file_get_contents($avatar));
+                if (!$path) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Error uploading avatar'
+                    ], 500);
+                }
+                $path = Storage::disk('s3')->url($avatarPath);
+                $user->avatar = $path;
+            }
+            
+            $user->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Account information updated successfully',
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 'error',
+                'message' => "You don't have permission to modify this account"
             ], 404);
         }
     }

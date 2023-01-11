@@ -17,10 +17,10 @@ const beforeUpload = (file) => {
   }
   return isJpgOrPng && isLt2M;
 };
-const ImageUpload = () => {
+const ImageUpload = ({ avatar, setAvatar }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(
-    "http://sociala.uitheme.net/assets/images/pt-1.jpg"
+    avatar || "https://via.placeholder.com/150"
   );
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
@@ -32,6 +32,7 @@ const ImageUpload = () => {
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
+        setAvatar(info.file.originFileObj);
       });
     }
   };

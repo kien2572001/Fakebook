@@ -36,3 +36,7 @@ Route::resource('users', UserController::class)->only([
     'show',
 ]);
 
+Route::prefix('users')->group(function () {
+    Route::post('/modify-account-information', [UserController::class, 'modifyAccountInfomation']);
+});
+

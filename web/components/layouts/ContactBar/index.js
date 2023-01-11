@@ -2,7 +2,7 @@ import StatusDot from "./StatusDot";
 
 const ContactBar = () => {
   return (
-    <div class="flex flex-col mt-2 bg-white rounded-[15px] shadow-[0_8px_30px_8px_rgba(0,0,0,0.05)]">
+    <div className="flex flex-col mt-2 bg-white rounded-[15px] shadow-[0_8px_30px_8px_rgba(0,0,0,0.05)]">
       {/* Contacts */}
       <div className="flex flex-col pl-6 pr-4 pt-6 ">
         <span className="font-semibold text-gray-text block text-[0.625rem] tracking-[1px] mb-2">

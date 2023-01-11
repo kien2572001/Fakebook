@@ -33,6 +33,7 @@ class AuthController extends Controller
 
         $user = Auth::user();
         $tokenCookies = Cookie::make('token', $token, 60)->withHttpOnly(true);
+        $userCookies = Cookie::make('user', $user, 60)->withHttpOnly(true);
         return response()->json(
             [
                 'status' => 'success',
@@ -43,7 +44,7 @@ class AuthController extends Controller
                 ],
             ],
             200
-        )->withCookie($tokenCookies);
+        )->withCookie($tokenCookies)->withCookie($userCookies);
     }
 
     public function register(Request $request)
@@ -96,7 +97,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully logged out',
-        ], 200)->withCookie(Cookie::forget('token'));
+        ], 200)->withCookie(Cookie::forget('token'))->withCookie(Cookie::forget('user'));
     }
 
     public function refresh()

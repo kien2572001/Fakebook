@@ -92,7 +92,7 @@ export default function login() {
     console.log(response);
 
     if (response.status === 200) {
-      localStorage.setItem("userInfo", JSON.stringify(response.data.user));
+      //localStorage.setItem("userInfo", JSON.stringify(response.data.user));
       router.push("/");
     }
     else{

@@ -38,6 +38,8 @@ class GoogleController extends Controller
         }
 
         $token = auth()->login($user);
+        $user = auth()->user();
+        $userCookies = cookie('user', $user, 60);
 
         return response()->json(
             [
@@ -45,6 +47,6 @@ class GoogleController extends Controller
                 'user' => $user,
             ],
             200
-        )->withCookie(cookie('token', $token, 60)->withHttpOnly(true));
+        )->withCookie(cookie('token', $token, 60)->withHttpOnly(true))->withCookie($userCookies);
     }
 }
