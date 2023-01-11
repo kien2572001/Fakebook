@@ -3,9 +3,17 @@ import axios from "axios";
 
 //ssr
 export async function getServerSideProps(context) {
-  const userCookie = JSON.parse(context.req.cookies.user);
+  const userCookie = context.req.cookies.user;
   // console.log('user', userCookie)
-  const id = userCookie.id;
+  if (!userCookie) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+  const id = JSON.parse(userCookie).id;
   let userData = null;
   try {
     const response = await axios.get(
@@ -24,6 +32,6 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function accountinformation({userData}) {
+export default function accountinformation({ userData }) {
   return <AccountInformation userData={userData} />;
 }

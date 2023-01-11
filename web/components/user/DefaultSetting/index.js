@@ -11,6 +11,7 @@ import {
 } from "react-feather";
 import axios from "~/api/axios";
 import { useRouter } from "next/router";
+import Link from "next/link";
 export default function DefaultSetting() {
   const router = useRouter();
   const handleLogout = async () => {
@@ -31,14 +32,17 @@ export default function DefaultSetting() {
           </div>
           {/* General box */}
           {/* Account infomation */}
-          <div className="w-full flex py-2 justify-start border-solid border-b border-[#E1E1F0] cursor-pointer">
+          <Link
+            href="/accountinformation"
+            className="w-full flex py-2 justify-start border-solid border-b border-[#E1E1F0] cursor-pointer"
+          >
             <div className="bg-blue-500 w-[45px] h-[45px] rounded-[45px] flex items-center justify-center mr-4 bg-gradient-to-r from-[#05f] to-[#09f]">
               <Home size={22} color="white" />
             </div>
             <div className="font-semibold leading-[45px]">
               Account Information
             </div>
-          </div>
+          </Link>
           {/* Save Address */}
           <div className="w-full flex py-2 justify-start border-solid border-b border-[#E1E1F0] cursor-pointer">
             <div className="bg-blue-500 w-[45px] h-[45px] rounded-[45px] flex items-center justify-center mr-4 bg-gradient-to-r from-[#f2994a] to-[#f2c94c]">
