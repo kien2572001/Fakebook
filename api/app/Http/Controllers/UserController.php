@@ -27,6 +27,23 @@ class UserController extends Controller
         }
     }
 
+    public function getMyInformation(Request $request){
+        $isAuth = Auth::check();
+        if ($isAuth){
+            $user = Auth::user();
+            return response()->json([
+                'status' => 'success',
+                'data' => new UserResource($user)
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'status' => 'error',
+                'message' => "You don't have permission to get this account"
+            ], 404);
+        }
+    }
+
     public function modifyAccountInfomation(Request $request){
         $isAuth = Auth::check();
         if ($isAuth){

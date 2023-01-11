@@ -1,10 +1,11 @@
-import React from "react";
 import axios from "~/api/axios";
-import { useEffect, useState,useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
-import { Mail, Lock, UserPlus, Menu,Zap } from "react-feather";
+import { Mail, Lock, Menu, Zap } from "react-feather";
 import Image from "next/image";
-import registerBackground from "../../public/login-bg-2.jpg";
+import Facebook from "../../public/icon-2.png";
+import Google from "../../public/icon-1.png";
+import LoginBackground from "../../public/login-bg.jpg";
 
 const useMediaQuery = (width) => {
   const [targetReached, setTargetReached] = useState(false);
@@ -32,29 +33,15 @@ const useMediaQuery = (width) => {
   return targetReached;
 };
 
-const Register = () => {
-  const router = useRouter();
-  const isLaptop = useMediaQuery(992);
-  //axios
-  /*
-   *   form state
-   */
-  const [name, setName] = useState("");
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const setType = (e, type) => {
-    type(e.target.value);
-  };
-  /*
-   * validate form
-   */
-  const [nameError, setNameError] = useState([]);
+  const router = useRouter();
+  const isLaptop = useMediaQuery(992);
   const [emailError, setEmailError] = useState([]);
   const [passwordError, setPasswordError] = useState([]);
-  const [ConfirmPasswordError, setConfirmPasswordError] = useState([]);
-
-  const errorNames = ["Name is required"];
+  const [isErrorEmail, setIsErrorEmail] = useState(false);
+  const [isErrorPassword, setIsErrorPassword] = useState(false);
   const errorPasswords = [
     "Password is required",
     "Password is too short (minimum is 6 characters)",
@@ -62,13 +49,20 @@ const Register = () => {
     "secial characters are not allowed",
   ];
   const errorEmails = ["Email is required", "Email is invalid"];
-  const errorConfirmPasswords = [
-    "Password confirmation doesn't match Password",
-  ];
+
+  const handleLoginWithGoogle = async () => {
+    const response = await axios.get("/auth/google");
+    router.push(response.data.data);
+    console.log(response);
+  };
+
+  useEffect(() => {
+    console.log("Router: ", router);
+  }, []);
 
   const validateEmail = () => {
     setEmailError([]);
-
+    setIsErrorEmail(false);
     let error = [];
     const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     if (!email) {
@@ -80,6 +74,7 @@ const Register = () => {
     }
     if (error.length > 0) {
       setEmailError(error);
+      setIsErrorEmail(true);
       return false;
     }
     return true;
@@ -87,86 +82,45 @@ const Register = () => {
 
   const validatePassword = () => {
     setPasswordError([]);
+    setIsErrorPassword(false);
     let error = [];
     if (!password) {
       error.push(errorPasswords[0]);
-    }
-    if (password.length < 6) {
-      error.push(errorPasswords[1]);
-    }
-    if (password.length > 128) {
-      error.push(errorPasswords[2]);
-    }
-    if (!password.match(/^[a-zA-Z0-9]+$/)) {
-      error.push(errorPasswords[3]);
+    } else {
+      if (password.length < 6) {
+        error.push(errorPasswords[1]);
+      }
+      if (password.length > 128) {
+        error.push(errorPasswords[2]);
+      }
+      if (!password.match(/^[a-zA-Z0-9]+$/)) {
+        error.push(errorPasswords[3]);
+      }
     }
     if (error.length > 0) {
       setPasswordError(error);
+      setIsErrorPassword(true);
       return false;
     }
     return true;
   };
 
-  const validateConfirmPassword = () => {
-    setConfirmPasswordError([]);
-    let error = [];
-    if (!passwordConfirmation) {
-      error.push(errorPasswords[0]);
-    }
-    if (password.length < 6) {
-      error.push(errorPasswords[1]);
-    }
-    if (password.length > 128) {
-      error.push(errorPasswords[2]);
-    }
-    if (!password.match(/^[a-zA-Z0-9]+$/)) {
-      error.push(errorPasswords[3]);
-    }
-    if (password !== passwordConfirmation) {
-      error.push(errorConfirmPasswords[0]);
-    }
-    if (error.length > 0) {
-      setConfirmPasswordError(error);
-      return false;
-    }
-    return true;
-  };
-
-  const validateName = () => {
-    setNameError([]);
-    let error = [];
-    if (!name) {
-      error.push(errorNames[0]);
-    }
-    if (error.length > 0) {
-      setNameError(error);
-      return false;
-    }
-    return true;
-  };
-  /*
-   *   handler
-   */
-  const handlerRegister = async (e) => {
-    let check1 = validateName();
-    let check2 = validateEmail();
-    let check3 = validatePassword();
-    let check4 = validateConfirmPassword();
-    if (check1 && check2 && check3 && check4) {
-      /*
-       * API
-       */
+  const handleLogin = async () => {
+    let check1 = validateEmail();
+    let check2 = validatePassword();
+    if (check1 && check2) {
       const data = {
-        name: name,
         email: email,
         password: password,
       };
-      const response = await axios.post("/auth/register", data);
+      const response = await axios.post("/auth/login", data);
+      console.log(response);
+
       if (response.status === 200) {
-        router.push("/auth/login");
-        console.log(response);
+        //localStorage.setItem("userInfo", JSON.stringify(response.data.user));
+        router.push("/");
       } else {
-        console.log("error");
+        alert("Login failed");
       }
     }
   };
@@ -190,42 +144,21 @@ const Register = () => {
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={registerBackground.src}
+        src={LoginBackground.src}
         alt="avatar"
         className="absolute hidden mini-desktop:inline-block scale-100 h-full"
       />
       {/* Left block */}
-      <div className="hidden mini-desktop:block mini-desktop:col-span-5 h-full  overflow-x-hidden"></div>
+      <div className="hidden mini-desktop:block mini-desktop:col-span-5 h-full overflow-x-hidden"></div>
       {/* Right block */}
       <div className="flex items-center h-full mini-desktop:col-span-7 bg-white z-10">
-        {/* register form */}
+        {/* Login form */}
         <div className="flex flex-col min-w-[320px] mini-desktop:min-w-[380px] mini-desktop:max-w-[400px] mx-auto p-4">
           {/* Header */}
           <div className="mb-4 text-3xl font-bold mini-desktop:text-4xl">
-            Create <br></br> your account
+            Login into <br></br> your account
           </div>
           {/* Input email */}
-          <div className="m-[2px] w-full relative mb-4">
-            <div className="absolute top-[18px] left-[18px]">
-              <UserPlus color="#adb5bd" size={22} />
-            </div>
-            <input
-              type="text"
-              className="w-full h-[60px] rounded-[7px] leading-[60px] font-semibold py-[6px] pl-12 pr-3 border-2 border-[#eee] border-solid text-[#212529] text-sm "
-              placeholder="Your Name"
-              value={name}
-              onChange={(e) => setType(e, setName)}
-            />
-            {!nameError.length == 0 &&
-              nameError.map((item, index) => (
-                <div className="text-red-500 text-sm" key={index}>
-                  {item}
-                </div>
-              ))}
-          </div>
-
-          {/* Input email */}
-
           <div className="m-[2px] w-full relative mb-4">
             <div className="absolute top-[18px] left-[18px]">
               <Mail color="#adb5bd" size={22} />
@@ -235,12 +168,12 @@ const Register = () => {
               className="w-full h-[60px] rounded-[7px] leading-[60px] font-semibold py-[6px] pl-12 pr-3 border-2 border-[#eee] border-solid text-[#212529] text-sm "
               placeholder="Your Email Address"
               value={email}
-              onChange={(e) => setType(e, setEmail)}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            {!emailError.length == 0 &&
-              emailError.map((item, index) => (
-                <div className="text-red-500 text-sm" key={index}>
-                  {item}
+            {isErrorEmail &&
+              emailError.map((error, index) => (
+                <div key={index} className="text-red-500 text-sm mb-2">
+                  {error}
                 </div>
               ))}
           </div>
@@ -254,31 +187,14 @@ const Register = () => {
               type="password"
               className="w-full h-[60px] rounded-[7px] leading-[60px] font-semibold py-[6px] pl-12 pr-3 border-2 border-[#eee] border-solid text-[#212529] text-sm "
               placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
               value={password}
-              onChange={(e) => setType(e, setPassword)}
             />
-          </div>
-          {!passwordError.length == 0 &&
-            passwordError.map((item, index) => (
-              <div className="text-red-500 text-sm" key={index}>
-                {item}
-              </div>
-            ))}
-          <div className="m-[2px] w-full relative mb-4">
-            <div className="absolute top-[18px] left-[18px]">
-              <Lock color="#adb5bd" size={22} />
-            </div>
-            <input
-              type="password"
-              className="w-full h-[60px] rounded-[7px] leading-[60px] font-semibold py-[6px] pl-12 pr-3 border-2 border-[#eee] border-solid text-[#212529] text-sm "
-              placeholder="Confirm Password"
-              value={passwordConfirmation}
-              onChange={(e) => setType(e, setPasswordConfirmation)}
-            />
-            {!ConfirmPasswordError.length == 0 &&
-              ConfirmPasswordError.map((item, index) => (
-                <div className="text-red-500 text-sm" key={index}>
-                  {item}
+            {isErrorPassword &&
+              passwordError.map((error, index) => (
+                <div key={index} className="text-red-500 text-sm mb-2">
+                  {error}
                 </div>
               ))}
           </div>
@@ -290,34 +206,61 @@ const Register = () => {
                 type="checkbox"
                 className="mr-2 ml-1 border-[1px] border-[#eee] rounded"
               />
-              <span className="text-sm text-gray-text">
-                Accept Term and Conditions
-              </span>
+              <span className="text-sm text-gray-text">Remember me</span>
+            </div>
+            <div className="text-sm font-semibold text-[#495057]">
+              Forgot your Password?
             </div>
           </div>
-          {/* Register button */}
+          {/* Login button */}
           <button
             className="w-full h-[60px] rounded-[7px] leading-[60px] font-semibold border-0 mb-1 text-[#fff] bg-[#343a40] text-sm "
-            onClick={handlerRegister}
+            onClick={handleLogin}
           >
-            Register
+            Login
           </button>
           {/* Register button */}
           <div className="text-sm font-medium leading-[32px] text-gray-text">
-            Already have account{" "}
+            Don't have an account?{" "}
             <a
-              onClick={() => router.push("/auth/login")}
+              onClick={() => router.push("/auth/register")}
               className="text-[#1E74FD] font-bold ml-1"
             >
-              Login
+              Register
             </a>
           </div>
           {/* Social sign in */}
+          <div className="mt-2 flex flex-col">
+            <h6 className="text-sm font-semibold text-gray-text mb-4 mx-auto">
+              Or, Sign in with your social account
+            </h6>
+            {/* Google */}
+            <div
+              className="w-full h-[60px] flex items-center bg-[#0d66ff] rounded-[7px] cursor-pointer mb-2"
+              onClick={handleLoginWithGoogle}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <div className="flex items-center mr-[60px] mb-1 ml-2">
+                <Image src={Google} alt="Google" width={40} height={40} />
+              </div>
+              <span className="leading-[60px] font-semibold text-white text-sm  ">
+                Sign in with Google
+              </span>
+            </div>
+            {/* Facebook */}
+            <div className="w-full h-[60px] flex items-center bg-[#3b5999] rounded-[7px] cursor-pointer">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <div className="flex items-center mr-[60px] mb-1 ml-2">
+                <Image src={Facebook} alt="Google" width={40} height={40} />
+              </div>
+              <span className="leading-[60px] font-semibold text-white text-sm  ">
+                Sign in with Facebook
+              </span>
+            </div>
+          </div>
         </div>
         {/* End login form */}
       </div>
     </div>
   );
-};
-
-export default Register;
+}

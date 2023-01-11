@@ -11,8 +11,21 @@ import {
   Moon,
 } from "react-feather";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import axios from "~/api/axios";
 
 export default function Navbar() {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const res = await axios.get("/users/my-information");
+      console.log(res);
+      setUserData(res.data.data);
+    };
+    getUserData();
+  }, []);
+
   return (
     <div className="navbar-container flex w-full h-[96px] justify-between	 justify-items-center">
       <div className="navbar-container flex h-full justify-items-center">
@@ -94,7 +107,10 @@ export default function Navbar() {
           <div className="cursor-pointer">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="http://sociala.uitheme.net/assets/images/profile-4.png"
+              src={
+                userData?.avatar ||
+                "https://fakebook-kien2572001.s3.ap-southeast-1.amazonaws.com/images/default/default-avatar.jpg"
+              }
               alt="avatar"
               className="w-[40px] h-[40px] rounded-[40px] ml-4"
             />

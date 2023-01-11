@@ -32,11 +32,14 @@ Route::prefix('auth')->group(function () {
     Route::get('/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
+Route::prefix('users')->group(function () {
+    Route::get('/my-information', [UserController::class, 'getMyInformation']);
+    Route::post('/modify-account-information', [UserController::class, 'modifyAccountInfomation']);
+});
+
+
 Route::resource('users', UserController::class)->only([
     'show',
 ]);
 
-Route::prefix('users')->group(function () {
-    Route::post('/modify-account-information', [UserController::class, 'modifyAccountInfomation']);
-});
 
