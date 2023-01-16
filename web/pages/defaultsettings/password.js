@@ -25,10 +25,10 @@ const ChangePassword = () => {
         </div>
     </div>
     <div className="flex h-screen focus:outline-none">
-      <div className="w-4/10 hidden laptop:block h-full">
-        <img src="http://sociala.uitheme.net/assets/images/login-bg-2.jpg" alt="changepassword-pic" className="h-full"/>
+      <div className="w-[40%] hidden laptop:block h-full">
+        <img src="http://sociala.uitheme.net/assets/images/login-bg-2.jpg" alt="changepassword-pic" className="h-full bg-auto"/>
       </div>
-      <div className="w-5/10 m-auto flex justify-center items-center">
+      <div className="w-[60%] m-auto flex justify-center items-center">
       <div className="flex flex-col min-w-[380px] max-w-[400px] mx-auto p-4">
           {/* Header */}
           <h2 className="mb-4 text-4xl font-bold">Change your password</h2>
