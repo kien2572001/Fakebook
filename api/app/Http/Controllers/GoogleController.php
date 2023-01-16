@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Laravel\Socialite\Facades\Socialite;
-
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
@@ -34,6 +33,7 @@ class GoogleController extends Controller
         }
 
         $token = auth()->login($user);
+
         return response()->json(
             [
                 'status' => 'success',
