@@ -23,3 +23,8 @@
     resize: vertical;
     color: black !important;
 }
+
+.createPostTextarea:hover{
+    background-color: #f1f1f1;  
+    border-color: #f1f1f1;
+}

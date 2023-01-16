@@ -27,4 +27,27 @@
     h5 {
         @apply text-sm font-bold;
     }
+
+    .create-post-modal .ant-modal-content{
+        border-radius: 5px;
+        width: 500px;
+    }
+
+
+    .create-post-modal .ant-modal-header {
+        border-radius: 5px 5px 0 0;
+        text-align: center;
+        height: 60px;
+    }
+
+    .create-post-modal .ant-modal-header > .ant-modal-title {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+
+    .create-post-modal .ant-modal-body {
+        padding: 0;
+    }
+
 }
