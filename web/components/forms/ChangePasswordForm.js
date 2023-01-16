@@ -6,8 +6,10 @@ export default function ChangePasswordForm(){
         <div className="ml-[10px]">
         <div className="flex flex-col max-w-[800px] bg-white  rounded-[5px] ml-auto mr-auto mt-[10px]">
             <div className="bg-[#0055ff] flex p-[24px] text-center rounded-t-[5px]">
+                <a href="#">
                 <ArrowLeft size={24} className="text-white" />
-                <span className="text-sm text-white ml-[20px] font-semibold">Change Password</span>
+                </a>
+                <span className="text-[18px] text-white ml-[20px] font-semibold items-baseline leading-tight">Change Password</span>
             </div>
             <div className="p-[24px] flex">
                 <form className="w-full">
