@@ -1,5 +1,5 @@
 import MainLayout from "~/components/layouts/MainLayout";
-import ChangePasswordForm from "~/components/forms/ChangePasswordForm";
+import ChangePasswordForm from "~/components/user/forms/ChangePasswordForm";
 
 export default function ChangePassword() {
   
