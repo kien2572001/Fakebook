@@ -30,8 +30,7 @@ class GoogleController extends Controller
             $user->social_id = $userData['id'];
             $user->social_type = 'google';
             $user->save();
-        }
-        else {
+        } else {
             $user->social_id = $userData['id'];
             $user->social_type = 'google';
             $user->save();

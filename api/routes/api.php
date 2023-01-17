@@ -42,5 +42,3 @@ Route::prefix('users')->group(function () {
 Route::resource('users', UserController::class)->only([
     'show',
 ]);
-
-

@@ -104,7 +104,7 @@ export default function DefaultSetting() {
             <div className="bg-blue-500 w-[45px] h-[45px] rounded-[45px] flex items-center justify-center mr-4 bg-gradient-to-r from-[#e44d26] to-[#f16529]">
               <Lock size={22} color="white" />
             </div>
-            <div className="font-semibold leading-[45px]">Logout</div>
+            <div className="font-semibold leading-[45px] hover:text-[#40a9ff]">Logout</div>
           </div>
         </div>
       </div>

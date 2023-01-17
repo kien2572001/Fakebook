@@ -6,9 +6,8 @@ class WebInit extends Controller
 {
     public function __invoke()
     {
-
         return response()->json([
-            'data' => 'Hello World'
+            'data' => 'Hello World',
         ]);
     }
 }
