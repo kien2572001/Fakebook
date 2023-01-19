@@ -18,10 +18,14 @@ import Picker from "@emoji-mart/react";
 import { Input } from "antd";
 const { TextArea } = Input;
 import UploadImagePost from "./UploadImagePost";
-export default function CreatePostCard() {
+import axios from "~/api/axios";
+
+export default function CreatePostCard({ userData }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [postMessage, setPostMessage] = useState("");
   const [showIconPicker, setShowIconPicker] = useState(false);
+  const [fileList, setFileList] = useState([]);
+  const [postStatus, setPostStatus] = useState("Public");
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -36,7 +40,7 @@ export default function CreatePostCard() {
   };
 
   const handlePostStatus = (value) => {
-    console.log(value);
+    setPostStatus(value);
   };
 
   const textRef = useRef();
@@ -45,6 +49,31 @@ export default function CreatePostCard() {
     const target = e.target;
     textRef.current.style.height = "150px";
     textRef.current.style.height = `${target.scrollHeight}px`;
+  };
+
+  const handleSubmitPost = async () => {
+    let data = new FormData();
+    data.append("content", postMessage);
+    data.append("status", "Public");
+    let i = 0;
+    fileList.forEach((item) => {
+      data.append("media_" + i, item.originFileObj);
+      i++;
+    });
+    data.append("media_length", fileList.length);
+    const res = await axios.post("/posts/create", data);
+    if (res.status === 200) {
+      clearModal();
+      alert("Post successfully!");
+    } else {
+      alert("Something went wrong!");
+    }
+  };
+
+  const clearModal = () => {
+    setPostMessage("");
+    handleCancel();
+    setFileList([]);
   };
 
   return (
@@ -58,7 +87,12 @@ export default function CreatePostCard() {
         className="create-post-modal"
         footer={
           <div className="flex justify-between items-center ">
-            <Button onClick={handleCancel} className="w-full h-[36px] bg-[#1B74E4] text-white font-semibold rounded-[6px]">Post</Button>
+            <Button
+              onClick={handleSubmitPost}
+              className="w-full h-[36px] bg-[#1B74E4] text-white font-semibold rounded-[6px]"
+            >
+              Post
+            </Button>
           </div>
         }
       >
@@ -67,7 +101,11 @@ export default function CreatePostCard() {
           <div className="flex items-center p-4">
             <div>
               <img
-                src="http://sociala.uitheme.net/assets/images/profile-4.png"
+                src={
+                  userData?.avatar
+                    ? userData.avatar
+                    : "http://sociala.uitheme.net/assets/images/profile-4.png"
+                }
                 alt="avatar"
                 className="w-[40px] h-[40px] rounded-[30px] mr-4"
               />
@@ -107,7 +145,7 @@ export default function CreatePostCard() {
             placeholder="What's on your mind ?"
           ></textarea>
           <div className="px-4">
-            <UploadImagePost />
+            <UploadImagePost fileList={fileList} setFileList={setFileList} />
           </div>
           {/* End text input block */}
           {/* Image, Video, Camera block */}
@@ -198,7 +236,11 @@ export default function CreatePostCard() {
         <div className="relative mt-4 ">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="http://sociala.uitheme.net/assets/images/profile-4.png"
+            src={
+              userData?.avatar
+                ? userData.avatar
+                : "http://sociala.uitheme.net/assets/images/profile-4.png"
+            }
             alt="avatar"
             className="w-[30px] h-[30px] rounded-[30px] ml-1 mt-1 absolute"
             onClick={showModal}

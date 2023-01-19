@@ -14,21 +14,26 @@ NextApp.getInitialProps = async (ctx) => {
     // console.log("response", response.data);
     const { data } = { data: null };
     const appData = App.getInitialProps(ctx);
-
+    // get cookie in ssr
+    const userData = ctx?.ctx?.req?.cookies?.user;
     return {
       ...appData,
       data,
+      userData,
     };
   }
 
   return {};
 };
 
-function NextApp({ Component, pageProps, data }) {
-  const [authUser] = useState(data);
 
+function NextApp({ Component, pageProps, data, userData }) {
   return (
-    <AuthContext.Provider value={authUser}>
+    <AuthContext.Provider
+      value={{
+        user: userData,
+      }}
+    >
       <Component {...pageProps} />
     </AuthContext.Provider>
   );

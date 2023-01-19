@@ -31,7 +31,7 @@ export default function ChangePasswordForm() {
           <Link href="/defaultsettings">
             <ArrowLeft size={24} className="text-white" />
           </Link>
-          <span className="text-sm text-white ml-[20px] font-semibold">
+          <span className="text-[18px] text-white ml-[20px] font-semibold items-baseline leading-tight">
             Change Password
           </span>
         </div>

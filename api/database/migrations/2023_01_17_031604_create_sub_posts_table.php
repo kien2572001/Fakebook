@@ -14,7 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sub_posts', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->uuid('post_id');
+            $table->foreign('post_id')->references('id')->on('posts');
+            $table->string('content')->nullable();
             $table->timestamps();
         });
     }

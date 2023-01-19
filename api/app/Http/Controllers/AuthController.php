@@ -39,10 +39,6 @@ class AuthController extends Controller
             [
                 'status' => 'success',
                 'user' => $user,
-                'authorisation' => [
-                    'token' => $token,
-                    'type' => 'bearer',
-                ],
             ],
             200
         )->withCookie($tokenCookies)->withCookie($userCookies);

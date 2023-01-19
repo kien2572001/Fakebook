@@ -9,7 +9,6 @@ import MainLayout from "~/components/layouts/MainLayout";
 import ListPost from "~/components/layouts/ListPost";
 
 export default function Index() {
-  const user = useContext(AuthContext);
 
   return (
     <MainLayout>
