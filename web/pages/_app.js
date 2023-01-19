@@ -1,5 +1,5 @@
 import App from "next/app";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ky from "~/api/ky";
 
@@ -7,6 +7,10 @@ import AuthContext from "~/contexts/AuthContext";
 
 import "antd/dist/antd.css";
 import "~/styles/globals.css";
+
+import { Provider } from "react-redux";
+import { wrapper } from "~/store/store";
+
 NextApp.getInitialProps = async (ctx) => {
   // Is SSR
   if (ctx?.ctx?.req) {
@@ -26,16 +30,20 @@ NextApp.getInitialProps = async (ctx) => {
   return {};
 };
 
+function NextApp({ Component, data, userData, ...rest }) {
+  const { store, props } = wrapper.useWrappedStore(rest);
+  const { pageProps } = props;
 
-function NextApp({ Component, pageProps, data, userData }) {
   return (
-    <AuthContext.Provider
-      value={{
-        user: userData,
-      }}
-    >
-      <Component {...pageProps} />
-    </AuthContext.Provider>
+    <Provider store={store}>
+      <AuthContext.Provider
+        value={{
+          user: userData,
+        }}
+      >
+        <Component {...pageProps} />
+      </AuthContext.Provider>
+    </Provider>
   );
 }
 

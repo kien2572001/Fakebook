@@ -4,18 +4,11 @@ import PostCard from "./PostCard";
 import CreatePostCard from "./CreatePostCard";
 import axios from "~/api/axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectUser } from "~/store/userSlice";
 
 export default function ListPost() {
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-    const getUserData = async () => {
-      const res = await axios.get("/users/my-information");
-      console.log(res);
-      setUserData(res.data.data);
-    };
-    getUserData();
-  }, []);
+  const userData = useSelector(selectUser);
 
   return (
     <div className="px-[15px] mt-3 laptop:px-0 laptop:mx-auto laptop:max-w-[800px]">

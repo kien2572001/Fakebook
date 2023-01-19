@@ -14,11 +14,11 @@ import Link from "next/link";
 import { useEffect, useState, useContext } from "react";
 import axios from "~/api/axios";
 import AuthContext from "~/contexts/AuthContext";
+import { useSelector } from "react-redux";
+import { selectUser } from "~/store/userSlice";
 
 export default function Navbar() {
-  const {
-    user
-  } = useContext(AuthContext);
+  const user = useSelector(selectUser);
   return (
     <div className="navbar-container flex w-full h-[96px] justify-between	 justify-items-center">
       <div className="navbar-container flex h-full justify-items-center">
