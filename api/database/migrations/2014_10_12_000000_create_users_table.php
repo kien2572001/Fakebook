@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('about')->nullable();
             $table->string('social_id')->nullable();
             $table->string('social_type')->nullable();
+            $table->string('gender')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
