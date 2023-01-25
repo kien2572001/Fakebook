@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    //
+    public function showall(){
+        $users = User::all();
+        return response()->json($users, 200);
+    }
+    
     public function show($id)
     {
         $user = User::find($id);
@@ -57,7 +63,7 @@ class UserController extends Controller
             $user->city = $request->city;
             $user->country = $request->country;
             $user->about = $request->about;
-
+            $user->gender = $request->gender;
             //save image object to AWS
             if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
