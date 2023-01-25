@@ -24,6 +24,7 @@ export default function CreatePostCard({ userData }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [postMessage, setPostMessage] = useState("");
   const [showIconPicker, setShowIconPicker] = useState(false);
+  const [showImagePicker, setShowImagePicker] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [postStatus, setPostStatus] = useState("Public");
   const showModal = () => {
@@ -111,7 +112,11 @@ export default function CreatePostCard({ userData }) {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-gray-500 font-semibold">John Doe</span>
+              <span className="text-gray-500 font-semibold">
+                {
+                  userData?.firstName + " " + userData?.lastName
+                }
+              </span>
               <span className="text-gray-500 font-semibold opacity-40">
                 <Select
                   defaultValue="Public"
@@ -144,7 +149,7 @@ export default function CreatePostCard({ userData }) {
             }}
             placeholder="What's on your mind ?"
           ></textarea>
-          <div className="px-4">
+          <div className={`${showImagePicker ? "block" : "hidden"} px-4`}>
             <UploadImagePost fileList={fileList} setFileList={setFileList} />
           </div>
           {/* End text input block */}
@@ -179,7 +184,10 @@ export default function CreatePostCard({ userData }) {
             </div>
             <div className="flex justify-between grow">
               <Tooltip title="Photo/video">
-                <div className="flex justify-center items-center w-[40px] h-[40px] rounded-[40px] hover:bg-gray-100">
+                <div
+                  className="flex justify-center items-center w-[40px] h-[40px] rounded-[40px] hover:bg-gray-100"
+                  onClick={() => setShowImagePicker(!showImagePicker)}
+                >
                   <Image
                     size={30}
                     className=" cursor-pointer"

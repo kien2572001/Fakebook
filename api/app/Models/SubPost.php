@@ -9,7 +9,7 @@ use App\Traits\UuidTrait;
 
 class SubPost extends Model
 {
-    use HasFactory, SoftDeletes, UuidTrait;
+    use HasFactory, UuidTrait;
 
 
     protected $table = 'sub_posts';

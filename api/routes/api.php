@@ -45,6 +45,11 @@ Route::resource('users', UserController::class)->only([
 ]);
 
 Route::prefix('posts')->group(function () {
-    Route::get('/list', [PostController::class, 'getListPost']);
+    Route::get('/list', [PostController::class, 'getListPostInProfile']);
     Route::post('/create', [PostController::class, 'createPost']);
+});
+
+Route::prefix('reactions')->group(function () {
+    Route::post('/create', [ReactionController::class, 'createReaction']);
+    Route::post('/delete', [ReactionController::class, 'deleteReaction']);
 });

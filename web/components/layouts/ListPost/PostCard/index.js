@@ -6,7 +6,11 @@ import {
   Heart,
   MessageCircle,
   Share2,
+  MessageSquare,
+  Share,
 } from "react-feather";
+import { Popover, Button } from "antd";
+import Reactions from "./Reactions";
 export default function PostCard() {
   return (
     <div className={styles.card}>
@@ -40,14 +44,14 @@ export default function PostCard() {
         consequuntur voluptatum quos natus quas. Quisquam, quae. Quisquam
       </div>
       {/* Image */}
-      <div className="mb-6 w-full">
+      <div className="mb-3 w-full">
         <img
           src="http://sociala.uitheme.net/assets/images/t-10.jpg"
           alt="avatar"
           className="w-full  rounded-[15px]"
         />
       </div>
-      {/* Like, Comment, Share */}
+      {/* Like, Comment, Share count*/}
       <div className="flex justify-between items-center text-xs">
         <div className="flex">
           {/* Like */}
@@ -72,6 +76,32 @@ export default function PostCard() {
         <div className=" flex justify-end items-center mr-2 font-semibold">
           <Share2 size={25} color="black" className="" />
           <span className=" ml-2">Share</span>
+        </div>
+      </div>
+      {/* Button like share comment */}
+      <div className="flex justify-around items-center text-xs mt-3 h-[40px] border-t border-solid border-[#adb5bd] py-1">
+        {/* Like btn */}
+        <Popover content={<Reactions />}>
+          <div className="flex justify-center items-center text-[#6B7280]  grow h-full hover:bg-gray-100 rounded-[6px] cursor-pointer	">
+            <div className="flex justify-center items-center h-full ">
+              <ThumbsUp size={18} color="#6B7280" className="" />
+              <span className=" ml-2 text-[15px] font-semibold">Like</span>
+            </div>
+          </div>
+        </Popover>
+        {/* Comment btn */}
+        <div className="flex justify-center items-center text-[#6B7280]  grow h-full hover:bg-gray-100 rounded-[6px] cursor-pointer	">
+          <div className="flex justify-center items-center h-full ">
+            <MessageSquare size={18} color="#6B7280" className="" />
+            <span className=" ml-2 text-[15px] font-semibold">Comment</span>
+          </div>
+        </div>
+        {/* Share btn */}
+        <div className="flex justify-center items-center text-[#6B7280]  grow h-full hover:bg-gray-100 rounded-[6px] cursor-pointer	">
+          <div className="flex justify-center items-center h-full ">
+            <Share size={18} color="#6B7280" className="" />
+            <span className=" ml-2 text-[15px] font-semibold">Share</span>
+          </div>
         </div>
       </div>
     </div>

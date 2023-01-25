@@ -52,7 +52,7 @@ export default function Index({ userData }) {
 
   return (
     <MainLayout>
-      <ListPost />
+      <ListPost userData={userData} />
     </MainLayout>
   );
 }
