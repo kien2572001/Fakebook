@@ -33,7 +33,7 @@ export default function DefaultSetting() {
           {/* General box */}
           {/* Account infomation */}
           <Link
-            href="/accountinformation"
+            href="/settings/accountinformation"
             className="w-full flex py-2 justify-start border-solid border-b border-[#E1E1F0] cursor-pointer"
           >
             <div className="bg-blue-500 w-[45px] h-[45px] rounded-[45px] flex items-center justify-center mr-4 bg-gradient-to-r from-[#05f] to-[#09f]">
@@ -69,12 +69,15 @@ export default function DefaultSetting() {
             <div className="font-semibold leading-[45px]">My Cards</div>
           </div>
           {/* Password */}
-          <div className="w-full flex py-2 justify-start mb-6 cursor-pointer">
-            <div className="bg-blue-500 w-[45px] h-[45px] rounded-[45px] flex items-center justify-center mr-4 bg-gradient-to-r from-[#0575e6] to-[#021b79]">
-              <Inbox size={22} color="white" />
-            </div>
-            <div className="font-semibold leading-[45px]">Password</div>
-          </div>
+          <Link
+            href="/settings/password"
+            className="w-full flex py-2 justify-start border-solid border-b border-[#E1E1F0] cursor-pointer"
+          >
+             <div className="bg-blue-500 w-[45px] h-[45px] rounded-[45px] flex items-center justify-center mr-4 bg-gradient-to-r from-[#0575e6] to-[#021b79] mb-6">
+                <Inbox size={22} color="white" />
+              </div>
+              <div className="font-semibold leading-[45px]">Password</div>
+          </Link>
           {/* Other */}
           <div className="w-full text-sm text-gray-text self-start font-semibold mb-2">
             Other
@@ -101,7 +104,7 @@ export default function DefaultSetting() {
             <div className="bg-blue-500 w-[45px] h-[45px] rounded-[45px] flex items-center justify-center mr-4 bg-gradient-to-r from-[#e44d26] to-[#f16529]">
               <Lock size={22} color="white" />
             </div>
-            <div className="font-semibold leading-[45px]">Logout</div>
+            <div className="font-semibold leading-[45px] hover:text-[#40a9ff]">Logout</div>
           </div>
         </div>
       </div>

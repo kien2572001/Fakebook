@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
                 'social_id' => null,
                 'social_type' => null,
-                'about' => 'I am Kien Nguyen'
+                'about' => 'I am Kien Nguyen',
             ],
             [
                 'id' => Str::uuid(),
@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
                 'social_id' => null,
                 'social_type' => null,
-                'about' => 'I am Duy Nguyen'
+                'about' => 'I am Duy Nguyen',
             ],
             [
                 'id' => Str::uuid(),
@@ -68,7 +68,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
                 'social_id' => null,
                 'social_type' => null,
-                'about' => 'I am Viet Anh Nguyen'
+                'about' => 'I am Viet Anh Nguyen',
             ],
             [
                 'id' => Str::uuid(),
@@ -88,7 +88,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
                 'social_id' => null,
                 'social_type' => null,
-                'about' => 'I am Manh Nguyen'
+                'about' => 'I am Manh Nguyen',
             ],
         ]);
     }

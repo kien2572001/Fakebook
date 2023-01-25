@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -34,14 +34,11 @@ class AuthController extends Controller
         $user = Auth::user();
         $tokenCookies = Cookie::make('token', $token, 60)->withHttpOnly(true);
         $userCookies = Cookie::make('user', $user, 60)->withHttpOnly(true);
+
         return response()->json(
             [
                 'status' => 'success',
                 'user' => $user,
-                'authorisation' => [
-                    'token' => $token,
-                    'type' => 'bearer',
-                ],
             ],
             200
         )->withCookie($tokenCookies)->withCookie($userCookies);
@@ -88,6 +85,40 @@ class AuthController extends Controller
                 'message' => $th->getMessage(),
             ], 401);
         }
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'old_password' => 'required|string',
+            'new_password' => 'required|string|min:6',
+            'confirm_password' => 'required|string|min:6|same:new_password',
+        ]);
+        $isAuth = Auth::check();
+        if (!$isAuth) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized',
+            ], 401);
+        }
+
+        $user = Auth::user();
+        $oldPassword = $request->old_password;
+        $newPassword = $request->new_password;
+        if (Hash::check($oldPassword, $user->password)) {
+            $user->password = Hash::make($newPassword);
+            $user->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Password changed successfully',
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Old password is incorrect',
+        ], 401);
     }
 
     public function logout()

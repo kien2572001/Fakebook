@@ -1,5 +1,5 @@
 import App from "next/app";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ky from "~/api/ky";
 
@@ -7,6 +7,10 @@ import AuthContext from "~/contexts/AuthContext";
 
 import "antd/dist/antd.css";
 import "~/styles/globals.css";
+
+import { Provider } from "react-redux";
+import { wrapper } from "~/store/store";
+
 NextApp.getInitialProps = async (ctx) => {
   // Is SSR
   if (ctx?.ctx?.req) {
@@ -14,23 +18,32 @@ NextApp.getInitialProps = async (ctx) => {
     // console.log("response", response.data);
     const { data } = { data: null };
     const appData = App.getInitialProps(ctx);
-
+    // get cookie in ssr
+    const userData = ctx?.ctx?.req?.cookies?.user;
     return {
       ...appData,
       data,
+      userData,
     };
   }
 
   return {};
 };
 
-function NextApp({ Component, pageProps, data }) {
-  const [authUser] = useState(data);
+function NextApp({ Component, data, userData, ...rest }) {
+  const { store, props } = wrapper.useWrappedStore(rest);
+  const { pageProps } = props;
 
   return (
-    <AuthContext.Provider value={authUser}>
-      <Component {...pageProps} />
-    </AuthContext.Provider>
+    <Provider store={store}>
+      <AuthContext.Provider
+        value={{
+          user: userData,
+        }}
+      >
+        <Component {...pageProps} />
+      </AuthContext.Provider>
+    </Provider>
   );
 }
 

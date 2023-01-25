@@ -11,21 +11,14 @@ import {
   Moon,
 } from "react-feather";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "~/api/axios";
+import AuthContext from "~/contexts/AuthContext";
+import { useSelector } from "react-redux";
+import { selectUser } from "~/store/userSlice";
 
 export default function Navbar() {
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-    const getUserData = async () => {
-      const res = await axios.get("/users/my-information");
-      console.log(res);
-      setUserData(res.data.data);
-    };
-    getUserData();
-  }, []);
-
+  const user = useSelector(selectUser);
   return (
     <div className="navbar-container flex w-full h-[96px] justify-between	 justify-items-center">
       <div className="navbar-container flex h-full justify-items-center">
@@ -108,7 +101,7 @@ export default function Navbar() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={
-                userData?.avatar ||
+                user?.avatar ||
                 "https://fakebook-kien2572001.s3.ap-southeast-1.amazonaws.com/images/default/default-avatar.jpg"
               }
               alt="avatar"

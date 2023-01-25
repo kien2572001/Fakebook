@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\WebInit;
 use Illuminate\Support\Facades\Route;
 /*
@@ -27,6 +28,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('change-password', [AuthController::class, 'changePassword']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/google/callback', [GoogleController::class, 'handleGoogleCallback']);
@@ -43,4 +45,12 @@ Route::resource('users', UserController::class)->only([
     'show',
 ]);
 
+Route::prefix('posts')->group(function () {
+    Route::get('/list', [PostController::class, 'getListPostInProfile']);
+    Route::post('/create', [PostController::class, 'createPost']);
+});
 
+Route::prefix('reactions')->group(function () {
+    Route::post('/create', [ReactionController::class, 'createReaction']);
+    Route::post('/delete', [ReactionController::class, 'deleteReaction']);
+});
