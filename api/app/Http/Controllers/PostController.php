@@ -19,7 +19,7 @@ class PostController extends Controller
 
         $user_id = $request->user_id;
 
-        $posts = Post::with('image','subPosts.image','reactions','comments','comments.reactions','comments.user','user')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+        $posts = Post::with('image','subPosts.image','reactions.user','comments','comments.reactions','comments.user','user')->orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => 'success',
             'data' => $posts,

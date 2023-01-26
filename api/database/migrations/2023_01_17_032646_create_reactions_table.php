@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('reactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->morphs('reactionable');
+            $table->uuid('reactionable_id');
+            $table->string('reactionable_type');
             $table->uuid('user_id');
-            $table->string('reaction')->comment('like, dislike, love, haha, wow, sad, angry');
+            $table->string('reaction')->comment('like, love, haha, wow, sad, angry');
             $table->timestamps();
         });
     }

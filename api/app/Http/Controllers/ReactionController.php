@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Reaction;
+use Illuminate\Support\Facades\Auth;
 
 class ReactionController extends Controller
 {
@@ -13,19 +15,20 @@ class ReactionController extends Controller
             $validate = $request->validate([
                 'reactionable_id' => 'required|string',
                 'reactionable_type' => 'required|string',
-                'type' => 'required|string',
+                'reaction' => 'required|string',
             ]);
     
             $reactionable_id = $request->reactionable_id;
             $reactionable_type = $request->reactionable_type;
-            $type = $request->type;
+            $type = $request->reaction;
     
             $reaction = new Reaction();
             $reaction->reactionable_id = $reactionable_id;
             $reaction->reactionable_type = $reactionable_type;
-            $reaction->type = $type;
+            $reaction->reaction = $type;
             $reaction->user_id = Auth::user()->id;
             $reaction->save();
+            $reaction->load('user');
     
             return response()->json([
                 'status' => 'success',
@@ -50,12 +53,22 @@ class ReactionController extends Controller
             $reactionable_id = $request->reactionable_id;
             $userId = Auth::user()->id;
             $reaction = Reaction::where('reactionable_id', $reactionable_id)->where('user_id', $userId)->first();
+            $deletedId = $reaction->id;
             $reaction->delete();
     
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Reaction removed'
-            ], 200);
+            if ($reaction){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Reaction deleted',
+                    'data' => $deletedId,
+                ], 200);
+            }
+            else{
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Reaction not found',
+                ], 404);
+            }
         }
         else{
             return response()->json([

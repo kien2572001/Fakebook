@@ -6,15 +6,8 @@ import Wow from "~/public/reactions/facebook-wow.svg";
 import Sad from "~/public/reactions/facebook-sad.svg";
 import Angry from "~/public/reactions/facebook-angry.svg";
 import Image from "next/image";
-export default function Reactions(){
-    return (
-        <div className="flex justify-between items-center w-[200px] laptop:w-[250px]">
-            <Image src = {Like} width = {25} height = {25} />
-            <Image src = {Love} width = {25} height = {25} />
-            <Image src = {Haha} width = {25} height = {25} />
-            <Image src = {Wow} width = {25} height = {25} />
-            <Image src = {Sad} width = {25} height = {25} />
-            <Image src = {Angry} width = {25} height = {25} />
-        </div>
-    )
+export default function Reactions( handleReactions) {
+  return (
+    <></>
+  );
 }
