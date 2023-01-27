@@ -7,6 +7,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\WebInit;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReactionController;
+use App\Http\Resources\User;
+use App\Models\User as ModelsUser;
 /*
 |--------------------------------------------------------------------------
 | API Routes
