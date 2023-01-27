@@ -41,6 +41,13 @@ Route::prefix('users')->group(function () {
     Route::get('/my-information', [UserController::class, 'getMyInformation']);
     Route::post('/modify-account-information', [UserController::class, 'modifyAccountInfomation']);
     Route::get('/test', [UserController::class, 'showall']);
+    Route::get('/', function () {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Get all users',
+            'data' => ModelsUser::all()
+        ], 200);
+    });
 });
 
 
