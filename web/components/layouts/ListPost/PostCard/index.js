@@ -1,31 +1,31 @@
-import react from "react";
-import styles from "~/styles/Main.module.css";
-import {
-  MoreHorizontal,
-  ThumbsUp,
-  Heart,
-  MessageCircle,
-  Share2,
-  MessageSquare,
-  Share,
-} from "react-feather";
-import { Popover, Button, Tooltip } from "antd";
-import { useState, useEffect } from "react";
-import LikeButton from "./Like";
-import Like from "~/public/reactions/facebook-like.svg";
-import Love from "~/public/reactions/facebook-love.svg";
-import Haha from "~/public/reactions/facebook-haha.svg";
-import Wow from "~/public/reactions/facebook-wow.svg";
-import Sad from "~/public/reactions/facebook-sad.svg";
-import Angry from "~/public/reactions/facebook-angry.svg";
+import { Popover, Tooltip } from "antd";
+import moment from "moment";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import {
+  MessageCircle,
+  MessageSquare,
+  MoreHorizontal,
+  Share,
+  Share2,
+  ThumbsUp,
+} from "react-feather";
 import { useSelector } from "react-redux";
 import axios from "~/api/axios";
-import moment from "moment";
+import Angry from "~/public/reactions/facebook-angry.svg";
+import Haha from "~/public/reactions/facebook-haha.svg";
+import Like from "~/public/reactions/facebook-like.svg";
+import Love from "~/public/reactions/facebook-love.svg";
+import Sad from "~/public/reactions/facebook-sad.svg";
+import Wow from "~/public/reactions/facebook-wow.svg";
+import styles from "~/styles/Main.module.css";
+import LikeButton from "./Like";
 export default function PostCard({ item, key }) {
   const [reactions, setReactions] = useState(null);
   const user = useSelector((state) => state.user.user);
-  const [reactionArrBeforeFilter, setReactionArrBeforeFilter] = useState(item.reactions);
+  const [reactionArrBeforeFilter, setReactionArrBeforeFilter] = useState(
+    item?.reactions
+  );
   const [reactionUserFilterByType, setReactionUserFilterByType] = useState({
     like: {
       count: 0,
@@ -82,7 +82,7 @@ export default function PostCard({ item, key }) {
     }
   };
 
-  const updateReaction =  (reaction, type = "create") => {
+  const updateReaction = (reaction, type = "create") => {
     let newReactions = reactionArrBeforeFilter;
     if (type === "create") {
       newReactions.push(reaction);
@@ -90,7 +90,7 @@ export default function PostCard({ item, key }) {
     if (type === "delete") {
       newReactions = newReactions.filter((item) => item.id !== reaction);
     }
-    
+
     let likeCount = {
       like: {
         count: 0,
@@ -223,7 +223,9 @@ export default function PostCard({ item, key }) {
   };
 
   useEffect(() => {
-    const reaction =  reactionArrBeforeFilter.find((item) => item.user_id === user.id);
+    const reaction = reactionArrBeforeFilter?.find(
+      (item) => item.user_id === user.id
+    );
     if (reaction) {
       setReactions(reaction.reaction);
     } else {
@@ -259,7 +261,7 @@ export default function PostCard({ item, key }) {
     };
     let count = 0;
     let list = [];
-    reactionArrBeforeFilter.forEach((item) => {
+    reactionArrBeforeFilter?.forEach((item) => {
       list.push({
         name: item.user.first_name + " " + item.user.last_name,
         id: item.user.id,
@@ -328,7 +330,7 @@ export default function PostCard({ item, key }) {
           {/* Avatar */}
           <div className="w-[45px] h-[45px] mb-4 mr-4">
             <img
-              src={item.user.avatar}
+              src={item?.user.avatar}
               alt="avatar"
               className="w-full h-full rounded-[45px]"
             />
@@ -336,10 +338,10 @@ export default function PostCard({ item, key }) {
           {/* Name */}
           <div className=" text-xs mt-1 mb-2">
             <span className="text-default font-bold  block">
-              {item.user.first_name + " " + item.user.last_name}
+              {item?.user.first_name + " " + item?.user.last_name}
             </span>
             <span className="text-gray-500 block">
-              {moment(item.created_at).fromNow()}
+              {moment(item?.created_at).fromNow()}
             </span>
           </div>
         </div>
@@ -351,7 +353,7 @@ export default function PostCard({ item, key }) {
       </div>
       {/* Content */}
       <div className="text-lg mb-2 text-gray-text break-all leading-[26px] font-medium ">
-        {item.content}
+        {item?.content}
       </div>
       {/* Image */}
       <div className="mb-3 w-full">

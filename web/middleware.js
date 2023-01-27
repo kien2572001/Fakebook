@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { getCookie } from "cookies-next";
 
 const privateRouter = {
   home: true,
