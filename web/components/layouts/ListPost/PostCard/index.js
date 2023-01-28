@@ -1,22 +1,24 @@
-import react from "react";
-import styles from "~/styles/Main.module.css";
+import { Popover, Tooltip } from "antd";
+import moment from "moment";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import {
-  MoreHorizontal,
-  ThumbsUp,
-  Heart,
   MessageCircle,
-  Share2,
   MessageSquare,
+  MoreHorizontal,
   Share,
+  Share2,
+  ThumbsUp,
 } from "react-feather";
-import { Popover, Button, Tooltip } from "antd";
-import { useState, useEffect } from "react";
-import LikeButton from "./Like";
+import { useSelector } from "react-redux";
+import axios from "~/api/axios";
+import Angry from "~/public/reactions/facebook-angry.svg";
+import Haha from "~/public/reactions/facebook-haha.svg";
 import Like from "~/public/reactions/facebook-like.svg";
 import Love from "~/public/reactions/facebook-love.svg";
-import Haha from "~/public/reactions/facebook-haha.svg";
-import Wow from "~/public/reactions/facebook-wow.svg";
 import Sad from "~/public/reactions/facebook-sad.svg";
+import Wow from "~/public/reactions/facebook-wow.svg";
+import styles from "~/styles/Main.module.css";
 import Angry from "~/public/reactions/facebook-angry.svg";
 import Image from "next/image";
 import { useSelector } from "react-redux";
@@ -28,7 +30,7 @@ export default function PostCard({ item, index }) {
   const [reactions, setReactions] = useState(null);
   const user = useSelector((state) => state.user.user);
   const [reactionArrBeforeFilter, setReactionArrBeforeFilter] = useState(
-    item.reactions
+    item?.reactions
   );
   const [reactionUserFilterByType, setReactionUserFilterByType] = useState({
     like: {
@@ -227,7 +229,7 @@ export default function PostCard({ item, index }) {
   };
 
   useEffect(() => {
-    const reaction = reactionArrBeforeFilter.find(
+    const reaction = reactionArrBeforeFilter?.find(
       (item) => item.user_id === user.id
     );
     if (reaction) {
@@ -265,7 +267,7 @@ export default function PostCard({ item, index }) {
     };
     let count = 0;
     let list = [];
-    reactionArrBeforeFilter.forEach((item) => {
+    reactionArrBeforeFilter?.forEach((item) => {
       list.push({
         name: item.user.first_name + " " + item.user.last_name,
         id: item.user.id,
@@ -332,7 +334,7 @@ export default function PostCard({ item, index }) {
           {/* Avatar */}
           <div className="w-[45px] h-[45px] mb-4 mr-4">
             <img
-              src={item.user.avatar}
+              src={item?.user.avatar}
               alt="avatar"
               className="w-full h-full rounded-[45px]"
             />
@@ -340,10 +342,10 @@ export default function PostCard({ item, index }) {
           {/* Name */}
           <div className=" text-xs mt-1 mb-2">
             <span className="text-default font-bold  block">
-              {item.user.first_name + " " + item.user.last_name}
+              {item?.user.first_name + " " + item?.user.last_name}
             </span>
             <span className="text-gray-500 block">
-              {moment(item.created_at).fromNow()}
+              {moment(item?.created_at).fromNow()}
             </span>
           </div>
         </div>
@@ -355,7 +357,7 @@ export default function PostCard({ item, index }) {
       </div>
       {/* Content */}
       <div className="text-lg mb-2 text-gray-text break-all leading-[26px] font-medium ">
-        {item.content}
+        {item?.content}
       </div>
       {/* Image */}
       <div className="mb-3 w-full">

@@ -8,6 +8,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\WebInit;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\ReactionController;
+use App\Http\Resources\User;
+use App\Models\User as ModelsUser;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,6 +45,13 @@ Route::prefix('users')->group(function () {
     Route::get('/my-information', [UserController::class, 'getMyInformation']);
     Route::post('/modify-account-information', [UserController::class, 'modifyAccountInfomation']);
     Route::get('/test', [UserController::class, 'showall']);
+    Route::get('/', function () {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Get all users',
+            'data' => ModelsUser::all()
+        ], 200);
+    });
 });
 
 
