@@ -2,13 +2,17 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ReactionController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\WebInit;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ReactionController;
 use App\Http\Resources\User;
 use App\Models\User as ModelsUser;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -58,9 +62,16 @@ Route::resource('users', UserController::class)->only([
 Route::prefix('posts')->group(function () {
     Route::get('/list', [PostController::class, 'getListPostInProfile']);
     Route::post('/create', [PostController::class, 'createPost']);
+    Route::get('/{id}/comments', [PostController::class, 'getCommentsOfPostById']);
 });
 
 Route::prefix('reactions')->group(function () {
     Route::post('/create', [ReactionController::class, 'createReaction']);
     Route::post('/delete', [ReactionController::class, 'deleteReaction']);
+});
+
+
+Route::prefix('comments')->group(function () {
+    Route::post('/create', [CommentController::class, 'createComment']);
+    Route::post('/delete', [CommentController::class, 'deleteComment']);
 });

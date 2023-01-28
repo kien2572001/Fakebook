@@ -19,8 +19,14 @@ import Love from "~/public/reactions/facebook-love.svg";
 import Sad from "~/public/reactions/facebook-sad.svg";
 import Wow from "~/public/reactions/facebook-wow.svg";
 import styles from "~/styles/Main.module.css";
-import LikeButton from "./Like";
-export default function PostCard({ item, key }) {
+import Angry from "~/public/reactions/facebook-angry.svg";
+import Image from "next/image";
+import { useSelector } from "react-redux";
+import axios from "~/api/axios";
+import moment from "moment";
+import CommentList from "./CommentList";
+import { v4 as uuidv4 } from 'uuid';
+export default function PostCard({ item, index }) {
   const [reactions, setReactions] = useState(null);
   const user = useSelector((state) => state.user.user);
   const [reactionArrBeforeFilter, setReactionArrBeforeFilter] = useState(
@@ -189,8 +195,8 @@ export default function PostCard({ item, key }) {
   const renderTooltipListUser = (arr) => {
     return (
       <div>
-        {arr.list.map((item, index) => {
-          return <div key={index}>{item.name}</div>;
+        {arr.list.map((item) => {
+          return <div key={uuidv4()}>{item.name}</div>;
         })}
       </div>
     );
@@ -318,8 +324,6 @@ export default function PostCard({ item, key }) {
       count: count,
       list: list,
     });
-    // console.log("reactionUserFilterByTypeCount", reactionUserFilterByTypeCount);
-    // console.log("reactionUserFilterByType", reactionUserFilterByType);
   }, []);
 
   return (
@@ -461,6 +465,9 @@ export default function PostCard({ item, key }) {
           </div>
         </div>
       </div>
+      {/* Comment box */}
+      <CommentList id={item.id} />
+      {/* End of comment box */}
     </div>
   );
 }
