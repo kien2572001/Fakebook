@@ -22,10 +22,14 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import axios from "~/api/axios";
 import moment from "moment";
-export default function PostCard({ item, key }) {
+import CommentList from "./CommentList";
+import { v4 as uuidv4 } from 'uuid';
+export default function PostCard({ item, index }) {
   const [reactions, setReactions] = useState(null);
   const user = useSelector((state) => state.user.user);
-  const [reactionArrBeforeFilter, setReactionArrBeforeFilter] = useState(item.reactions);
+  const [reactionArrBeforeFilter, setReactionArrBeforeFilter] = useState(
+    item.reactions
+  );
   const [reactionUserFilterByType, setReactionUserFilterByType] = useState({
     like: {
       count: 0,
@@ -82,7 +86,7 @@ export default function PostCard({ item, key }) {
     }
   };
 
-  const updateReaction =  (reaction, type = "create") => {
+  const updateReaction = (reaction, type = "create") => {
     let newReactions = reactionArrBeforeFilter;
     if (type === "create") {
       newReactions.push(reaction);
@@ -90,7 +94,7 @@ export default function PostCard({ item, key }) {
     if (type === "delete") {
       newReactions = newReactions.filter((item) => item.id !== reaction);
     }
-    
+
     let likeCount = {
       like: {
         count: 0,
@@ -189,8 +193,8 @@ export default function PostCard({ item, key }) {
   const renderTooltipListUser = (arr) => {
     return (
       <div>
-        {arr.list.map((item, index) => {
-          return <div key={index}>{item.name}</div>;
+        {arr.list.map((item) => {
+          return <div key={uuidv4()}>{item.name}</div>;
         })}
       </div>
     );
@@ -223,7 +227,9 @@ export default function PostCard({ item, key }) {
   };
 
   useEffect(() => {
-    const reaction =  reactionArrBeforeFilter.find((item) => item.user_id === user.id);
+    const reaction = reactionArrBeforeFilter.find(
+      (item) => item.user_id === user.id
+    );
     if (reaction) {
       setReactions(reaction.reaction);
     } else {
@@ -316,8 +322,6 @@ export default function PostCard({ item, key }) {
       count: count,
       list: list,
     });
-    // console.log("reactionUserFilterByTypeCount", reactionUserFilterByTypeCount);
-    // console.log("reactionUserFilterByType", reactionUserFilterByType);
   }, []);
 
   return (
@@ -459,6 +463,9 @@ export default function PostCard({ item, key }) {
           </div>
         </div>
       </div>
+      {/* Comment box */}
+      <CommentList id={item.id} />
+      {/* End of comment box */}
     </div>
   );
 }

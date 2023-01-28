@@ -10,12 +10,13 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    //
-    public function showall(){
+    public function showall()
+    {
         $users = User::all();
+
         return response()->json($users, 200);
     }
-    
+
     public function show($id)
     {
         $user = User::find($id);

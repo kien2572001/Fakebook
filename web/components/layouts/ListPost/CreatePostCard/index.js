@@ -143,7 +143,6 @@ export default function CreatePostCard({ userData }) {
             } w-full outline-none  text-2xl block z-50 break-all mb-2 relative px-4 min-h-[150px] resize-none	overflow-hidden`}
             value={postMessage}
             onChange={(e) => {
-              console.log(e.target.value);
               setPostMessage(e.target.value);
               onChangeSize(e);
             }}
