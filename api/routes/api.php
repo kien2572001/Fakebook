@@ -8,8 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\WebInit;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\ReactionController;
+use Illuminate\Http\Request;
 use App\Http\Resources\User;
 use App\Models\User as ModelsUser;
 

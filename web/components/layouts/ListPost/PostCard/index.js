@@ -11,7 +11,6 @@ import {
   ThumbsUp,
 } from "react-feather";
 import { useSelector } from "react-redux";
-import axios from "~/api/axios";
 import Angry from "~/public/reactions/facebook-angry.svg";
 import Haha from "~/public/reactions/facebook-haha.svg";
 import Like from "~/public/reactions/facebook-like.svg";
@@ -19,13 +18,10 @@ import Love from "~/public/reactions/facebook-love.svg";
 import Sad from "~/public/reactions/facebook-sad.svg";
 import Wow from "~/public/reactions/facebook-wow.svg";
 import styles from "~/styles/Main.module.css";
-import Angry from "~/public/reactions/facebook-angry.svg";
-import Image from "next/image";
-import { useSelector } from "react-redux";
 import axios from "~/api/axios";
-import moment from "moment";
 import CommentList from "./CommentList";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import LikeButton from "./Like";
 export default function PostCard({ item, index }) {
   const [reactions, setReactions] = useState(null);
   const user = useSelector((state) => state.user.user);
