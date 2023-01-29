@@ -5,6 +5,11 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    maxWidth: {
+      '1/4': '25%',
+      '1/2': '50%',
+      '200': '200px',
+    },
     extend: {
       fontFamily: {
         'mplus1': ['"M PLUS 1"', "sans-serif"],

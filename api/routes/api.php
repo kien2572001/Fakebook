@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\WebInit;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\chatController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,13 +39,13 @@ Route::prefix('users')->group(function () {
     Route::get('/my-information', [UserController::class, 'getMyInformation']);
     Route::post('/modify-account-information', [UserController::class, 'modifyAccountInfomation']);
     Route::get('/test', [UserController::class, 'showall']);
+    Route::get('/{id}', [UserController::class, 'show']);
 });
 
 
 Route::resource('users', UserController::class)->only([
     'show',
 ]);
-
 Route::prefix('posts')->group(function () {
     Route::get('/list', [PostController::class, 'getListPostInProfile']);
     Route::post('/create', [PostController::class, 'createPost']);
@@ -53,4 +54,9 @@ Route::prefix('posts')->group(function () {
 Route::prefix('reactions')->group(function () {
     Route::post('/create', [ReactionController::class, 'createReaction']);
     Route::post('/delete', [ReactionController::class, 'deleteReaction']);
+});
+Route::prefix('chat')->group(function () {
+    Route::get('/fetchMessages', [chatController::class, 'fetchMessages']);
+    Route::post('/sendMessage', [chatController::class, 'sendMessage']);
+    Route::get('/test', [chatController::class, 'Test']);
 });
