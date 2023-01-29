@@ -40,7 +40,7 @@ class CommentController extends Controller
 
         return response()->json([
             'message' => 'Comment created successfully',
-            'comment' => $comment->load('user')->load('reactions.user'),
+            'comment' => $comment->load('user','reactions.user','image'),
         ], 201);
     }
 }

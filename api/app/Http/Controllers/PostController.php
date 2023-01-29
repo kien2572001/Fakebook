@@ -83,7 +83,7 @@ class PostController extends Controller
             //code...
             $post = Post::find($id);
             $comments = $post->comments;
-            $comments->load('user')->load('reactions.user');
+            $comments->load('user', 'reactions.user', 'image');
             return response()->json([
                 'status' => 'success',
                 'data' => $comments,

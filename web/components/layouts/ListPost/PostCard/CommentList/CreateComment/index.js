@@ -69,6 +69,7 @@ export default function CreateComment({ postId, addComment }) {
     setContent("");
     setImage(null);
     setOpenSelectImage(false);
+    setShowEmojiPicker(false);
   };
 
   return (

@@ -9,6 +9,7 @@ export default function CommentList({ id }) {
   useEffect(() => {
     const fetchComments = async () => {
       const res = await axios.get(`/posts/${id}/comments`);
+      console.log('comments: ', res.data.data);
       setComments(res.data.data.sort((a, b) => {
         return new Date(b.created_at) - new Date(a.created_at);
       }));
