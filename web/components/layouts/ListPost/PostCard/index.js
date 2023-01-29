@@ -22,45 +22,11 @@ import axios from "~/api/axios";
 import CommentList from "./CommentList";
 import { v4 as uuidv4 } from "uuid";
 import LikeButton from "./Like";
+import ReactionsRender from "~/components/common/ReactionsRender";
 export default function PostCard({ item, index }) {
   const [reactions, setReactions] = useState(null);
   const user = useSelector((state) => state.user.user);
-  const [reactionArrBeforeFilter, setReactionArrBeforeFilter] = useState(
-    item?.reactions
-  );
-  const [reactionUserFilterByType, setReactionUserFilterByType] = useState({
-    like: {
-      count: 0,
-      list: [],
-    },
-    love: {
-      count: 0,
-      list: [],
-    },
-    haha: {
-      count: 0,
-      list: [],
-    },
-
-    wow: {
-      count: 0,
-      list: [],
-    },
-    sad: {
-      count: 0,
-      list: [],
-    },
-    angry: {
-      count: 0,
-      list: [],
-    },
-  });
-  const [reactionUserFilterByTypeCount, setReactionUserFilterByTypeCount] =
-    useState({
-      count: 0,
-      list: [],
-    });
-  const [comments, setComments] = useState([]);
+  const [reactionArr, setReactionArr] = useState(item?.reactions);
 
   const handleReactions = async (reaction) => {
     if (reactions === null) {
@@ -84,102 +50,35 @@ export default function PostCard({ item, index }) {
     }
   };
 
-  const updateReaction = (reaction, type = "create") => {
-    let newReactions = reactionArrBeforeFilter;
+  const updateReaction = (data, type) => {
+    console.log("data", data);
     if (type === "create") {
-      newReactions.push(reaction);
+      let user = {
+        id: data.user_id,
+        name: data.user.first_name + " " + data.user.last_name,
+      };
+      let arr = reactionArr;
+      console.log("arr", arr);
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].reaction === data.reaction) {
+          arr[i].count += 1;
+          arr[i].listUser.push(user);
+        }
+      }
+      setReactionArr(arr);
     }
     if (type === "delete") {
-      newReactions = newReactions.filter((item) => item.id !== reaction);
-    }
-
-    let likeCount = {
-      like: {
-        count: 0,
-        list: [],
-      },
-      love: {
-        count: 0,
-        list: [],
-      },
-      haha: {
-        count: 0,
-        list: [],
-      },
-      wow: {
-        count: 0,
-        list: [],
-      },
-      sad: {
-        count: 0,
-        list: [],
-      },
-      angry: {
-        count: 0,
-        list: [],
-      },
-    };
-    let count = 0;
-    let list = [];
-    //console.log('newReactions', newReactions)
-    newReactions.forEach((item) => {
-      list.push({
-        name: item.user.first_name + " " + item.user.last_name,
-        id: item.user.id,
-      });
-      count++;
-      switch (item.reaction) {
-        case "like":
-          likeCount.like.count++;
-          likeCount.like.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          item.user.first_name + " " + item.user.last_name;
-          break;
-        case "love":
-          likeCount.love.count++;
-          likeCount.love.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          break;
-        case "haha":
-          likeCount.haha.count++;
-          likeCount.haha.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          break;
-        case "wow":
-          likeCount.wow.count++;
-          likeCount.wow.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          break;
-        case "sad":
-          likeCount.sad.count++;
-          likeCount.sad.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          break;
-        case "angry":
-          likeCount.angry.count++;
-          likeCount.angry.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          break;
+      let arr = reactionArr;
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].reaction === data.reaction) {
+          arr[i].count -= 1;
+          arr[i].listUser = arr[i].listUser.filter(
+            (item) => item.id !== data.user_id
+          );
+        }
       }
-    });
-    setReactionUserFilterByType(likeCount);
-    setReactionUserFilterByTypeCount({
-      count: count,
-      list: list,
-    });
-    setReactionArrBeforeFilter(newReactions);
+      setReactionArr(arr);
+    }
   };
 
   const displayReactionsContent = () => {
@@ -189,137 +88,42 @@ export default function PostCard({ item, index }) {
   };
 
   const renderTooltipListUser = (arr) => {
+    let listUser = [];
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr[i].listUser.length; j++) {
+        listUser.push(arr[i].listUser[j]);
+      }
+    }
     return (
       <div>
-        {arr.list.map((item) => {
+        {listUser?.map((item) => {
           return <div key={uuidv4()}>{item.name}</div>;
         })}
       </div>
     );
   };
 
-  const renderReaction = () => {
-    let arr = Object.keys(reactionUserFilterByType).map((key) => {
-      return {
-        key: key,
-        count: reactionUserFilterByType[key].count,
-        list: reactionUserFilterByType[key].list,
-      };
-    });
-    arr = arr.sort((a, b) => b.count - a.count);
-    return (
-      <>
-        {arr.map((item, index) => {
-          if (item.count > 0) {
-            return (
-              <Tooltip title={renderTooltipListUser(item)}>
-                <div className=" mr-2 flex justify-center first-letter:items-center ">
-                  <LikeButton reactions={item.key} />
-                </div>
-              </Tooltip>
-            );
-          }
-        })}
-      </>
-    );
-  };
-
   useEffect(() => {
-    const reaction = reactionArrBeforeFilter?.find(
-      (item) => item.user_id === user.id
-    );
-    if (reaction) {
-      setReactions(reaction.reaction);
-    } else {
-      setReactions(null);
-    }
-
-    //Count likes, comment
-    let likeCount = {
-      like: {
-        count: 0,
-        list: [],
-      },
-      love: {
-        count: 0,
-        list: [],
-      },
-      haha: {
-        count: 0,
-        list: [],
-      },
-      wow: {
-        count: 0,
-        list: [],
-      },
-      sad: {
-        count: 0,
-        list: [],
-      },
-      angry: {
-        count: 0,
-        list: [],
-      },
-    };
-    let count = 0;
-    let list = [];
-    reactionArrBeforeFilter?.forEach((item) => {
-      list.push({
-        name: item.user.first_name + " " + item.user.last_name,
-        id: item.user.id,
-      });
-      count++;
-      switch (item.reaction) {
-        case "like":
-          likeCount.like.count++;
-          likeCount.like.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          item.user.first_name + " " + item.user.last_name;
-          break;
-        case "love":
-          likeCount.love.count++;
-          likeCount.love.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          break;
-        case "haha":
-          likeCount.haha.count++;
-          likeCount.haha.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          break;
-        case "wow":
-          likeCount.wow.count++;
-          likeCount.wow.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          break;
-        case "sad":
-          likeCount.sad.count++;
-          likeCount.sad.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          break;
-        case "angry":
-          likeCount.angry.count++;
-          likeCount.angry.list.push({
-            name: item.user.first_name + " " + item.user.last_name,
-            id: item.user.id,
-          });
-          break;
+    let reaction = null
+    let check = false
+    for (let i = 0; i < reactionArr.length; i++) {
+      for (let j = 0; j < reactionArr[i].listUser.length; j++) {
+        if (reactionArr[i].listUser[j].id === user.id) {
+          reaction = reactionArr[i].reaction
+          check = true
+          break
+        }
       }
-    });
-    setReactionUserFilterByType(likeCount);
-    setReactionUserFilterByTypeCount({
-      count: count,
-      list: list,
-    });
+      if (check) {
+        break
+      }
+    }
+    if (check){
+      setReactions(reaction)
+    }
+    else {
+      setReactions(null)
+    }
   }, []);
 
   return (
@@ -368,14 +172,15 @@ export default function PostCard({ item, index }) {
         <div className="flex">
           {/* Like */}
           <div className=" flex  justify-start items-center mr-2">
-            {renderReaction()}
-            <Tooltip
-              title={renderTooltipListUser(reactionUserFilterByTypeCount)}
-            >
-              <div className="font-semibold">
-                {reactionUserFilterByTypeCount.count}
-              </div>
-            </Tooltip>
+            {/* {renderReaction()} */}
+            <ReactionsRender type="post" reactions={reactionArr} />
+            {reactionArr.length > 0 && (
+              <Tooltip title={renderTooltipListUser(reactionArr)}>
+                <div className="font-semibold">
+                  {reactionArr.reduce((a, b) => a + b.count, 0)}
+                </div>
+              </Tooltip>
+            )}
           </div>
           {/* Comment */}
           <div className=" flex justify-start items-center mr-2 ">

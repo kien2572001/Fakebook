@@ -53,14 +53,13 @@ class ReactionController extends Controller
             $reactionable_id = $request->reactionable_id;
             $userId = Auth::user()->id;
             $reaction = Reaction::where('reactionable_id', $reactionable_id)->where('user_id', $userId)->first();
-            $deletedId = $reaction->id;
             $reaction->delete();
 
             if ($reaction) {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Reaction deleted',
-                    'data' => $deletedId,
+                    'data' => $reaction,
                 ], 200);
             }
 

@@ -24,10 +24,9 @@ export default function ListPost({ userData }) {
         },
       });
       setItems(res.data.data);
-      console.log(res.data);
+      //console.log(res.data.data);
     };
     fetchPosts();
-    //console.log("user", userData);
   }, []);
 
   return (

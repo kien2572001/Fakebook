@@ -1,7 +1,14 @@
 import React from "react";
 import moment from "moment";
 import { Image } from "antd";
+import { useSelector } from "react-redux";
+import axios from "~/api/axios";
 export default function Comment({ comment }) {
+  const user = useSelector((state) => state.user.user);
+  const handleReactions = (type) => {
+    console.log(type);
+  };
+
   return (
     <div className="flex pt-1">
       {/* Avatar */}

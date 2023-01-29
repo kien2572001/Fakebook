@@ -8,6 +8,7 @@ use App\Models\SubPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -20,6 +21,20 @@ class PostController extends Controller
         $user_id = $request->user_id;
 
         $posts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->orderBy('created_at', 'desc')->get();
+        $posts = $posts->map(function ($post) {
+            $reactions = \App\Helpers\AppHelper::countReactions($post->reactions);
+            $temp = [
+                'id' => $post->id,
+                'content' => $post->content,
+                'user' => $post->user,
+                'image' => $post->image ? $post->image->path : null,
+                'sub_posts' => $post->subPosts,
+                'reactions' => $reactions,
+                'created_at' => $post->created_at,
+                'updated_at' => $post->updated_at,
+            ];
+            return $temp;
+        });
 
         return response()->json([
             'status' => 'success',
@@ -27,10 +42,11 @@ class PostController extends Controller
         ], 200);
     }
 
+   
+
     public function createPost(Request $request)
     {
         $isAuth = Auth::check();
-        //dd($request->all());
         if ($isAuth) {
             $user = Auth::user();
             $post = new Post();
