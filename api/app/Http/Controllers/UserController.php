@@ -51,6 +51,23 @@ class UserController extends Controller
         ], 404);
     }
 
+    public function getUserInformationForProfilePage(Request $request, $id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            return response()->json([
+                'status' => 'success',
+                'data' => new UserResource($user),
+            ], 200);
+        }
+        else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found',
+            ], 404);
+        }
+    }
+
     public function modifyAccountInfomation(Request $request)
     {
         $isAuth = Auth::check();

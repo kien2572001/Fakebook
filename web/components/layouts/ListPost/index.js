@@ -14,7 +14,7 @@ export default function ListPost({ userData }) {
   const fetchMoreData = () => {
     setTimeout(() => {
       setItems(items.concat(Array.from({ length: 5 })));
-    }, 1500);key
+    }, 1500);
   };
   useEffect(() => {
     const fetchPosts = async () => {

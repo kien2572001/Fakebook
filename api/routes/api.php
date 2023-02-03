@@ -43,6 +43,7 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('users')->group(function () {
     Route::get('/my-information', [UserController::class, 'getMyInformation']);
+    Route::get('/{id}/information', [UserController::class, 'getUserInformationForProfilePage']);
     Route::post('/modify-account-information', [UserController::class, 'modifyAccountInfomation']);
     Route::get('/test', [UserController::class, 'showall']);
     Route::get('/', function () {

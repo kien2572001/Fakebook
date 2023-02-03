@@ -11,22 +11,18 @@ import {
   ThumbsUp,
 } from "react-feather";
 import { useSelector } from "react-redux";
-import Angry from "~/public/reactions/facebook-angry.svg";
-import Haha from "~/public/reactions/facebook-haha.svg";
-import Like from "~/public/reactions/facebook-like.svg";
-import Love from "~/public/reactions/facebook-love.svg";
-import Sad from "~/public/reactions/facebook-sad.svg";
-import Wow from "~/public/reactions/facebook-wow.svg";
 import styles from "~/styles/Main.module.css";
 import axios from "~/api/axios";
 import CommentList from "./CommentList";
 import { v4 as uuidv4 } from "uuid";
 import LikeButton from "./Like";
 import ReactionsRender from "~/components/common/ReactionsRender";
+import ReactionBar from "~/components/common/ReactionsBar";
 export default function PostCard({ item, index }) {
   const [reactions, setReactions] = useState(null);
   const user = useSelector((state) => state.user.user);
   const [reactionArr, setReactionArr] = useState(item?.reactions);
+  const [showComment, setShowComment] = useState(false);
 
   const handleReactions = async (reaction) => {
     if (reactions === null) {
@@ -51,14 +47,14 @@ export default function PostCard({ item, index }) {
   };
 
   const updateReaction = (data, type) => {
-    console.log("data", data);
+    //console.log("data", data);
     if (type === "create") {
       let user = {
         id: data.user_id,
         name: data.user.first_name + " " + data.user.last_name,
       };
       let arr = reactionArr;
-      console.log("arr", arr);
+      //console.log("arr", arr);
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].reaction === data.reaction) {
           arr[i].count += 1;
@@ -104,25 +100,24 @@ export default function PostCard({ item, index }) {
   };
 
   useEffect(() => {
-    let reaction = null
-    let check = false
+    let reaction = null;
+    let check = false;
     for (let i = 0; i < reactionArr.length; i++) {
       for (let j = 0; j < reactionArr[i].listUser.length; j++) {
         if (reactionArr[i].listUser[j].id === user.id) {
-          reaction = reactionArr[i].reaction
-          check = true
-          break
+          reaction = reactionArr[i].reaction;
+          check = true;
+          break;
         }
       }
       if (check) {
-        break
+        break;
       }
     }
-    if (check){
-      setReactions(reaction)
-    }
-    else {
-      setReactions(null)
+    if (check) {
+      setReactions(reaction);
+    } else {
+      setReactions(null);
     }
   }, []);
 
@@ -174,7 +169,7 @@ export default function PostCard({ item, index }) {
           <div className=" flex  justify-start items-center mr-2">
             {/* {renderReaction()} */}
             <ReactionsRender type="post" reactions={reactionArr} />
-            {reactionArr.length > 0 && (
+            {reactionArr?.length > 0 && (
               <Tooltip title={renderTooltipListUser(reactionArr)}>
                 <div className="font-semibold">
                   {reactionArr.reduce((a, b) => a + b.count, 0)}
@@ -200,30 +195,7 @@ export default function PostCard({ item, index }) {
       <div className="flex justify-around items-center text-xs mt-3 h-[40px] border-t border-solid border-[#adb5bd] py-1">
         {/* Like btn */}
         {reactions === null ? (
-          <Popover
-            content={
-              <div className="flex justify-between items-center w-[200px] laptop:w-[250px]">
-                <div onClick={() => handleReactions("like")}>
-                  <Image src={Like} width={25} height={25} alt="like" />
-                </div>
-                <div onClick={() => handleReactions("love")}>
-                  <Image src={Love} width={25} height={25} alt="love" />
-                </div>
-                <div onClick={() => handleReactions("haha")}>
-                  <Image src={Haha} width={25} height={25} alt="haha" />
-                </div>
-                <div onClick={() => handleReactions("wow")}>
-                  <Image src={Wow} width={25} height={25} alt="wow" />
-                </div>
-                <div onClick={() => handleReactions("sad")}>
-                  <Image src={Sad} width={25} height={25} alt="sad" />
-                </div>
-                <div onClick={() => handleReactions("angry")}>
-                  <Image src={Angry} width={25} height={25} alt="angry" />
-                </div>
-              </div>
-            }
-          >
+          <ReactionBar handleReactions={handleReactions}>
             <div
               className="flex justify-center items-center text-[#6B7280]  grow h-full hover:bg-gray-100 rounded-[6px] cursor-pointer	"
               onClick={() => {
@@ -235,7 +207,7 @@ export default function PostCard({ item, index }) {
                 <span className=" ml-2 text-[15px] font-semibold">Like</span>
               </div>
             </div>
-          </Popover>
+          </ReactionBar>
         ) : (
           <div
             className="flex justify-center items-center text-[#6B7280]  grow h-full hover:bg-gray-100 rounded-[6px] cursor-pointer	"
@@ -252,7 +224,12 @@ export default function PostCard({ item, index }) {
           </div>
         )}
         {/* Comment btn */}
-        <div className="flex justify-center items-center text-[#6B7280]  grow h-full hover:bg-gray-100 rounded-[6px] cursor-pointer	">
+        <div
+          className="flex justify-center items-center text-[#6B7280]  grow h-full hover:bg-gray-100 rounded-[6px] cursor-pointer	"
+          onClick={() => {
+            setShowComment(!showComment);
+          }}
+        >
           <div className="flex justify-center items-center h-full ">
             <MessageSquare size={18} color="#6B7280" className="" />
             <span className=" ml-2 text-[15px] font-semibold">Comment</span>
@@ -267,7 +244,7 @@ export default function PostCard({ item, index }) {
         </div>
       </div>
       {/* Comment box */}
-      <CommentList id={item.id} />
+      {showComment && <CommentList id={item.id} />}
       {/* End of comment box */}
     </div>
   );

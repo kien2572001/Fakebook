@@ -3,11 +3,181 @@ import moment from "moment";
 import { Image } from "antd";
 import { useSelector } from "react-redux";
 import axios from "~/api/axios";
+import { useEffect, useState } from "react";
+import ReactionsRender from "~/components/common/ReactionsRender";
+import ReactionBar from "~/components/common/ReactionsBar";
 export default function Comment({ comment }) {
   const user = useSelector((state) => state.user.user);
-  const handleReactions = (type) => {
-    console.log(type);
+  const [reactions, setReactions] = useState(null);
+  const [reactionArr, setReactionArr] = useState(comment?.reactions);
+  const [showReply, setShowReply] = useState(false);
+  const handleReactions = async (reaction) => {
+    if (reactions === null) {
+      const res = await axios.post("/reactions/create", {
+        reactionable_id: comment.id,
+        reactionable_type: "App\\Models\\Comment",
+        reaction: reaction,
+      });
+      if (res.data.status === "success") {
+        //console.log("res", res);
+        setReactions(reaction);
+        updateReaction(res.data.data, "create");
+      }
+    } else {
+      const res = await axios.post("/reactions/delete", {
+        reactionable_id: comment.id,
+      });
+      if (res.data.status === "success") {
+        setReactions(null);
+        updateReaction(res.data.data, "delete");
+      }
+    }
   };
+
+  const updateReaction = (data, type) => {
+    //console.log("data", data);
+    if (type === "create") {
+      let user = {
+        id: data.user_id,
+        name: data.user.first_name + " " + data.user.last_name,
+      };
+      let arr = reactionArr;
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].reaction === data.reaction) {
+          arr[i].count += 1;
+          arr[i].listUser.push(user);
+        }
+      }
+      setReactionArr(arr);
+    }
+    if (type === "delete") {
+      let arr = reactionArr;
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].reaction === data.reaction) {
+          arr[i].count -= 1;
+          arr[i].listUser = arr[i].listUser.filter(
+            (item) => item.id !== data.user_id
+          );
+        }
+      }
+      setReactionArr(arr);
+    }
+  };
+
+  const displayReactionsContent = () => {
+    if (reactions === "like") {
+      return (
+        <span
+          className=" text-xs px-2 hover:underline select-none text-[#548BF6]"
+          onClick={() => {
+            handleReactions("like");
+          }}
+        >
+          Like
+        </span>
+      );
+    }
+    if (reactions === "love") {
+      return (
+        <span
+          className=" text-xs px-2 hover:underline select-none text-[#F63E7B]"
+          onClick={() => {
+            handleReactions("like");
+          }}
+        >
+          Love
+        </span>
+      );
+    }
+    if (reactions === "haha") {
+      return (
+        <span
+          className=" text-xs px-2 hover:underline select-none text-[#F7B500]"
+          onClick={() => {
+            handleReactions("like");
+          }}
+        >
+          Haha
+        </span>
+      );
+    }
+    if (reactions === "wow") {
+      return (
+        <span
+          className=" text-xs px-2 hover:underline select-none text-[#F7B500]"
+          onClick={() => {
+            handleReactions("like");
+          }}
+        >
+          Wow
+        </span>
+      );
+    }
+    if (reactions === "sad") {
+      return (
+        <span
+          className=" text-xs px-2 hover:underline select-none text-[#F7B500]"
+          onClick={() => {
+            handleReactions("like");
+          }}
+        >
+          Sad
+        </span>
+      );
+    }
+    if (reactions === "angry") {
+      return (
+        <span
+          className=" text-xs px-2 hover:underline select-none text-[#F7B500]"
+          onClick={() => {
+            handleReactions("like");
+          }}
+        >
+          Angry
+        </span>
+      );
+    }
+  };
+
+  const renderTooltipListUser = (arr) => {
+    let listUser = [];
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < arr[i].listUser.length; j++) {
+        listUser.push(arr[i].listUser[j]);
+      }
+    }
+    return (
+      <div>
+        {listUser?.map((item) => {
+          return <div key={uuidv4()}>{item.name}</div>;
+        })}
+      </div>
+    );
+  };
+
+  useEffect(() => {
+    let reaction = null;
+    let check = false;
+    for (let i = 0; i < reactionArr.length; i++) {
+      if (reactionArr[i].listUser) {
+        for (let j = 0; j < reactionArr[i].listUser.length; j++) {
+          if (reactionArr[i].listUser[j].id === user.id) {
+            reaction = reactionArr[i].reaction;
+            check = true;
+            break;
+          }
+        }
+        if (check) {
+          break;
+        }
+      }
+    }
+    if (check) {
+      setReactions(reaction);
+    } else {
+      setReactions(null);
+    }
+  }, []);
 
   return (
     <div className="flex pt-1">
@@ -34,20 +204,35 @@ export default function Comment({ comment }) {
           </div>
           {comment.image && (
             <div className="w-full max-h-[200px] mt-1">
-              <img
-                src={comment.image.path}
+              {/* <img
+                src={comment.image}
                 alt="comment"
                 className="max-h-[200px] rounded-[20px]"
-              />
+              /> */}
+              <Image src={comment.image} alt="comment" height={200} />
             </div>
           )}
           {/* Like response */}
-          <div className="flex items-center font-semibold ml-1 mt-1 cursor-default">
-            <span className=" text-xs px-2 hover:underline selet">Like</span>
+          <div className="flex items-center font-semibold ml-1 mt-1 cursor-default h-[22px]">
+            {reactions === null ? (
+              <ReactionBar handleReactions={handleReactions}>
+                <span
+                  className=" text-xs px-2 hover:underline select-none"
+                  onClick={() => {
+                    handleReactions("like");
+                  }}
+                >
+                  Like
+                </span>
+              </ReactionBar>
+            ) : (
+              <>{displayReactionsContent()}</>
+            )}
             <span className=" text-xs px-2 hover:underline">Reply</span>
             <span className=" text-xs px-2 font-normal text-[#65676B]">
               {moment(comment.created_at).fromNow()}
             </span>
+            <ReactionsRender reactions={reactionArr} type={"comment"} />
           </div>
         </div>
       </div>
