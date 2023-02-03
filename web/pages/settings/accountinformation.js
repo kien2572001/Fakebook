@@ -1,6 +1,5 @@
 import AccountInformation from "~/components/user/AccountInformation";
 import axios from "axios";
-
 //ssr
 export async function getServerSideProps(context) {
   const userCookie = context.req.cookies.user;
@@ -17,7 +16,6 @@ export async function getServerSideProps(context) {
   let userData = null;
   try {
     const response = await axios.get(
-      // `${process.env.SERVER_API_HOST}/api/users/${id}}`
       `${process.env.SERVER_API_HOST}/api/users/${id}`
     );
     userData = response.data?.data;

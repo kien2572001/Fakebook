@@ -12,7 +12,7 @@ import {
 import axios from "~/api/axios";
 import { useRouter } from "next/router";
 import Link from "next/link";
-export default function DefaultSetting() {
+export default function DefaultSetting({ userData }) {
   const router = useRouter();
   const handleLogout = async () => {
     let res = await axios.post("/auth/logout");
@@ -21,7 +21,7 @@ export default function DefaultSetting() {
     }
   };
   return (
-    <MainLayout>
+    <MainLayout userData={userData}>
       <div className="px-[15px] w-full mt-3 laptop:px-0 laptop:max-w-[800px] laptop:mx-auto">
         <div className="w-full p-6 laptop:p-12 bg-white shadow-[0_0.5rem_1rem_0.5rem_rgba(0,0,0,0.03)] flex flex-col items-center">
           <div className="w-full mb-6 text-lg mobile:text-[2rem] font-bold self-start	">
