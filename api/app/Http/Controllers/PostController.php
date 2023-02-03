@@ -100,6 +100,19 @@ class PostController extends Controller
             $post = Post::find($id);
             $comments = $post->comments;
             $comments->load('user', 'reactions.user', 'image');
+            $comments = $comments->map(function ($comment) {
+                $reactions = \App\Helpers\AppHelper::countReactions($comment->reactions);
+                $temp = [
+                    'id' => $comment->id,
+                    'content' => $comment->content,
+                    'user' => $comment->user,
+                    'image' => $comment->image ? $comment->image->path : null,
+                    'reactions' => $reactions,
+                    'created_at' => $comment->created_at,
+                    'updated_at' => $comment->updated_at,
+                ];
+                return $temp;
+            });
             return response()->json([
                 'status' => 'success',
                 'data' => $comments,

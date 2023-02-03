@@ -1,5 +1,5 @@
-import { useContext } from "react";
-
+import { useContext, useEffect } from "react";
+import { parserUserCookies } from "~/ultis/parser";
 import {
   ExternalLink,
   Eye,
@@ -9,17 +9,57 @@ import {
   MoreHorizontal,
   Users,
 } from "react-feather";
-import CreatePostCard from "~/components/layouts/ListPost/CreatePostCard";
-import PostCard from "~/components/layouts/ListPost/PostCard";
 import MainLayout from "~/components/layouts/MainLayout";
 import AuthContext from "~/contexts/AuthContext";
+import ListPost from "~/components/layouts/ListPost";
+import axios from "~/api/axios";
 
-export default function Index() {
-  const { user } = useContext(AuthContext);
+export async function getServerSideProps(context) {
+  const userData = parserUserCookies(context.req.cookies);
+  if (!userData) {
+    return {
+      redirect: {
+        destination: "auth/login",
+        permanent: false,
+      },
+    };
+  }
 
-  const userData = JSON.parse(user || "{}");
+  const userId = context.params.userId;
+  let thisProfileUser = null;
+  if (userId !== userData.id) {
+    try {
+      const response = await axios.get(
+        // `${process.env.SERVER_API_HOST}/api/users/${id}}`
+        `${process.env.SERVER_API_HOST}/api/users/${userId}/information`
+      );
+      thisProfileUser = response.data?.data;
+    } catch (error) {
+      //console.log(error);
+    }
+  }
+  else {
+    thisProfileUser = userData;
+  }
+
+  return {
+    props: {
+      userData: userData,
+      thisProfileUser: thisProfileUser,
+    },
+  };
+}
+
+export default function profile({ userData,thisProfileUser }) {
+  // const { user } = useContext(AuthContext);
+
+  // const userData = JSON.parse(user || "{}");
+
+  // useEffect(() => {
+  //   console.log("user", userData);
+  // }, []);
   return (
-    <MainLayout>
+    <MainLayout userData={userData}>
       <div className="mini-desktop:mx-32">
         {/* Profile Header */}
         <div className="py-4 my-2 h-[360px] tablet:h-[400px] mini-desktop:h-[436px] rounded-2xl bg-white relative drop-shadow-md">
@@ -35,7 +75,7 @@ export default function Index() {
             <div className="absolute -top-[30px] left-8 w-[108px] h-[108px] rounded-full bg-white flex justify-center items-center">
               <img
                 src={
-                  userData?.avatar ||
+                  thisProfileUser?.avatar ||
                   "http://sociala.uitheme.net/assets/images/user-12.png"
                 }
                 alt="image-profile"
@@ -45,10 +85,11 @@ export default function Index() {
             <div className=" ml-36 mt-4 flex w-full justify-between">
               <div>
                 <p className="font-bold text-xl">
-                  {userData?.last_name || "Người dùng facebook"}
+                  {thisProfileUser?.firstName + " " + thisProfileUser?.lastName ||
+                    "Người dùng facebook"}
                 </p>
                 <p className="text-sm text-gray-400 font-medium">
-                  {userData?.email}
+                  {thisProfileUser?.email}
                 </p>
               </div>
               <div className="flex items-center max-tablet:hidden">
@@ -102,7 +143,7 @@ export default function Index() {
               <div className="px-4">
                 <p className="font-bold mb-3">About</p>
                 <p className="text-xs font-medium text-text-disabled leading-5">
-                  {userData?.about ||
+                  {thisProfileUser?.about ||
                     `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi
                   nulla dolor, ornare at commodo non, feugiat non nisi.
                   Phasellus faucibus mollis pharetra. Proin blandit ac massa sed
@@ -134,8 +175,8 @@ export default function Index() {
                 <MapPin width={25} color={"#b3bbc2"} className="mr-4" />
                 <div>
                   <p className="font-bold text-sm">
-                    {userData?.city || "Flodia"},{" "}
-                    {userData?.country || "Austia"}
+                    {thisProfileUser?.city || "Flodia"},{" "}
+                    {thisProfileUser?.country || "Austia"}
                   </p>
                 </div>
               </div>
@@ -235,9 +276,7 @@ export default function Index() {
           </div>
           {/* List posts */}
           <div className="basis-2/3">
-            <CreatePostCard />
-            <PostCard />
-            <PostCard />
+            <ListPost userData={thisProfileUser} />
           </div>
         </div>
       </div>

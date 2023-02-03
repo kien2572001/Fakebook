@@ -50,4 +50,5 @@
         padding: 0;
     }
 
+    img.ant-image-preview-img { display: inline-block; }
 }

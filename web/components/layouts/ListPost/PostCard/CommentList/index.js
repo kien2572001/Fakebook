@@ -17,10 +17,6 @@ export default function CommentList({ id }) {
     fetchComments();
   }, []);
 
-  useEffect(() => {
-    console.log('comments: ', comments);
-  }, [comments]);
-
   const addComment = (comment) => {
     setComments([comment, ...comments]);
   };

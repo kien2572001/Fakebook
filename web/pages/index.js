@@ -43,12 +43,6 @@ export async function getServerSideProps(context) {
 }
 
 export default function Index({ userData }) {
-  // const dispatch = useDispatch();
-
-  // useLayoutEffect(() => {
-  //   //console.log("userData", userData);
-  //   dispatch(setUser(userData));
-  // }, []);
 
   return (
     <MainLayout userData={userData} >
