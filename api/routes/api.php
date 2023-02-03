@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\UserFriendController;
 use App\Http\Controllers\WebInit;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -73,4 +74,14 @@ Route::prefix('reactions')->group(function () {
 Route::prefix('comments')->group(function () {
     Route::post('/create', [CommentController::class, 'createComment']);
     Route::post('/delete', [CommentController::class, 'deleteComment']);
+});
+
+Route::prefix('friends')->group(function () {
+    Route::get('/', [UserFriendController::class, 'getListFriend']);
+    Route::get('/list', [UserFriendController::class, 'getAllFriend']);
+    Route::get('/request', [UserFriendController::class, 'getListRequest']);
+    Route::post('/add', [UserFriendController::class, 'addFriend']);
+    Route::post('/accept', [UserFriendController::class, 'acceptFriend']);
+    Route::post('/reject', [UserFriendController::class, 'rejectFriend']);
+    Route::post('/delete', [UserFriendController::class, 'deleteFriend']);
 });
