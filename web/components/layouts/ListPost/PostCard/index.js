@@ -1,6 +1,5 @@
 import { Popover, Tooltip } from "antd";
 import moment from "moment";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
   MessageCircle,
@@ -18,11 +17,14 @@ import { v4 as uuidv4 } from "uuid";
 import LikeButton from "./Like";
 import ReactionsRender from "~/components/common/ReactionsRender";
 import ReactionBar from "~/components/common/ReactionsBar";
+import { Image } from "antd";
+
 export default function PostCard({ item, index }) {
   const [reactions, setReactions] = useState(null);
   const user = useSelector((state) => state.user.user);
   const [reactionArr, setReactionArr] = useState(item?.reactions);
   const [showComment, setShowComment] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const handleReactions = async (reaction) => {
     if (reactions === null) {
@@ -100,6 +102,7 @@ export default function PostCard({ item, index }) {
   };
 
   useEffect(() => {
+    console.log("item", item);
     let reaction = null;
     let check = false;
     for (let i = 0; i < reactionArr.length; i++) {
@@ -119,7 +122,41 @@ export default function PostCard({ item, index }) {
     } else {
       setReactions(null);
     }
+    renderListImage();
   }, []);
+
+  const renderListImage = () => {
+    const listImage = item?.sub_posts?.map((item) => {
+      return item.image.path;
+    });
+    if (listImage.length === 1) {
+      return <Image src={listImage[0]} style={{ width: "100%",cursor:"pointer" }}/>;
+    } else if (listImage.length === 2) {
+      return (
+        <div className="flex cursor-pointer">
+          <img src={listImage[0]} className="w-1/2" onClick={() => setVisible(true)}/>
+          <img
+            src={listImage[1]}
+            className="w-1/2"
+            onClick={() => setVisible(true)}
+          />
+          <div className="display-none">
+            <Image.PreviewGroup
+              preview={{
+                visible,
+                onVisibleChange: (visible) => setVisible(visible),
+              }}
+            >
+              <Image src={listImage[0]} />
+              <Image src={listImage[1]} />
+            </Image.PreviewGroup>
+          </div>
+        </div>
+      );
+    }
+
+    console.log("listImage", listImage);
+  };
 
   return (
     <div className={styles.card}>
@@ -156,11 +193,26 @@ export default function PostCard({ item, index }) {
       </div>
       {/* Image */}
       <div className="mb-3 w-full">
-        <img
+        {/* <img
           src="http://sociala.uitheme.net/assets/images/t-10.jpg"
           alt="avatar"
           className="w-full  rounded-[15px]"
-        />
+        /> */}
+        {/* <>
+          {item?.sub_posts?.map((item) => {
+            return (
+              // <div key={uuidv4()}>
+              //   <img
+              //     src={item?.image.path}
+              //     alt="avatar"
+              //     className="w-full  rounded-[15px]"
+              //   />
+              // </div>
+              <Image src={item?.image.path} style={{ width: "100%" }} />
+            );
+          })}
+        </> */}
+        {renderListImage()}
       </div>
       {/* Like, Comment, Share count*/}
       <div className="flex justify-between items-center text-xs">
