@@ -19,6 +19,3 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('1chat', function ($user) {
     return $user;
 });
-Broadcast::channel('1chat.{id}', function ($user, $id) {
-    return $user->id === $id;
-});

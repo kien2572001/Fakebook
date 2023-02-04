@@ -2,12 +2,16 @@ import { data } from "autoprefixer";
 import React, { useEffect } from "react";
 import {X, Minus,Video,Phone,Image,Smile,Mic,ThumbsUp,ArrowUpCircle} from "react-feather";
 import { useSelector } from "react-redux";
+import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 import axios from "~/api/axios";
 //6eae2e7a-ec5d-412e-98f3-653344d6b6bb
 //07ef9fcf-3787-4418-b282-eb37f010be6c
  export default function ChatTest() {
-    const [name1, setName1] = React.useState("Naruto");
-    const [targetId,setTagetId] = React.useState("07ef9fcf-3787-4418-b282-eb37f010be6c");
+    const [name1, setName1] = React.useState("");
+    const [targetId,setTagetId] = React.useState("");
+    const [chanelName,setChanelName] = React.useState("");
+    const [input,setInput] = React.useState("");
     const [target,setTarget] = React.useState({
         data:{
             avatar:"https://i.pinimg.com/originals/0c/0c/0c/0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c.jpg",
@@ -15,34 +19,103 @@ import axios from "~/api/axios";
             lastName:"",
         }
     });
-    const [isLoading,setIsLoading] = React.useState(false);
+    ///////////////////////////////////////
+    let messages =[];
+    const messageEndRef = React.useRef(null);
     const user = useSelector((state) => state.user.user);
     const [currentMessage, setCurrentMessage] = React.useState("");
-    const [message, setMessage] = React.useState(["Hi","Hello","How are you?","I'm fine, thank you!","What about you?","I'm fine too!","Nice to meet you!","Nice to meet you too!","Bye","Bye!"]);
-
+    const [message, setMessage] = React.useState([""]);
+    const pusher = new Pusher("61ced07f1c5be563dc8f", {
+        cluster: "ap1",
+    });
+    const chanel = pusher.subscribe("1chat");
+    const scrollToBottom = () => {
+        messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+    const changeID = () =>{
+        console.log(input)
+        setTagetId(input);
+        setInput("");
+    }
     React.useEffect( () => {
-       axios.get('/users/07ef9fcf-3787-4418-b282-eb37f010be6c')
-       .then((res)=>{
+       // Pusher.logToConsole = true;
+        const pusher = new Pusher("61ced07f1c5be563dc8f", {
+            cluster: "ap1",
+            encrypted: true,
+        });
+        scrollToBottom();  
+        axios.get(`/users/${targetId}`)
+        .then((res)=>{
             setTarget(res.data);
             setName1(res.data.data.firstName+" "+res.data.data.lastName);
        })
        .catch((err)=>{
               console.log(err);
        })
-       console.log('target',target)
+       const channel = pusher.subscribe('')
        setName1(target.data.firstName+" "+target.data.lastName);
-    },[])
-   
-    const insertMessages =  () =>{
-        let term = [...message];
-        term.push(currentMessage);
-        setMessage(term);
+       scrollToBottom();
+       if(user.id[0]>targetId[0]){
+        setChanelName(user.id.slice(0,3)+targetId.slice(0,3));
+         }else{
+        setChanelName(targetId.slice(0,3)+user.id.slice(0,3));
+        }
+
+    },[targetId])
+
+    React.useEffect(()=>{
+        scrollToBottom();
+        //Pusher.logToConsole = true;
+        // const pusher = new Pusher("61ced07f1c5be563dc8f", {
+        //     cluster: "ap1",
+        //     encrypted: true,
+        // });
+        // const chanel = pusher.subscribe("1chat");
+        // chanel.bind('message', function(data) {
+        //     messages.push(data);
+        //     console.log(data);
+        //     setMessage(messages);
+        // })
+        // console.log(messages);
+    });
+    const insertMessages = async () =>{
+        
+        let data = {
+            user_src:user.id,
+            message:currentMessage
+        }
+        await axios.post('/chat/sendMessage',data)
+        .then((res)=>{
+            console.log(res);
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
         setCurrentMessage("");
-        console.log(target);
+        
+        chanel.bind('message-sent', function(data) {
+            messages.push(data);
+            console.log(data);
+            setMessage(messages);
+        })
+        console.log("test:",messages);
+        scrollToBottom();
     }
-   
+    
     return (
         <>
+        <div>id user:{user.id}</div>
+        <div>chanel:{chanelName}</div>
+        <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className ="w-full"
+        >
+
+        </input>
+        <button onClick={changeID}>Send</button>
+
         <div className="block absolute w-96 h-96 border-black ">
             <div className="flex flex-row px-2 py-2 bg-[#0084FF] rounded-t-lg shadow-lg justify-between">
                 {/* Head*/}
@@ -61,7 +134,7 @@ import axios from "~/api/axios";
                         <Phone color="#FFFFFF" size={20}/>
                     </div>
                     <div className="px-2">
-                        <Video color="#FFFFFF" size={22}/>
+                        <Video color="#FFFFFF" size={22}/> 
                     </div>
                     <div className="px-2">
                         <Minus color="#FFFFFF" size={22}/>
@@ -72,7 +145,7 @@ import axios from "~/api/axios";
                 </div>
             </div>
             {/* Message */}
-            <div className="h-80 block overflow-auto bg-[#FFFFFF] ">
+            <div className="h-80 block overflow-auto bg-[#FFFFFF] " >
                 <div className="py-2 px-3 ">
                     <div className="flex justify-center mb-2">
                         <p className="text-gray-400 text-xs">Hôm nay</p>
@@ -128,7 +201,7 @@ import axios from "~/api/axios";
                     value={currentMessage}
                     onChange={(e)=>setCurrentMessage(e.target.value)}
                     onKeyDown={(e)=>{
-                        if(e.key==="Enter"){
+                        if(e.key==="Enter"&&currentMessage.length>0){
                             insertMessages();
                         }
                     }}
