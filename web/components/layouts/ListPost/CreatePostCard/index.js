@@ -55,7 +55,7 @@ export default function CreatePostCard({ userData }) {
   const handleSubmitPost = async () => {
     let data = new FormData();
     data.append("content", postMessage);
-    data.append("status", "Public");
+    data.append("permission", postStatus);
     let i = 0;
     fileList.forEach((item) => {
       data.append("media_" + i, item.originFileObj);
@@ -124,9 +124,9 @@ export default function CreatePostCard({ userData }) {
                   className=""
                   size="small"
                   options={[
-                    { label: "Public", value: "Public" },
-                    { label: "Friends", value: "Friends" },
-                    { label: "Only me", value: "Only me" },
+                    { label: "Public", value: "public" },
+                    { label: "Friends", value: "friends" },
+                    { label: "Only me", value: "only_me" },
                   ]}
                 ></Select>
               </span>

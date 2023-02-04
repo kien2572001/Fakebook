@@ -8,6 +8,9 @@ import {
   Share,
   Share2,
   ThumbsUp,
+  Users,
+  Globe,
+  Lock,
 } from "react-feather";
 import { useSelector } from "react-redux";
 import styles from "~/styles/Main.module.css";
@@ -130,11 +133,20 @@ export default function PostCard({ item, index }) {
       return item.image.path;
     });
     if (listImage.length === 1) {
-      return <Image src={listImage[0]} style={{ width: "100%",cursor:"pointer" }}/>;
+      return (
+        <Image
+          src={listImage[0]}
+          style={{ width: "100%", cursor: "pointer" }}
+        />
+      );
     } else if (listImage.length === 2) {
       return (
         <div className="flex cursor-pointer">
-          <img src={listImage[0]} className="w-1/2" onClick={() => setVisible(true)}/>
+          <img
+            src={listImage[0]}
+            className="w-1/2"
+            onClick={() => setVisible(true)}
+          />
           <img
             src={listImage[1]}
             className="w-1/2"
@@ -158,6 +170,28 @@ export default function PostCard({ item, index }) {
     console.log("listImage", listImage);
   };
 
+  const renderPostPermission = (size) => {
+    if (item?.permission === "public") {
+      return (
+        <Tooltip title="Public" placement="top">
+          <Globe size={size} />
+        </Tooltip>
+      );
+    } else if (item?.permission === "friends") {
+      return (
+        <Tooltip title="Friends" placement="top">
+          <Users size={size} />
+        </Tooltip>
+      );
+    } else if (item?.permission === "only_me") {
+      return (
+        <Tooltip title="Only me" placement="top">
+          <Lock size={size} />
+        </Tooltip>
+      );
+    }
+  };
+
   return (
     <div className={styles.card}>
       {/* Avatar box */}
@@ -178,6 +212,8 @@ export default function PostCard({ item, index }) {
             </span>
             <span className="text-gray-500 block">
               {moment(item?.created_at).fromNow()}
+
+              <span className="ml-1">{renderPostPermission(15)}</span>
             </span>
           </div>
         </div>
@@ -192,28 +228,7 @@ export default function PostCard({ item, index }) {
         {item?.content}
       </div>
       {/* Image */}
-      <div className="mb-3 w-full">
-        {/* <img
-          src="http://sociala.uitheme.net/assets/images/t-10.jpg"
-          alt="avatar"
-          className="w-full  rounded-[15px]"
-        /> */}
-        {/* <>
-          {item?.sub_posts?.map((item) => {
-            return (
-              // <div key={uuidv4()}>
-              //   <img
-              //     src={item?.image.path}
-              //     alt="avatar"
-              //     className="w-full  rounded-[15px]"
-              //   />
-              // </div>
-              <Image src={item?.image.path} style={{ width: "100%" }} />
-            );
-          })}
-        </> */}
-        {renderListImage()}
-      </div>
+      <div className="mb-3 w-full">{renderListImage()}</div>
       {/* Like, Comment, Share count*/}
       <div className="flex justify-between items-center text-xs">
         <div className="flex">

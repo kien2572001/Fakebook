@@ -30,6 +30,7 @@ class PostController extends Controller
                 'image' => $post->image ? $post->image->path : null,
                 'sub_posts' => $post->subPosts,
                 'reactions' => $reactions,
+                'permission' => $post->permission,
                 'created_at' => $post->created_at,
                 'updated_at' => $post->updated_at,
             ];
@@ -52,6 +53,7 @@ class PostController extends Controller
             $post = new Post();
             $post->content = $request->content;
             $post->user_id = $user->id;
+            $post->permission = $request->permission;
             $post->save();
 
             if ($request->hasFile('image')) {
