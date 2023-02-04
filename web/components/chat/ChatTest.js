@@ -60,17 +60,16 @@ import axios from "~/api/axios";
         const pusher = new Pusher("61ced07f1c5be563dc8f", {
             cluster: "ap1",
         });
-        const chanel = pusher.subscribe('chat');
+        const chanel = pusher.subscribe(`${chanelName}`);
         chanel.bind('message', (data) =>{
             messages.push(data);
             setMessage(messages);
-        })
-        console.log(messages);
-        window.scroll(0,9999);
+        });
     });
     const insertMessages = async () =>{
         let data = {
             user_src:user.id,
+            user_target:targetId,
             message:currentMessage
         }
         await axios.post('/chat/sendMessage',data)
@@ -82,7 +81,7 @@ import axios from "~/api/axios";
         })
         setCurrentMessage("");
         
-        console.log("test:",messages);
+        console.log("test:",message);
         scrollToBottom();
     }
     

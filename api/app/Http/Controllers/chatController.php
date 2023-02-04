@@ -19,7 +19,7 @@ class chatController extends Controller
       //    'user_target' => $request->user_target
       //  ]);
       // event(new MessageSent($request->user_src, $request->user_target, $request->message))->toOthers();
-      event(new MessageSent($request->input('user_src'), $request->input('message')));
+      event(new MessageSent($request->input('user_src'),$request->input('user_target'),$request->input('message')));
       return "connect successfully";
    }
    public function Test(Request $request)
