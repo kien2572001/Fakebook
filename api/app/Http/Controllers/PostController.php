@@ -84,6 +84,20 @@ class PostController extends Controller
                 }
             }
 
+            $post->load('image', 'subPosts.image', 'reactions.user', 'user');
+            $reactions = \App\Helpers\AppHelper::countReactions($post->reactions);
+            $post = [
+                'id' => $post->id,
+                'content' => $post->content,
+                'user' => $post->user,
+                'image' => $post->image ? $post->image->path : null,
+                'sub_posts' => $post->subPosts,
+                'reactions' => $reactions,
+                'permission' => $post->permission,
+                'created_at' => $post->created_at,
+                'updated_at' => $post->updated_at,
+            ];
+
             return response()->json([
                 'status' => 'success',
                 'data' => $post,

@@ -11,7 +11,7 @@ import {
   MapPin,
   Flag,
 } from "react-feather";
-import { Button, Modal, Select, Tooltip } from "antd";
+import { Button, Modal, Select, Tooltip,message } from "antd";
 import { useState, useRef } from "react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
@@ -20,13 +20,14 @@ const { TextArea } = Input;
 import UploadImagePost from "./UploadImagePost";
 import axios from "~/api/axios";
 
-export default function CreatePostCard({ userData }) {
+export default function CreatePostCard({ userData , handleAddPost}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [postMessage, setPostMessage] = useState("");
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [postStatus, setPostStatus] = useState("Public");
+  const textRef = useRef();
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -35,7 +36,6 @@ export default function CreatePostCard({ userData }) {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
-    //reset postMessage
     setPostMessage("");
     setShowIconPicker(false);
   };
@@ -44,7 +44,7 @@ export default function CreatePostCard({ userData }) {
     setPostStatus(value);
   };
 
-  const textRef = useRef();
+  
 
   const onChangeSize = (e) => {
     const target = e.target;
@@ -65,9 +65,10 @@ export default function CreatePostCard({ userData }) {
     const res = await axios.post("/posts/create", data);
     if (res.status === 200) {
       clearModal();
-      alert("Post successfully!");
+      message.success("Post created successfully!");
+      handleAddPost(res.data.data);
     } else {
-      alert("Something went wrong!");
+      message.error("Something went wrong!");
     }
   };
 
