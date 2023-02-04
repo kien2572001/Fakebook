@@ -78,11 +78,13 @@ Route::prefix('comments')->group(function () {
 });
 
 Route::prefix('friends')->group(function () {
-    Route::get('/', [UserFriendController::class, 'getListFriend']);
     Route::get('/list', [UserFriendController::class, 'getAllFriend']);
     Route::get('/request', [UserFriendController::class, 'getListRequest']);
     Route::post('/add', [UserFriendController::class, 'addFriend']);
     Route::post('/accept', [UserFriendController::class, 'acceptFriend']);
     Route::post('/reject', [UserFriendController::class, 'rejectFriend']);
     Route::post('/delete', [UserFriendController::class, 'deleteFriend']);
+    Route::get('/check/{friendId}', [UserFriendController::class, 'checkFriend']);
+    Route::get('/', [UserFriendController::class, 'getListFriend']);
+    
 });

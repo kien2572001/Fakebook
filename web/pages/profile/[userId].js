@@ -13,6 +13,8 @@ import MainLayout from "~/components/layouts/MainLayout";
 import AuthContext from "~/contexts/AuthContext";
 import ListPost from "~/components/layouts/ListPost";
 import axios from "~/api/axios";
+import { useState } from "react";
+import { Button, Dropdown, Menu, message } from "antd";
 
 export async function getServerSideProps(context) {
   const userData = parserUserCookies(context.req.cookies);
@@ -27,6 +29,7 @@ export async function getServerSideProps(context) {
 
   const userId = context.params.userId;
   let thisProfileUser = null;
+  let checkFriend = "false";
   if (userId !== userData.id) {
     try {
       const response = await axios.get(
@@ -37,8 +40,7 @@ export async function getServerSideProps(context) {
     } catch (error) {
       //console.log(error);
     }
-  }
-  else {
+  } else {
     thisProfileUser = userData;
   }
 
@@ -50,14 +52,159 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function profile({ userData,thisProfileUser }) {
-  // const { user } = useContext(AuthContext);
+export default function profile({ userData, thisProfileUser }) {
+  const [checkRelation, setCheckRelation] = useState("none");
+  const [source_id, setSource_id] = useState(userData.id);
+  const [target_id, setTarget_id] = useState(thisProfileUser.id);
 
-  // const userData = JSON.parse(user || "{}");
+  const friendSelectItems = (
+    <Menu>
+      <Menu.Item key="0">
+        <div onClick={() => handleCancelFriend()}>Cancel friend</div>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <div> Block</div>
+      </Menu.Item>
+    </Menu>
+  );
 
-  // useEffect(() => {
-  //   console.log("user", userData);
-  // }, []);
+  useEffect(() => {
+    const checkFriend = async () => {
+      try {
+        const response = await axios.get(
+          "/friends/check/" + thisProfileUser.id
+        );
+        if (response.status === 200) {
+          setCheckRelation(response.data.data?.status);
+        }
+        setSource_id(response.data.data?.source_id);
+        setTarget_id(response.data.data?.target_id);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (userData.id !== thisProfileUser.id) {
+      checkFriend();
+    } else {
+      setCheckRelation("myself");
+    }
+  }, []);
+
+  const handleAddFriend = async () => {
+    try {
+      const response = await axios.post("/friends/add/", {
+        target_id: thisProfileUser.id,
+      });
+      if (response.status === 200) {
+        setCheckRelation(response.data.data?.status);
+        message.success("Send friend request successfully");
+      } else {
+        message.error("Send friend request failed");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleRejectFriend = async () => {
+    try {
+      const response = await axios.post("/friends/reject/", {
+        user_id: source_id,
+      });
+      if (response.status === 200) {
+        setCheckRelation(response.data.data?.status);
+        message.success("Reject friend successfully");
+      } else {
+        message.error("Reject friend failed");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAcceptFriend = async () => {
+    try {
+      const response = await axios.post("/friends/accept/", {
+        user_id: source_id,
+      });
+      if (response.status === 200) {
+        setCheckRelation(response.data.data?.status);
+        message.success("Accept friend successfully");
+      } else {
+        message.error("Accept friend failed");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCancelFriend = async () => {
+    try {
+      const response = await axios.post("/friends/delete/", {
+        user_id: thisProfileUser.id,
+      });
+      if (response.status === 200) {
+        setCheckRelation("none");
+        message.success("Cancel friend successfully");
+      } else {
+        message.error("Cancel friend failed");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const renderFriendButton = () => {
+    if (checkRelation === "myself") {
+      return;
+    } else if (checkRelation === "none" || checkRelation === "reject") {
+      return (
+        <button
+          className="bg-[#10D876] text-white px-4 py-2 rounded-md font-semibold text-sm mr-2"
+          onClick={() => handleAddFriend()}
+        >
+          Add friend
+        </button>
+      );
+    } else if (checkRelation === "pending") {
+      if (source_id === userData.id) {
+        return (
+          <button
+            className="bg-[#10D876] text-white px-4 py-2 rounded-md font-semibold text-sm mr-2"
+            onClick={() => handleAddFriend()}
+          >
+            Cancel request
+          </button>
+        );
+      } else {
+        return (
+          <>
+            <button
+              className="bg-[#10D876] text-white px-4 py-2 rounded-md font-semibold text-sm mr-2"
+              onClick={() => handleAcceptFriend()}
+            >
+              Accept request
+            </button>
+            <button
+              className="bg-danger text-white px-4 py-2 rounded-md font-semibold text-sm mr-2"
+              onClick={() => handleRejectFriend()}
+            >
+              Reject request
+            </button>
+          </>
+        );
+      }
+    } else if (checkRelation === "accepted") {
+      return (
+        <Dropdown overlay={friendSelectItems}>
+          <button className="bg-[#10D876] text-white px-4 py-2 rounded-md font-semibold text-sm mr-2">
+            Friend
+          </button>
+        </Dropdown>
+      );
+    }
+  };
+
   return (
     <MainLayout userData={userData}>
       <div className="mini-desktop:mx-32">
@@ -85,17 +232,16 @@ export default function profile({ userData,thisProfileUser }) {
             <div className=" ml-36 mt-4 flex w-full justify-between">
               <div>
                 <p className="font-bold text-xl">
-                  {thisProfileUser?.firstName + " " + thisProfileUser?.lastName ||
-                    "Người dùng facebook"}
+                  {thisProfileUser?.firstName +
+                    " " +
+                    thisProfileUser?.lastName || "Người dùng facebook"}
                 </p>
                 <p className="text-sm text-gray-400 font-medium">
                   {thisProfileUser?.email}
                 </p>
               </div>
               <div className="flex items-center max-tablet:hidden">
-                <button className="bg-[#10D876] text-white px-4 py-2 rounded-md font-semibold text-sm mr-2">
-                  Add friend
-                </button>
+                {renderFriendButton()}
                 <div className=" bg-[#f5f5f5] w-[50px] h-[50px] flex justify-center items-center mr-2 rounded-md">
                   <Mail width={25} className="text-gray-600" />
                 </div>

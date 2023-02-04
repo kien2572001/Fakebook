@@ -13,7 +13,8 @@ import {
   Youtube,
   Zap,
 } from "react-feather";
-export default function Sidebar() {
+
+export default function Sidebar({ userData }) {
   return (
     // Sidebar
     <div className="px-[15px] w-full font-openSans">
@@ -65,7 +66,7 @@ export default function Sidebar() {
               <User size="20" color="white" />
             </div>
             <div className="text-[15px] text-[#888888] font-semibold cursor-pointer">
-              <Link href="/profile">Author Profile</Link>
+              <Link href={`/profile/${userData.id}`}>Author Profile</Link>
             </div>
           </div>
         </div>

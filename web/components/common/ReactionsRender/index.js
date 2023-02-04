@@ -27,12 +27,10 @@ export default function ReactionsRender({ reactions, type = "post" }) {
           {arr.map((item) => {
             if (item.count > 0) {
               return (
-                <>
-                  <div className="flex justify-center first-letter:items-center ">
+                  <div className="flex justify-center first-letter:items-center " key={uuidv4()}>
                     <LikeButton reactions={item.reaction}  size={14}/>{" "}
                     <span className="ml-1">{item.count}</span>
                   </div>
-                </>
               );
             }
           })}
@@ -53,7 +51,7 @@ export default function ReactionsRender({ reactions, type = "post" }) {
           {reactions.map((item) => {
             if (item.count > 0) {
               return (
-                <Tooltip title={renderTooltipListUser(item)}>
+                <Tooltip title={renderTooltipListUser(item)} key={uuidv4()}>
                   <div className=" mr-2 flex justify-center first-letter:items-center ">
                     <LikeButton reactions={item.reaction} />
                   </div>
@@ -69,7 +67,7 @@ export default function ReactionsRender({ reactions, type = "post" }) {
               {reactions.map((item) => {
                 if (item.count > 0) {
                   return (
-                    <div className=" flex justify-center first-letter:items-center ">
+                    <div className=" flex justify-center first-letter:items-center " key={uuidv4()}>
                       <LikeButton reactions={item.reaction} size={14} />
                     </div>
                   );
