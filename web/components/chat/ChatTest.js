@@ -24,11 +24,7 @@ import axios from "~/api/axios";
     const messageEndRef = React.useRef(null);
     const user = useSelector((state) => state.user.user);
     const [currentMessage, setCurrentMessage] = React.useState("");
-    const [message, setMessage] = React.useState([""]);
-    const pusher = new Pusher("61ced07f1c5be563dc8f", {
-        cluster: "ap1",
-    });
-    const chanel = pusher.subscribe("1chat");
+    const [message, setMessage] = React.useState([]);
     const scrollToBottom = () => {
         messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
@@ -39,10 +35,6 @@ import axios from "~/api/axios";
     }
     React.useEffect( () => {
        // Pusher.logToConsole = true;
-        const pusher = new Pusher("61ced07f1c5be563dc8f", {
-            cluster: "ap1",
-            encrypted: true,
-        });
         scrollToBottom();  
         axios.get(`/users/${targetId}`)
         .then((res)=>{
@@ -52,7 +44,6 @@ import axios from "~/api/axios";
        .catch((err)=>{
               console.log(err);
        })
-       const channel = pusher.subscribe('')
        setName1(target.data.firstName+" "+target.data.lastName);
        scrollToBottom();
        if(user.id[0]>targetId[0]){
@@ -66,20 +57,17 @@ import axios from "~/api/axios";
     React.useEffect(()=>{
         scrollToBottom();
         //Pusher.logToConsole = true;
-        // const pusher = new Pusher("61ced07f1c5be563dc8f", {
-        //     cluster: "ap1",
-        //     encrypted: true,
-        // });
-        // const chanel = pusher.subscribe("1chat");
-        // chanel.bind('message', function(data) {
-        //     messages.push(data);
-        //     console.log(data);
-        //     setMessage(messages);
-        // })
-        // console.log(messages);
+        const pusher = new Pusher("61ced07f1c5be563dc8f", {
+            cluster: "ap1",
+        });
+        const chanel = pusher.subscribe('chat');
+        chanel.bind('message', (data) =>{
+            messages.push(data);
+            setMessage(messages);
+        })
+        console.log(messages);
     });
     const insertMessages = async () =>{
-        
         let data = {
             user_src:user.id,
             message:currentMessage
@@ -93,11 +81,6 @@ import axios from "~/api/axios";
         })
         setCurrentMessage("");
         
-        chanel.bind('message-sent', function(data) {
-            messages.push(data);
-            console.log(data);
-            setMessage(messages);
-        })
         console.log("test:",messages);
         scrollToBottom();
     }
@@ -151,8 +134,8 @@ import axios from "~/api/axios";
                         <p className="text-gray-400 text-xs">Hôm nay</p>
                     </div>
                 </div>
-               {1&&message.map((item,index)=>{
-                    if(index%2==0)return(
+               {1&&message.map((item)=>{
+                    if(item.user_src!=user.id)return(
                         <div className="flex mb-2 px-2 py-1 items-end">
                             <div className="block px-2">
                                 <img className="w-6 h-6 rounded-full  bottom-0" src={target.data.avatar} />
@@ -160,7 +143,7 @@ import axios from "~/api/axios";
                             <div className="max-w-200 mx-2">
                                 <p className="font-sans font-normal text-xs">{name1}</p>
                                 <div className="bg-[#e4e6eb] max-w-200 rounded-full">
-                                    <p className="text-xs px-2 max-w-200 py-1 block">{item}</p>
+                                    <p className="text-xs px-2 max-w-200 py-1 block">{item.message}</p>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +152,7 @@ import axios from "~/api/axios";
                             <div className="flex mb-2 px-2 py-3 justify-end">
                                 <div className="max-w-200 mx-2">
                                     <div className="bg-[#0084FF] max-w-200 rounded-full">
-                                        <p className="text-xs px-2 py-1 max-w-200 block text-white">{item}</p>
+                                        <p className="text-xs px-2 py-1 max-w-200 block text-white">{item.message}</p>
                                     </div>
                                 </div>
                             </div>

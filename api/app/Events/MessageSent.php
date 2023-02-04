@@ -13,9 +13,9 @@ use Illuminate\Queue\SerializesModels;
 class MessageSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $message;
+    
     public $user_src;
-    public $user_target;
+    public $message;
    
     public function __construct($user_src, $message)
     {
@@ -25,10 +25,10 @@ class MessageSent implements ShouldBroadcast
     }
     public function broadcastOn()
     {
-        return ['1chat'];
+        return ['chat'];
     }
     public function broadcastAs()
     {
-        return 'message-sent';
+        return 'message';
     }
 }
