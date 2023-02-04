@@ -66,6 +66,7 @@ import axios from "~/api/axios";
             setMessage(messages);
         })
         console.log(messages);
+        window.scroll(0,9999);
     });
     const insertMessages = async () =>{
         let data = {
