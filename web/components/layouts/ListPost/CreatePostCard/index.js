@@ -19,6 +19,7 @@ import { Input } from "antd";
 const { TextArea } = Input;
 import UploadImagePost from "./UploadImagePost";
 import axios from "~/api/axios";
+import { Mention,MentionsInput } from "react-mentions";
 
 export default function CreatePostCard({ userData , handleAddPost}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,7 +45,20 @@ export default function CreatePostCard({ userData , handleAddPost}) {
     setPostStatus(value);
   };
 
-  
+  const data = [
+    {
+      id: "1",
+      display: "Manh Nguyen",
+    },
+    {
+      id: "2",
+      display: "Long Nguyen",
+    },
+    {
+      id: "3",
+      display: "Viet Nguyen",
+    },
+  ];
 
   const onChangeSize = (e) => {
     const target = e.target;
@@ -148,7 +162,8 @@ export default function CreatePostCard({ userData , handleAddPost}) {
               onChangeSize(e);
             }}
             placeholder="What's on your mind ?"
-          ></textarea>
+          >
+          </textarea>
           <div className={`${showImagePicker ? "block" : "hidden"} px-4`}>
             <UploadImagePost fileList={fileList} setFileList={setFileList} />
           </div>

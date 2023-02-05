@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -110,5 +111,32 @@ class UserController extends Controller
             'status' => 'error',
             'message' => "You don't have permission to modify this account",
         ], 404);
+    }
+
+    public function getMentionsList(Request $request)
+    {
+        // $validate = $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'range' => 'required|string|contains:all,friend',
+        // ]);
+        // if ($validate->fails()) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Invalid request',
+        //     ], 400);
+        // }
+        // Search user by name = first_name + last_name
+        //$users = User::whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$request->name}%"])->get();
+        if ($request->range == 'friend') {
+            $user = Auth::user();
+            $users = $user->friends()->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$request->name}%"])->get();
+        }
+        else{
+            $users = User::whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$request->name}%"])->get();
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => $users,
+        ], 200);
     }
 }
