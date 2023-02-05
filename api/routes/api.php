@@ -10,6 +10,7 @@ use App\Http\Controllers\UserFriendController;
 use App\Http\Controllers\WebInit;
 use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\chatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,7 @@ Route::prefix('users')->group(function () {
     Route::get('/{id}/information', [UserController::class, 'getUserInformationForProfilePage']);
     Route::post('/modify-account-information', [UserController::class, 'modifyAccountInfomation']);
     Route::get('/test', [UserController::class, 'showall']);
+    Route::get('/{id}', [UserController::class, 'show']);
     Route::get('/', function () {
         return response()->json([
             'status' => 'success',
@@ -58,7 +60,6 @@ Route::prefix('users')->group(function () {
 Route::resource('users', UserController::class)->only([
     'show',
 ]);
-
 Route::prefix('posts')->group(function () {
     Route::get('/list', [PostController::class, 'getListPostInProfile']);
     Route::post('/create', [PostController::class, 'createPost']);
@@ -69,6 +70,13 @@ Route::prefix('reactions')->group(function () {
     Route::post('/create', [ReactionController::class, 'createReaction']);
     Route::post('/delete', [ReactionController::class, 'deleteReaction']);
 });
+
+Route::prefix('chat')->group(function () {
+    Route::get('/fetchMessages', [chatController::class, 'fetchMessages']);
+    Route::post('/sendMessage', [chatController::class, 'sendMessage']);
+    Route::get('/test', [chatController::class, 'Test']);
+});
+
 
 
 Route::prefix('comments')->group(function () {
@@ -87,3 +95,4 @@ Route::prefix('friends')->group(function () {
     Route::get('/check/{friendId}', [UserFriendController::class, 'checkFriend']);
     Route::get('/', [UserFriendController::class, 'getListFriend']);
 });
+
