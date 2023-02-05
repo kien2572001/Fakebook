@@ -6,12 +6,7 @@ import ImageUpload from "./ImageUpload";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import axios from "~/api/axios";
-import Toast from "~/components/common/Toast";
-import { toast } from "react-toastify";
-import { Input } from "postcss";
-import { Select } from "antd";
-
-
+import { message, Select } from "antd";
 
 const AccountInformation = ({ userData }) => {
   const [firstName, setFirstName] = useState(userData?.firstName || "");
@@ -23,44 +18,51 @@ const AccountInformation = ({ userData }) => {
   const [city, setCity] = useState(userData?.city || "");
   const [country, setCountry] = useState(userData?.country || "");
   const [about, setAbout] = useState(userData?.about || "");
-  const [gender,setGender] = useState(userData?.gender||"");
+  const [gender, setGender] = useState(userData?.gender || "");
   const [countries, setCountries] = useState([{}]);
   const [indexContry, setIndexContry] = useState(0);
+
   useEffect(() => {
-    console.log("userData", userData);
+    //console.log("userData", userData);
     //axios get  data conutries
-    axios.get("https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/index.json?fbclid=IwAR36AT-dZJ0840y7aEpeQV9Weegi5xMU5H16Dnea39lnc1YRJkhfRRDQDqk")
-    .then((res)=>{
-      setCountries(res.data);
-    })
-    .catch((err)=>{
-      console.log(err);
-    })
+    axios
+      .get(
+        "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/index.json?fbclid=IwAR36AT-dZJ0840y7aEpeQV9Weegi5xMU5H16Dnea39lnc1YRJkhfRRDQDqk"
+      )
+      .then((res) => {
+        setCountries(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
-/*
-* validation
-*/
-const [phoneError, setPhoneError] = useState("");
-const [isPhoneError, setIsPhoneError] = useState(false);
-const [stateSubmit, setStateSubmit] = useState(false);
-const validationPhone = () =>{
-  setIsPhoneError(false);
-  if(!phone){
-    setPhoneError("Phone is required");
-    setIsPhoneError(true);
-    return false;
-  }
-  // regex phone
-  const regexPhone = /^0[0-9]{9,10}$/;
-  if(!regexPhone.test(phone)){
-    setPhoneError("Phone is invalid");
-    setIsPhoneError(true);
-    return false;
-  }
-  return true;
-  
-}
+  useEffect(() => {
+    console.log("countries", countries);
+  }, [countries]);
+
+  /*
+   * validation
+   */
+  const [phoneError, setPhoneError] = useState("");
+  const [isPhoneError, setIsPhoneError] = useState(false);
+  const [stateSubmit, setStateSubmit] = useState(false);
+  const validationPhone = () => {
+    setIsPhoneError(false);
+    if (!phone) {
+      setPhoneError("Phone is required");
+      setIsPhoneError(true);
+      return false;
+    }
+    // regex phone
+    const regexPhone = /^0[0-9]{9,10}$/;
+    if (!regexPhone.test(phone)) {
+      setPhoneError("Phone is invalid");
+      setIsPhoneError(true);
+      return false;
+    }
+    return true;
+  };
   const handleSave = async () => {
     setStateSubmit(true);
     console.log("firstName", firstName);
@@ -72,33 +74,41 @@ const validationPhone = () =>{
     console.log("city", city);
     console.log("country", country);
     console.log("about", about);
-    if(validationPhone()&&firstName&&lastName&&address&&city&&country&&gender){
-    const data = new FormData();
-    data.append("firstName", firstName);
-    data.append("lastName", lastName);
-    data.append("email", email);
-    data.append("phone", phone);
-    data.append("avatar", avatar);
-    data.append("address", address);
-    data.append("city", city);
-    data.append("country", country);
-    data.append("about", about);
-    data.append("gender", gender)
-    const res = await axios.post("/users/modify-account-information", data);
-    if (res?.status === 200) {
-      alert("Update success")
-    } else {
-      alert("Update failed")
+    if (
+      validationPhone() &&
+      firstName &&
+      lastName &&
+      address &&
+      city &&
+      country &&
+      gender
+    ) {
+      const data = new FormData();
+      data.append("firstName", firstName);
+      data.append("lastName", lastName);
+      data.append("email", email);
+      data.append("phone", phone);
+      data.append("avatar", avatar);
+      data.append("address", address);
+      data.append("city", city);
+      data.append("country", country);
+      data.append("about", about);
+      data.append("gender", gender);
+      const res = await axios.post("/users/modify-account-information", data);
+      if (res?.status === 200) {
+        message.success("Update success");
+      } else {
+        message.error("Update fail");
+      }
     }
-  }
   };
-  
-  const handleContry = (value) =>{
+
+  const handleContry = (value) => {
     setIndexContry(value);
     setCountry(countries[value].name);
-  }
+  };
   return (
-    <MainLayout>
+    <MainLayout userData={userData}>
       <div className="px-[15px] mt-3 laptop:px-0 laptop:mx-auto laptop:max-w-[800px]">
         <div className="flex flex-col bg-white">
           {/* Header */}
@@ -130,7 +140,9 @@ const validationPhone = () =>{
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
-                {(!firstName&&stateSubmit) && <span className="text-red-500">First name is required</span>}
+                {!firstName && stateSubmit && (
+                  <span className="text-red-500">First name is required</span>
+                )}
               </div>
               {/* Last name box */}
               <div className="flex flex-col mb-6 laptop:grow laptop:ml-[15px]">
@@ -144,27 +156,56 @@ const validationPhone = () =>{
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                 />
-                {(!lastName&&stateSubmit) && <span className="text-red-500">Last name is required</span>}
+                {!lastName && stateSubmit && (
+                  <span className="text-red-500">Last name is required</span>
+                )}
               </div>
             </div>
             {/*gender*/}
             <div className="flex flex-col laptop:flex-row">
-              <div className ="flex flex-col mb-6 laptop:grow laptop:mr">
-                  <label htmlFor="gender" className="mb-2 font-semibold">
-                    Gender
-                  </label>
-                  <select 
-                  id = "gender"
-                  className ={`${styles["form-control"]} ${styles["custom-input"]}`+"content-center"}
+              <div className="flex flex-col mb-6 laptop:grow laptop:mr">
+                <label htmlFor="gender" className="mb-2 font-semibold">
+                  Gender
+                </label>
+                {/* <select
+                  id="gender"
+                  className={
+                    `${styles["form-control"]} ${styles["custom-input"]}` +
+                    "content-center"
+                  }
                   onChange={(e) => setGender(e.target.value)}
-                  >
-                        <option selected>Your gender</option>
-                        <option value ="M">Male</option>
-                        <option value ="F">Female</option>
-                        <option value ="O">Other</option>
-                  </select>
-                  {(!gender&&stateSubmit) && <span className = "text-red-500">Gender is required</span>}
-                </div>
+                >
+                  <option 
+                    
+                  >Your gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select> */}
+                <Select
+                  options={[
+                    {
+                      value: "Male",
+                      label: "Male",
+                    },
+                    {
+                      value: "Female",
+                      label: "Female",
+                    },
+                    {
+                      value: "Other",
+                      label: "Other",
+                    },
+                  ]}
+                  defaultValue={gender}
+                  onChange={(e) => setGender(e.value)}
+                  placeholder='Select your gender'
+                />
+
+                {!gender && stateSubmit && (
+                  <span className="text-red-500">Gender is required</span>
+                )}
+              </div>
             </div>
             {/* group email and phone */}
             <div className="flex flex-col laptop:flex-row">
@@ -193,7 +234,9 @@ const validationPhone = () =>{
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />
-                {(isPhoneError&&stateSubmit) && <span className="text-red-500">{phoneError}</span>}
+                {isPhoneError && stateSubmit && (
+                  <span className="text-red-500">{phoneError}</span>
+                )}
               </div>
             </div>
             {/* Address */}
@@ -208,7 +251,9 @@ const validationPhone = () =>{
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
               />
-              {(!address&&stateSubmit) && <span className="text-red-500">Address is required</span>}
+              {!address && stateSubmit && (
+                <span className="text-red-500">Address is required</span>
+              )}
             </div>
             <div className="flex flex-col laptop:flex-row">
               {/* Country */}
@@ -217,21 +262,27 @@ const validationPhone = () =>{
                   Country
                 </label>
                 <select
-                className={`${styles["form-control"]} ${styles["custom-input"]}+"content-center"`}
-                id="country"
-                onChange={(e) => handleContry(e.target.value)}
+                  className={`${styles["form-control"]} ${styles["custom-input"]}+"content-center"`}
+                  id="country"
+                  onChange={(e) => handleContry(e.target.value)}
                 >
-                <option selected>Your country</option>
-                {countries.length > 0 && 
-                countries.map((country,index) => (
-                  <option key={country.id} value={index} className ="indent-3">{country.name}</option>
-                ))
-                }
-                
-                <img src={`${countries[indexContry].image}`}/>
-                
+                  <option selected>Your country</option>
+                  {countries.length > 0 &&
+                    countries.map((country, index) => (
+                      <option
+                        key={country.id}
+                        value={index}
+                        className="indent-3"
+                      >
+                        {country.name}
+                      </option>
+                    ))}
+
+                  {/* <img src={`${countries[indexContry].image}`} /> */}
                 </select>
-                {(!country&&stateSubmit) && <span className="text-red-500">Country is required</span>}
+                {!country && stateSubmit && (
+                  <span className="text-red-500">Country is required</span>
+                )}
               </div>
 
               {/* City */}
@@ -246,7 +297,9 @@ const validationPhone = () =>{
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                 />
-                {(!city&&stateSubmit) && <span className="text-red-500">City is required</span>}
+                {!city && stateSubmit && (
+                  <span className="text-red-500">City is required</span>
+                )}
               </div>
             </div>
             {/* About */}

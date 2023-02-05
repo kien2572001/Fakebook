@@ -27,6 +27,11 @@
     h5 {
         @apply text-sm font-bold;
     }
+    
+    img, svg, video, canvas, audio, iframe, embed, object {
+        display: inline-block;
+        vertical-align: middle;
+      }
 
     .create-post-modal .ant-modal-content{
         border-radius: 5px;

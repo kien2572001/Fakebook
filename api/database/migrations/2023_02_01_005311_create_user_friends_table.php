@@ -13,12 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('reactions', function (Blueprint $table) {
+        Schema::create('user_friends', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('reactionable_id');
-            $table->string('reactionable_type');
-            $table->uuid('user_id');
-            $table->string('reaction')->comment('like, love, haha, wow, sad, angry');
+            $table->uuid('source_id');
+            $table->uuid('target_id');
+            $table->foreign('source_id')->references('id')->on('users');
+            $table->foreign('target_id')->references('id')->on('users');
+            $table->string('type')->nullable();
+            $table->string('status');
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reactions');
+        Schema::dropIfExists('user_friends');
     }
 };

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "~/store/userSlice";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { v4 as uuidv4 } from "uuid";
 
 export default function ListPost({ userData }) {
   //const [items, setItems] = useState(Array.from({ length: 5 }));
@@ -24,15 +25,18 @@ export default function ListPost({ userData }) {
         },
       });
       setItems(res.data.data);
-      console.log(res.data);
+      //console.log(res.data.data);
     };
     fetchPosts();
-    //console.log("user", userData);
   }, []);
+
+  const handleAddPost = (post) => {
+    setItems([post, ...items]);
+  };
 
   return (
     <div className="px-[15px] mt-3 laptop:px-0 laptop:mx-auto laptop:max-w-[800px]">
-      <CreatePostCard userData={userData} />
+      <CreatePostCard userData={userData} handleAddPost={handleAddPost} />
       {/* <InfiniteScroll
         dataLength={items.length}
         next={fetchMoreData}
@@ -48,8 +52,8 @@ export default function ListPost({ userData }) {
           <PostCard key={index} />
         ))}
       </InfiniteScroll> */}
-      {items.map((item, index) => (
-        <PostCard key={index} item={item} />
+      {items.map((item) => (
+        <PostCard key={uuidv4()} item={item} />
       ))}
     </div>
   );

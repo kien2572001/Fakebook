@@ -1,9 +1,20 @@
-import react from "react";
-import { Tv, Globe, Award, Zap, User } from "react-feather";
-import { Inbox, Home, MapPin, Youtube } from "react-feather";
-import { Settings, PieChart, MessageSquare } from "react-feather";
 import Link from "next/link";
-export default function Sidebar() {
+import {
+  Award,
+  Globe,
+  Home,
+  Inbox,
+  MapPin,
+  MessageSquare,
+  PieChart,
+  Settings,
+  Tv,
+  User,
+  Youtube,
+  Zap,
+} from "react-feather";
+
+export default function Sidebar({ userData }) {
   return (
     // Sidebar
     <div className="px-[15px] w-full font-openSans">
@@ -54,8 +65,8 @@ export default function Sidebar() {
             <div className="w-[45px] h-[45px] flex justify-center items-center mr-4 rounded-[45px] bg-gradient-to-r from-[#05f] to-[#09f]">
               <User size="20" color="white" />
             </div>
-            <div className="text-[15px] text-[#888888] font-semibold">
-              Author Profile
+            <div className="text-[15px] text-[#888888] font-semibold cursor-pointer">
+              <Link href={`/profile/${userData.id}`}>Author Profile</Link>
             </div>
           </div>
         </div>

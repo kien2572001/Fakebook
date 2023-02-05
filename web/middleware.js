@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { getCookie } from "cookies-next";
 
 const privateRouter = {
   home: true,
@@ -26,5 +25,5 @@ export function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/", "/profile", "/defaultsettings", "/auth/login", "/user/:path*"],
+  matcher: ["/", "/profile/:path*", "/defaultsettings", "/auth/login", "/user/:path*"],
 };

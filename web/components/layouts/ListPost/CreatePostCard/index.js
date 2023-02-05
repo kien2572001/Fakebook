@@ -11,7 +11,7 @@ import {
   MapPin,
   Flag,
 } from "react-feather";
-import { Button, Modal, Select, Tooltip } from "antd";
+import { Button, Modal, Select, Tooltip,message } from "antd";
 import { useState, useRef } from "react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
@@ -19,14 +19,16 @@ import { Input } from "antd";
 const { TextArea } = Input;
 import UploadImagePost from "./UploadImagePost";
 import axios from "~/api/axios";
+import { Mention,MentionsInput } from "react-mentions";
 
-export default function CreatePostCard({ userData }) {
+export default function CreatePostCard({ userData , handleAddPost}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [postMessage, setPostMessage] = useState("");
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [fileList, setFileList] = useState([]);
-  const [postStatus, setPostStatus] = useState("Public");
+  const [postStatus, setPostStatus] = useState("public");
+  const textRef = useRef();
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -35,7 +37,6 @@ export default function CreatePostCard({ userData }) {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
-    //reset postMessage
     setPostMessage("");
     setShowIconPicker(false);
   };
@@ -44,7 +45,20 @@ export default function CreatePostCard({ userData }) {
     setPostStatus(value);
   };
 
-  const textRef = useRef();
+  const data = [
+    {
+      id: "1",
+      display: "Manh Nguyen",
+    },
+    {
+      id: "2",
+      display: "Long Nguyen",
+    },
+    {
+      id: "3",
+      display: "Viet Nguyen",
+    },
+  ];
 
   const onChangeSize = (e) => {
     const target = e.target;
@@ -55,7 +69,7 @@ export default function CreatePostCard({ userData }) {
   const handleSubmitPost = async () => {
     let data = new FormData();
     data.append("content", postMessage);
-    data.append("status", "Public");
+    data.append("permission", postStatus);
     let i = 0;
     fileList.forEach((item) => {
       data.append("media_" + i, item.originFileObj);
@@ -65,9 +79,10 @@ export default function CreatePostCard({ userData }) {
     const res = await axios.post("/posts/create", data);
     if (res.status === 200) {
       clearModal();
-      alert("Post successfully!");
+      message.success("Post created successfully!");
+      handleAddPost(res.data.data);
     } else {
-      alert("Something went wrong!");
+      message.error("Something went wrong!");
     }
   };
 
@@ -124,9 +139,9 @@ export default function CreatePostCard({ userData }) {
                   className=""
                   size="small"
                   options={[
-                    { label: "Public", value: "Public" },
-                    { label: "Friends", value: "Friends" },
-                    { label: "Only me", value: "Only me" },
+                    { label: "Public", value: "public" },
+                    { label: "Friends", value: "friends" },
+                    { label: "Only me", value: "only_me" },
                   ]}
                 ></Select>
               </span>
@@ -143,12 +158,12 @@ export default function CreatePostCard({ userData }) {
             } w-full outline-none  text-2xl block z-50 break-all mb-2 relative px-4 min-h-[150px] resize-none	overflow-hidden`}
             value={postMessage}
             onChange={(e) => {
-              console.log(e.target.value);
               setPostMessage(e.target.value);
               onChangeSize(e);
             }}
             placeholder="What's on your mind ?"
-          ></textarea>
+          >
+          </textarea>
           <div className={`${showImagePicker ? "block" : "hidden"} px-4`}>
             <UploadImagePost fileList={fileList} setFileList={setFileList} />
           </div>
