@@ -1,17 +1,15 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserFriendController;
 use App\Http\Controllers\WebInit;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Http\Resources\User;
 use App\Models\User as ModelsUser;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +48,7 @@ Route::prefix('users')->group(function () {
         return response()->json([
             'status' => 'success',
             'message' => 'Get all users',
-            'data' => ModelsUser::all()
+            'data' => ModelsUser::all(),
         ], 200);
     });
 });
@@ -75,6 +73,7 @@ Route::prefix('reactions')->group(function () {
 Route::prefix('comments')->group(function () {
     Route::post('/create', [CommentController::class, 'createComment']);
     Route::post('/delete', [CommentController::class, 'deleteComment']);
+    Route::get('/{id}/replies', [CommentController::class, 'getRepliesOfCommentById']);
 });
 
 Route::prefix('friends')->group(function () {
@@ -86,5 +85,4 @@ Route::prefix('friends')->group(function () {
     Route::post('/delete', [UserFriendController::class, 'deleteFriend']);
     Route::get('/check/{friendId}', [UserFriendController::class, 'checkFriend']);
     Route::get('/', [UserFriendController::class, 'getListFriend']);
-    
 });

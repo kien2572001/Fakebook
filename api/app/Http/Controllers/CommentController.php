@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Comment;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
 
 class CommentController extends Controller
 {
@@ -36,11 +36,35 @@ class CommentController extends Controller
             $image->save();
         }
 
-        
-
         return response()->json([
             'message' => 'Comment created successfully',
-            'comment' => $comment->load('user','reactions.user','image'),
+            'comment' => $comment->load('user', 'reactions.user', 'image'),
         ], 201);
+    }
+
+    public function getRepliesOfCommentById($id)
+    {
+        try {
+            $comment = Comment::find($id);
+            $replies = $comment->replies()->with('user', 'reactions.user', 'image')->get();
+            $replies = $replies->map(function ($reply) {
+                $reactions = \App\Helpers\AppHelper::countReactions($reply->reactions);
+                return [
+                    'id' => $reply->id,
+                    'content' => $reply->content,
+                    'user' => $reply->user,
+                    'reactions' => $reactions,
+                    'created_at' => $reply->created_at,
+                    'updated_at' => $reply->updated_at,
+                ];
+            });
+
+            return response()->json([
+                'replies' => $replies,
+                'status' => 'success',
+            ], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }

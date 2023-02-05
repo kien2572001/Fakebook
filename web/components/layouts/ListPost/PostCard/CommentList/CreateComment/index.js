@@ -8,7 +8,11 @@ import { Button, message, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import axios from "~/api/axios";
 
-export default function CreateComment({ postId, addComment }) {
+export default function CreateComment({
+  postId,
+  addComment,
+  type = "comment",
+}) {
   const user = useSelector((state) => state.user.user);
   const [content, setContent] = useState("");
   const textRef = useRef();
@@ -42,6 +46,7 @@ export default function CreateComment({ postId, addComment }) {
   };
 
   const handleSubmitComment = async () => {
+
     if (content.trim() === "") {
       message.error("Please enter your comment");
       return;
@@ -49,15 +54,20 @@ export default function CreateComment({ postId, addComment }) {
     const formData = new FormData();
     formData.append("content", content);
     formData.append("commentable_id", postId);
-    formData.append("commentable_type", "App\\Models\\Post");
+    if (type === "comment") {
+      formData.append("commentable_type", "App\\Models\\Post");
+    }
+    if (type === "reply") {
+      formData.append("commentable_type", "App\\Models\\Comment");
+    }
     if (image) {
       formData.append("image", image);
     }
     const res = await axios.post("/comments/create", formData);
+    console.log("res: ", res);
     if (res.status === 201) {
       resetForm();
       // add new comment to list comment
-      
       addComment(res.data.comment);
       message.success("Comment successfully");
     } else {
@@ -112,16 +122,18 @@ export default function CreateComment({ postId, addComment }) {
               icon={<Smile size={24} color="#65676B" />}
               type="link"
             ></Button>
-            <Button
-              icon={<Camera size={24} color="#65676B" />}
-              type="link"
-              onClick={() => {
-                if (openSelectImage) {
-                  setImage(null);
-                }
-                setOpenSelectImage(!openSelectImage);
-              }}
-            />
+            {type === "comment" && (
+              <Button
+                icon={<Camera size={24} color="#65676B" />}
+                type="link"
+                onClick={() => {
+                  if (openSelectImage) {
+                    setImage(null);
+                  }
+                  setOpenSelectImage(!openSelectImage);
+                }}
+              />
+            )}
             <Button
               icon={<Send size={24} color="#65676B" />}
               type="link"

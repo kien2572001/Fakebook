@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->string('content')->nullable();
+            $table->string('permission')->default('public')->comment('public, friends', 'only_me');
             $table->timestamps();
         });
     }

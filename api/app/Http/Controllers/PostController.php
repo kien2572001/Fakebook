@@ -8,7 +8,6 @@ use App\Models\SubPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -23,17 +22,18 @@ class PostController extends Controller
         $posts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->orderBy('created_at', 'desc')->get();
         $posts = $posts->map(function ($post) {
             $reactions = \App\Helpers\AppHelper::countReactions($post->reactions);
-            $temp = [
+
+            return [
                 'id' => $post->id,
                 'content' => $post->content,
                 'user' => $post->user,
                 'image' => $post->image ? $post->image->path : null,
                 'sub_posts' => $post->subPosts,
                 'reactions' => $reactions,
+                'permission' => $post->permission,
                 'created_at' => $post->created_at,
                 'updated_at' => $post->updated_at,
             ];
-            return $temp;
         });
 
         return response()->json([
@@ -41,8 +41,6 @@ class PostController extends Controller
             'data' => $posts,
         ], 200);
     }
-
-   
 
     public function createPost(Request $request)
     {
@@ -52,6 +50,7 @@ class PostController extends Controller
             $post = new Post();
             $post->content = $request->content;
             $post->user_id = $user->id;
+            $post->permission = $request->permission;
             $post->save();
 
             if ($request->hasFile('image')) {
@@ -82,6 +81,20 @@ class PostController extends Controller
                 }
             }
 
+            $post->load('image', 'subPosts.image', 'reactions.user', 'user');
+            $reactions = \App\Helpers\AppHelper::countReactions($post->reactions);
+            $post = [
+                'id' => $post->id,
+                'content' => $post->content,
+                'user' => $post->user,
+                'image' => $post->image ? $post->image->path : null,
+                'sub_posts' => $post->subPosts,
+                'reactions' => $reactions,
+                'permission' => $post->permission,
+                'created_at' => $post->created_at,
+                'updated_at' => $post->updated_at,
+            ];
+
             return response()->json([
                 'status' => 'success',
                 'data' => $post,
@@ -94,7 +107,8 @@ class PostController extends Controller
         ], 404);
     }
 
-    public function getCommentsOfPostById(Request $request, $id){
+    public function getCommentsOfPostById(Request $request, $id)
+    {
         try {
             //code...
             $post = Post::find($id);
@@ -102,7 +116,8 @@ class PostController extends Controller
             $comments->load('user', 'reactions.user', 'image');
             $comments = $comments->map(function ($comment) {
                 $reactions = \App\Helpers\AppHelper::countReactions($comment->reactions);
-                $temp = [
+
+                return [
                     'id' => $comment->id,
                     'content' => $comment->content,
                     'user' => $comment->user,
@@ -111,8 +126,8 @@ class PostController extends Controller
                     'created_at' => $comment->created_at,
                     'updated_at' => $comment->updated_at,
                 ];
-                return $temp;
             });
+
             return response()->json([
                 'status' => 'success',
                 'data' => $comments,
@@ -121,6 +136,4 @@ class PostController extends Controller
             //throw $th;
         }
     }
-
-    
 }

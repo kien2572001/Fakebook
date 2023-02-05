@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\UserFriend;
 use App\Enums\UserFriendStatusEnum;
 use App\Http\Requests\UserFriendRequest;
+use App\Models\UserFriend;
+use Illuminate\Http\Request;
 
 class UserFriendController extends Controller
 {
@@ -23,7 +23,7 @@ class UserFriendController extends Controller
         ], 200);
     }
 
-    public function  getAllFriend()
+    public function getAllFriend()
     {
     }
 
@@ -39,7 +39,6 @@ class UserFriendController extends Controller
 
         $userId = auth()->user()->id;
 
-        
         $userFriendS1 = UserFriend::where('source_id', $userId)
             ->where('target_id', $friendId)
             ->first();
@@ -47,12 +46,12 @@ class UserFriendController extends Controller
         $userFriendS2 = UserFriend::where('source_id', $friendId)
             ->where('target_id', $userId)
             ->first();
-        
+
         if (isset($userFriendS1) || isset($userFriendS2)) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'You are friends with this user',
-                'data' =>  isset($userFriendS1) ? $userFriendS1 : $userFriendS2,
+                'data' => isset($userFriendS1) ? $userFriendS1 : $userFriendS2,
             ], 200);
         }
 
@@ -83,27 +82,31 @@ class UserFriendController extends Controller
             ->where('target_id', $friendId)
             ->first();
 
-        if ($userFriend&&$userFriend->status == UserFriendStatusEnum::PENDING->value) {
+        if ($userFriend && $userFriend->status === UserFriendStatusEnum::PENDING->value) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'You have already sent a request to this user',
             ], 400);
         }
-        else if ($userFriend&&$userFriend->status == UserFriendStatusEnum::ACCEPTED->value) {
+
+        if ($userFriend && $userFriend->status === UserFriendStatusEnum::ACCEPTED->value) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'You are already friends with this user',
             ], 400);
         }
-        else if ($userFriend&&$userFriend->status == UserFriendStatusEnum::REJECTED->value) {
+
+        if ($userFriend && $userFriend->status === UserFriendStatusEnum::REJECTED->value) {
             $userFriend->status = UserFriendStatusEnum::PENDING->value;
             $userFriend->save();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Add friend successfully',
                 'data' => $userFriend,
             ], 200);
         }
+
         $userFriend = new UserFriend();
         $userFriend->source_id = $userId;
         $userFriend->target_id = $friendId;
@@ -131,8 +134,10 @@ class UserFriendController extends Controller
                 'message' => 'You have not received a request from this user',
             ], 400);
         }
+
         $userFriend->status = UserFriendStatusEnum::ACCEPTED->value;
         $userFriend->save();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Accept friend successfully',
@@ -154,21 +159,24 @@ class UserFriendController extends Controller
                 'message' => 'You have not received a request from this user',
             ], 400);
         }
+
         $userFriend->status = UserFriendStatusEnum::REJECTED->value;
         $userFriend->save();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Reject friend successfully',
             'data' => $userFriend,
         ], 200);
     }
+
     public function deleteFriend(Request $request)
     {
         $userId = auth()->user()->id;
         $friendId = $request->user_id;
         $userFriend = UserFriend::where([
             ['source_id', '=', $userId],
-            ['target_id', '=', $friendId]
+            ['target_id', '=', $friendId],
         ])
             ->orWhere([
                 ['source_id', '=', $friendId],
@@ -181,7 +189,9 @@ class UserFriendController extends Controller
                 'message' => 'You have not received a request from this user',
             ], 400);
         }
+
         $userFriend->delete();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Delete friend successfully',
