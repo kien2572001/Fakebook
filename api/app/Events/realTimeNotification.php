@@ -9,31 +9,25 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-class MessageSent implements ShouldBroadcast
+
+class realTimeNotification implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    
     public $user_src;
     public $user_target;
-    public $message;
-   
-    public function __construct($user_src, $user_target,$message )
+    public $signal;
+    public function __construct($user_src, $user_target,$signal)
     {
-        $this->message = $message;
+        $this->signal = $signal;
         $this->user_src = $user_src;
         $this->user_target = $user_target;
     }
     public function broadcastOn()
     {
-        if($this->user_src[0]>$this->user_target[0])
-            $chanel = substr($this->user_src,0,3).substr($this->user_target,0,3);
-        else
-            $chanel = substr($this->user_target,0,3).substr($this->user_src,0,3);
-        return [$chanel];
-        //return ['chat'];
+        return [$this->user_target];
     }
     public function broadcastAs()
     {
-        return 'message';
+        return 'signal';
     }
 }

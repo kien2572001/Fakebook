@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Reaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Events\realTimeNotification;
 class ReactionController extends Controller
 {
     public function createReaction(Request $request)
@@ -28,6 +28,7 @@ class ReactionController extends Controller
             $reaction->reaction = $type;
             $reaction->user_id = Auth::user()->id;
             $reaction->save();
+            event(new realTimeNotification(Auth::user()->id,"7c4f33cd-ac0c-4b3b-9207-778f8b850749","reaction"));
             $reaction->load('user');
 
             return response()->json([
