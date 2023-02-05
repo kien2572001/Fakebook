@@ -20,7 +20,7 @@ import axios from "~/api/axios";
         }
     });
     ///////////////////////////////////////
-    let messages =[];
+   
     const messageEndRef = React.useRef(null);
     const user = useSelector((state) => state.user.user);
     const [currentMessage, setCurrentMessage] = React.useState("");
@@ -55,7 +55,7 @@ import axios from "~/api/axios";
     },[targetId])
 
     React.useEffect(()=>{
-        scrollToBottom();
+        let messages =[];
         //Pusher.logToConsole = true;
         const pusher = new Pusher("61ced07f1c5be563dc8f", {
             cluster: "ap1",
@@ -66,7 +66,7 @@ import axios from "~/api/axios";
             setMessage(messages);
         });
     });
-    const insertMessages = async () =>{
+    const insertMessages = async (e) =>{
         let data = {
             user_src:user.id,
             user_target:targetId,
@@ -82,7 +82,6 @@ import axios from "~/api/axios";
         setCurrentMessage("");
         
         console.log("test:",message);
-        scrollToBottom();
     }
     
     return (
