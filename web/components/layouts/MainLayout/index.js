@@ -28,7 +28,7 @@ export default function MainLayout({ children,userData }) {
           <Sidebar userData={userData} />
         </div>
         <div className="overflow-auto grow pt-[96px] laptop:pl-[280px] desktop:pr-[280px] min-h-screen">{children}</div>
-        <div className="hidden desktop:block desktop:w-[280px] pt-[96px] fixed top-0 px-[0.9375rem] right-0">
+        <div className="hidden desktop:block desktop:w-[280px] pt-[96px] fixed top-0 px-[0.9375rem] right-0 bottom-0">
           <ContactBar />
         </div>
       </div>
