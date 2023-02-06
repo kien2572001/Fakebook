@@ -9,10 +9,8 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserFriendController;
 use App\Http\Controllers\WebInit;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Http\Resources\User;
 use App\Models\User as ModelsUser;
-
+use App\Http\Controllers\GroupController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -86,5 +84,16 @@ Route::prefix('friends')->group(function () {
     Route::post('/delete', [UserFriendController::class, 'deleteFriend']);
     Route::get('/check/{friendId}', [UserFriendController::class, 'checkFriend']);
     Route::get('/', [UserFriendController::class, 'getListFriend']);
-    
+});
+
+Route::prefix('groups')->group(function () {
+    Route::get('/', [GroupController::class, 'getMyGroups']);
+    Route::get('/list', [GroupController::class, 'getListGroup']);
+    Route::get('/{id}/members', [GroupController::class, 'getListMemberOfGroup']);
+    Route::get('/{id}/posts', [GroupController::class, 'getListPostOfGroup']);
+    Route::post('/create-post', [GroupController::class, 'createPostInGroup']);
+    Route::post('/create', [GroupController::class, 'createGroup']);
+    Route::post('/join', [GroupController::class, 'joinGroup']);
+    Route::post('/leave', [GroupController::class, 'leaveGroup']);
+    Route::post('/update', [GroupController::class, 'updateGroup']);
 });
