@@ -16,12 +16,13 @@ const AccountInformation = ({ userData }) => {
   const [avatar, setAvatar] = useState(userData?.avatar || "");
   const [address, setAddress] = useState(userData?.address || "");
   const [city, setCity] = useState(userData?.city || "");
-  const [country, setCountry] = useState(userData?.country || "");
+  const [country, setCountry] = useState(userData?.country ||"your country");
   const [about, setAbout] = useState(userData?.about || "");
-  const [gender, setGender] = useState(userData?.gender || "");
+  const [gender, setGender] = useState(userData?.gender || "Select your gender");
+  const [countryIMG, setCountryIMG] = useState("https://upload.wikimedia.org/wikipedia/commons/c/cb/The_Blue_Marble_%28remastered%29.jpg");
   const [countries, setCountries] = useState([{}]);
   const [indexContry, setIndexContry] = useState(0);
-
+  const [currentCountry, setCurrentCountry] = useState({});
   useEffect(() => {
     //console.log("userData", userData);
     //axios get  data conutries
@@ -30,6 +31,12 @@ const AccountInformation = ({ userData }) => {
         "https://cdn.jsdelivr.net/npm/country-flag-emoji-json@2.0.0/dist/index.json?fbclid=IwAR36AT-dZJ0840y7aEpeQV9Weegi5xMU5H16Dnea39lnc1YRJkhfRRDQDqk"
       )
       .then((res) => {
+        console.log("res", res.data);
+        if(country!== "your country"){
+          const index =  res.data.find((item)=>item.name === country);
+          console.log("index",index)
+          setCountryIMG(index.image);
+      }
         setCountries(res.data);
       })
       .catch((err) => {
@@ -37,10 +44,7 @@ const AccountInformation = ({ userData }) => {
       });
   }, []);
 
-  useEffect(() => {
-    console.log("countries", countries);
-  }, [countries]);
-
+  
   /*
    * validation
    */
@@ -63,6 +67,9 @@ const AccountInformation = ({ userData }) => {
     }
     return true;
   };
+  const testGender = (value) => {
+    setGender(value);
+  }
   const handleSave = async () => {
     setStateSubmit(true);
     console.log("firstName", firstName);
@@ -74,6 +81,7 @@ const AccountInformation = ({ userData }) => {
     console.log("city", city);
     console.log("country", country);
     console.log("about", about);
+    console.log("gender",gender)
     if (
       validationPhone() &&
       firstName &&
@@ -106,6 +114,7 @@ const AccountInformation = ({ userData }) => {
   const handleContry = (value) => {
     setIndexContry(value);
     setCountry(countries[value].name);
+    setCountryIMG(countries[value].image);
   };
   return (
     <MainLayout userData={userData}>
@@ -197,9 +206,8 @@ const AccountInformation = ({ userData }) => {
                       label: "Other",
                     },
                   ]}
-                  defaultValue={gender}
-                  onChange={(e) => setGender(e.value)}
-                  placeholder='Select your gender'
+                  value={gender}
+                  onChange={testGender}
                 />
 
                 {!gender && stateSubmit && (
@@ -266,7 +274,7 @@ const AccountInformation = ({ userData }) => {
                   id="country"
                   onChange={(e) => handleContry(e.target.value)}
                 >
-                  <option selected>Your country</option>
+                  <option selected>{country}</option>
                   {countries.length > 0 &&
                     countries.map((country, index) => (
                       <option
@@ -284,7 +292,12 @@ const AccountInformation = ({ userData }) => {
                   <span className="text-red-500">Country is required</span>
                 )}
               </div>
-
+              <div className="flex flex-col relative laptop:grow items-center">
+                <img
+                    src={`${countryIMG}`}
+                    className="absolute object-cover rounded-full shadow-lg top-6"
+                  />
+              </div>
               {/* City */}
               <div className="flex flex-col mb-6 laptop:grow laptop:ml-[15px]">
                 <label htmlFor="city" className="mb-2 font-semibold">
@@ -297,6 +310,7 @@ const AccountInformation = ({ userData }) => {
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                 />
+               
                 {!city && stateSubmit && (
                   <span className="text-red-500">City is required</span>
                 )}
