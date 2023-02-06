@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\chatController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReactionController;
@@ -12,7 +13,6 @@ use App\Http\Controllers\UserFriendController;
 use App\Http\Controllers\WebInit;
 use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -100,4 +100,16 @@ Route::prefix('friends')->group(function () {
 
 Route::prefix('notifications')->group(function () {
     Route::get('/list', [NotificationController::class, 'getNotification']);
+});
+
+Route::prefix('groups')->group(function () {
+    Route::get('/', [GroupController::class, 'getMyGroups']);
+    Route::get('/list', [GroupController::class, 'getListGroup']);
+    Route::get('/{id}/members', [GroupController::class, 'getListMemberOfGroup']);
+    Route::get('/{id}/posts', [GroupController::class, 'getListPostOfGroup']);
+    Route::post('/create-post', [GroupController::class, 'createPostInGroup']);
+    Route::post('/create', [GroupController::class, 'createGroup']);
+    Route::post('/join', [GroupController::class, 'joinGroup']);
+    Route::post('/leave', [GroupController::class, 'leaveGroup']);
+    Route::post('/update', [GroupController::class, 'updateGroup']);
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Cache;
 use Carbon\Carbon;
 use Closure;

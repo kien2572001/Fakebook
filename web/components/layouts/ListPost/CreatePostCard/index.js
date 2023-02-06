@@ -1,27 +1,24 @@
-import react from "react";
-import styles from "~/styles/Main.module.css";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
+import { Button, Input, message, Modal, Select, Tooltip } from "antd";
+import { useRef, useState } from "react";
 import {
-  Edit3,
-  Video,
-  Image,
   Camera,
+  Edit3,
+  Flag,
+  Image,
+  MapPin,
   MoreHorizontal,
   Smile,
   User,
-  MapPin,
-  Flag,
+  Video,
 } from "react-feather";
-import { Button, Modal, Select, Tooltip,message } from "antd";
-import { useState, useRef } from "react";
-import data from "@emoji-mart/data";
-import Picker from "@emoji-mart/react";
-import { Input } from "antd";
-const { TextArea } = Input;
-import UploadImagePost from "./UploadImagePost";
 import axios from "~/api/axios";
-import { Mention,MentionsInput } from "react-mentions";
+import styles from "~/styles/Main.module.css";
+import UploadImagePost from "./UploadImagePost";
+const { TextArea } = Input;
 
-export default function CreatePostCard({ userData , handleAddPost}) {
+export default function CreatePostCard({ userData, handleAddPost }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [postMessage, setPostMessage] = useState("");
   const [showIconPicker, setShowIconPicker] = useState(false);
@@ -44,7 +41,6 @@ export default function CreatePostCard({ userData , handleAddPost}) {
   const handlePostStatus = (value) => {
     setPostStatus(value);
   };
-
 
   const onChangeSize = (e) => {
     const target = e.target;
@@ -114,9 +110,7 @@ export default function CreatePostCard({ userData , handleAddPost}) {
             </div>
             <div className="flex flex-col">
               <span className="text-gray-500 font-semibold">
-                {
-                  userData?.firstName + " " + userData?.lastName
-                }
+                {userData?.firstName + " " + userData?.lastName}
               </span>
               <span className="text-gray-500 font-semibold opacity-40">
                 <Select
@@ -148,8 +142,7 @@ export default function CreatePostCard({ userData , handleAddPost}) {
               onChangeSize(e);
             }}
             placeholder="What's on your mind ?"
-          >
-          </textarea>
+          ></textarea>
           <div className={`${showImagePicker ? "block" : "hidden"} px-4`}>
             <UploadImagePost fileList={fileList} setFileList={setFileList} />
           </div>
