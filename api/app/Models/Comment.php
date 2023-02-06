@@ -24,7 +24,7 @@ class Comment extends Model
 
     public function replies()
     {
-        return $this->morphMany(Comment::class, 'commentable');
+        return $this->morphMany(self::class, 'commentable');
     }
 
     public function reactions()
@@ -32,7 +32,8 @@ class Comment extends Model
         return $this->morphMany(Reaction::class, 'reactionable');
     }
 
-    public function image(){
+    public function image()
+    {
         return $this->morphOne(Image::class, 'imageable');
     }
 }

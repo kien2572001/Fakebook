@@ -8,6 +8,10 @@ import { useSelector } from "react-redux";
 import { selectUser } from "~/store/userSlice";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { v4 as uuidv4 } from "uuid";
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 export default function ListPost({ userData }) {
   //const [items, setItems] = useState(Array.from({ length: 5 }));
   const [items, setItems] = useState([]);

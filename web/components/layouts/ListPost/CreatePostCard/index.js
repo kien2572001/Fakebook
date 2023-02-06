@@ -19,6 +19,7 @@ import { Input } from "antd";
 const { TextArea } = Input;
 import UploadImagePost from "./UploadImagePost";
 import axios from "~/api/axios";
+import { Mention,MentionsInput } from "react-mentions";
 
 export default function CreatePostCard({ userData , handleAddPost}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,7 +27,11 @@ export default function CreatePostCard({ userData , handleAddPost}) {
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [fileList, setFileList] = useState([]);
+<<<<<<< HEAD
   const [postStatus, setPostStatus] = useState("Public");
+=======
+  const [postStatus, setPostStatus] = useState("public");
+>>>>>>> develop
   const textRef = useRef();
   const showModal = () => {
     setIsModalOpen(true);
@@ -44,7 +49,10 @@ export default function CreatePostCard({ userData , handleAddPost}) {
     setPostStatus(value);
   };
 
+<<<<<<< HEAD
   
+=======
+>>>>>>> develop
 
   const onChangeSize = (e) => {
     const target = e.target;
@@ -148,7 +156,8 @@ export default function CreatePostCard({ userData , handleAddPost}) {
               onChangeSize(e);
             }}
             placeholder="What's on your mind ?"
-          ></textarea>
+          >
+          </textarea>
           <div className={`${showImagePicker ? "block" : "hidden"} px-4`}>
             <UploadImagePost fileList={fileList} setFileList={setFileList} />
           </div>
@@ -174,7 +183,6 @@ export default function CreatePostCard({ userData , handleAddPost}) {
                     } else {
                       setPostMessage(postMessage + e.native);
                     }
-                    console.log(e);
                   }}
                 />
               </div>

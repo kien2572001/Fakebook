@@ -1,6 +1,7 @@
 import { Popover, Tooltip } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import Pusher from "pusher-js";
 import {
   MessageCircle,
   MessageSquare,
@@ -21,6 +22,7 @@ import LikeButton from "./Like";
 import ReactionsRender from "~/components/common/ReactionsRender";
 import ReactionBar from "~/components/common/ReactionsBar";
 import { Image } from "antd";
+import Link from "next/link";
 
 export default function PostCard({ item, index }) {
   const [reactions, setReactions] = useState(null);
@@ -28,13 +30,27 @@ export default function PostCard({ item, index }) {
   const [reactionArr, setReactionArr] = useState(item?.reactions);
   const [showComment, setShowComment] = useState(false);
   const [visible, setVisible] = useState(false);
-
+  const [dataPusher, setDataPusher] = useState(null);
+  useEffect(() => {
+    const pusher = new Pusher("61ced07f1c5be563dc8f", {
+      cluster: "ap1",
+  });
+  const chanel = pusher.subscribe(user.id);
+  chanel.bind("signal", (data) => {
+    setDataPusher(data);
+    console.log("data:", data);
+  });
+  return () => {
+    pusher.unsubscribe(user.id);
+  };
+  })
   const handleReactions = async (reaction) => {
     if (reactions === null) {
       const res = await axios.post("/reactions/create", {
         reactionable_id: item.id,
         reactionable_type: "App\\Models\\Post",
         reaction: reaction,
+        notification_target_id: item.user.id,
       });
       if (res.data.status === "success") {
         setReactions(reaction);
@@ -50,7 +66,7 @@ export default function PostCard({ item, index }) {
       }
     }
   };
-
+  
   const updateReaction = (data, type) => {
     //console.log("data", data);
     if (type === "create") {
@@ -199,17 +215,21 @@ export default function PostCard({ item, index }) {
         <div className="flex">
           {/* Avatar */}
           <div className="w-[45px] h-[45px] mb-4 mr-4">
-            <img
-              src={item?.user.avatar}
-              alt="avatar"
-              className="w-full h-full rounded-[45px]"
-            />
+            <Link href={`/profile/${item?.user.id}`}>
+              <img
+                src={item?.user.avatar}
+                alt="avatar"
+                className="w-full h-full rounded-[45px]"
+              />
+            </Link>
           </div>
           {/* Name */}
           <div className=" text-xs mt-1 mb-2">
-            <span className="text-default font-bold  block">
-              {item?.user.first_name + " " + item?.user.last_name}
-            </span>
+            <Link href={`/profile/${item?.user.id}`}>
+              <span className="text-default font-bold  block">
+                {item?.user.first_name + " " + item?.user.last_name}
+              </span>
+            </Link>
             <span className="text-gray-500 block">
               {moment(item?.created_at).fromNow()}
 

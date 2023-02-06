@@ -6,7 +6,9 @@ import axios from "~/api/axios";
 import { useEffect, useState } from "react";
 import ReactionsRender from "~/components/common/ReactionsRender";
 import ReactionBar from "~/components/common/ReactionsBar";
-export default function Comment({ comment }) {
+import ReplyList from "./ReplyList";
+import Link from "next/link";
+export default function Comment({ comment, type = "comment" }) {
   const user = useSelector((state) => state.user.user);
   const [reactions, setReactions] = useState(null);
   const [reactionArr, setReactionArr] = useState(comment?.reactions);
@@ -19,7 +21,6 @@ export default function Comment({ comment }) {
         reaction: reaction,
       });
       if (res.data.status === "success") {
-        //console.log("res", res);
         setReactions(reaction);
         updateReaction(res.data.data, "create");
       }
@@ -156,6 +157,9 @@ export default function Comment({ comment }) {
   };
 
   useEffect(() => {
+    if (type === "reply") {
+      console.log("comment", comment);
+    }
     let reaction = null;
     let check = false;
     for (let i = 0; i < reactionArr.length; i++) {
@@ -180,23 +184,27 @@ export default function Comment({ comment }) {
   }, []);
 
   return (
-    <div className="flex pt-1">
+    <div className="flex pt-1 w-full">
       {/* Avatar */}
       <div className="flex justify-center items-top grow-0 mr-2">
-        <img
-          src={comment.user.avatar}
-          alt="avatar"
-          className="min-w-[32px] h-[32px] rounded-[32px]"
-        />
+        <Link href={`/profile/${comment.user.id}`}>
+          <img
+            src={comment.user.avatar}
+            alt="avatar"
+            className="min-w-[32px] h-[32px] rounded-[32px]"
+          />
+        </Link>
       </div>
       {/* Content */}
       <div className="flex flex-col grow">
         <div className="grow text-sm text-[#050505]">
           <div className="inline-block bg-[#F0F2F5] rounded-[18px] px-3 py-2">
             <div className="flex items-start flex-col ">
-              <span className=" font-semibold">
-                {comment.user.first_name + " " + comment.user.last_name}
-              </span>
+              <Link href={`/profile/${comment.user.id}`}>
+                <span className=" font-semibold">
+                  {comment.user.first_name + " " + comment.user.last_name}
+                </span>
+              </Link>
               <div className="">
                 <span className="">{comment.content}</span>
               </div>
@@ -228,12 +236,21 @@ export default function Comment({ comment }) {
             ) : (
               <>{displayReactionsContent()}</>
             )}
-            <span className=" text-xs px-2 hover:underline">Reply</span>
+            {type === "comment" && (
+              <span
+                className=" text-xs px-2 hover:underline"
+                onClick={() => setShowReply(!showReply)}
+              >
+                Reply
+              </span>
+            )}
             <span className=" text-xs px-2 font-normal text-[#65676B]">
               {moment(comment.created_at).fromNow()}
             </span>
             <ReactionsRender reactions={reactionArr} type={"comment"} />
           </div>
+          {/* Reply */}
+          {showReply && <ReplyList id={comment.id} />}
         </div>
       </div>
     </div>

@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Helpers;
 
 class AppHelper
 {
-    public static function countReactions($reactions){
+    public static function countReactions($reactions)
+    {
         $arr = [
             [
                 'reaction' => 'like',
@@ -34,9 +36,8 @@ class AppHelper
                 'reaction' => 'angry',
                 'count' => 0,
                 'listUser' => [],
-            ]
+            ],
         ];
-
 
         foreach ($reactions as $reaction) {
             $user = $reaction->user;
@@ -48,9 +49,11 @@ class AppHelper
             $arr[$index]['count'] += 1;
             array_push($arr[$index]['listUser'], $returnUSer);
         }
-        usort($arr, function($a, $b) {
+
+        usort($arr, function ($a, $b) {
             return $b['count'] <=> $a['count'];
         });
+
         return $arr;
     }
 }

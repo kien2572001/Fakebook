@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->uuid('user_id');
-            $table->string('content')->nullable();
-            $table->string('permission')->default('public')->comment('public, friends', 'only_me');
+        Schema::create('messages', function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('user_src');
+            $table->text('user_target');
+            $table->text('message');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('messages');
     }
 };

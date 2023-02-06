@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Reaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Events\realTimeNotification;
 class ReactionController extends Controller
 {
     public function createReaction(Request $request)
@@ -21,6 +21,7 @@ class ReactionController extends Controller
             $reactionable_id = $request->reactionable_id;
             $reactionable_type = $request->reactionable_type;
             $type = $request->reaction;
+            $notification_target_id = $request->notification_target_id;
 
             $reaction = new Reaction();
             $reaction->reactionable_id = $reactionable_id;
@@ -28,6 +29,7 @@ class ReactionController extends Controller
             $reaction->reaction = $type;
             $reaction->user_id = Auth::user()->id;
             $reaction->save();
+            event(new realTimeNotification(Auth::user()->id, $notification_target_id, 'like your post'));
             $reaction->load('user');
 
             return response()->json([
