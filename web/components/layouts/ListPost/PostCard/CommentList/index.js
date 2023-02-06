@@ -18,6 +18,7 @@ export default function CommentList({ id }) {
           return new Date(b.created_at) - new Date(a.created_at);
         })
       );
+      console.log("comments: ", res.data.data);
       setTimeout(() => {
         setLoading(false);
       }, 200);

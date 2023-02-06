@@ -34,21 +34,24 @@ class ReactionController extends Controller
             $reaction->user_id = Auth::user()->id;
             $reaction->save();
 
-            $signal = '';
-            if ($reactionable_type === 'App\Models\Post') {
-                $signal = $type.' your post';
-            } elseif ($reactionable_type === 'App\Models\Comment') {
-                $signal = $type.' your comment';
+            if (Auth::user()->id !== $notification_target_id) {
+                $signal = '';
+                if ($reactionable_type === 'App\Models\Post') {
+                    $signal = $type.' your post';
+                } elseif ($reactionable_type === 'App\Models\Comment') {
+                    $signal = $type.' your comment';
+                }
+
+                $notification = new Notification();
+                $notification->user_src = Auth::user()->id;
+                $notification->user_target = $notification_target_id;
+                $notification->signal = $signal;
+                $notification->type = NotificationType::REACTION;
+                $notification->save();
+
+                event(new realTimeNotification(Auth::user()->id, $notification_target_id, $notification));
             }
 
-            $notification = new Notification();
-            $notification->user_src = Auth::user()->id;
-            $notification->user_target = $notification_target_id;
-            $notification->signal = $signal;
-            $notification->type = NotificationType::REACTION;
-            $notification->save();
-
-            event(new realTimeNotification(Auth::user()->id, $notification_target_id, $notification));
             $reaction->load('user');
 
             return response()->json([

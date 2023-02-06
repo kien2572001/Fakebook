@@ -22,7 +22,18 @@ export default function Notification({ data }) {
           className="absolute right-0 mt-2 bg-white rounded-md shadow-lg overflow-hidden z-20"
           style={{ width: "20rem" }}
         >
-          <div className="py-2 max-h-[341px] overflow-x-hidden overflow-y-auto cursor-pointer">
+          <div
+            className={`py-2 max-h-[341px] ${
+              data && data.length > 0 ? "overflow-x-hidden overflow-y-auto" : "overflow-hidden"
+            } cursor-pointer`}
+          >
+            {data && data.length === 0 && (
+              <img
+                src="https://fakebook-kien2572001.s3.ap-southeast-1.amazonaws.com/images/default/no-notification.png"
+                alt="no-notification"
+                className="w-full h-full"
+              />
+            )}
             {data &&
               data.length > 0 &&
               data.map((item, index) => {
@@ -51,9 +62,6 @@ export default function Notification({ data }) {
                   </div>
                 );
               })}
-            {data && data.length === 0 && (
-              <Result status="404" title="No notifications found" />
-            )}
             {/* <div
                 href="#"
                 className="flex items-center px-4 py-3 border-b hover:bg-gray-100 -mx-2"

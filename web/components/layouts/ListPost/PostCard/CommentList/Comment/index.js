@@ -19,6 +19,7 @@ export default function Comment({ comment, type = "comment" }) {
         reactionable_id: comment.id,
         reactionable_type: "App\\Models\\Comment",
         reaction: reaction,
+        notification_target_id: comment.user.id,
       });
       if (res.data.status === "success") {
         setReactions(reaction);
