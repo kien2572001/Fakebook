@@ -1,17 +1,8 @@
-import react from "react";
-
-import PostCard from "./PostCard";
-import CreatePostCard from "./CreatePostCard";
-import axios from "~/api/axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "~/store/userSlice";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { v4 as uuidv4 } from "uuid";
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
+import axios from "~/api/axios";
+import CreatePostCard from "./CreatePostCard";
+import PostCard from "./PostCard";
 export default function ListPost({ userData }) {
   //const [items, setItems] = useState(Array.from({ length: 5 }));
   const [items, setItems] = useState([]);
