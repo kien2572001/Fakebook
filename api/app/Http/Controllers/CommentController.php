@@ -49,6 +49,7 @@ class CommentController extends Controller
             $replies = $comment->replies()->with('user', 'reactions.user', 'image')->get();
             $replies = $replies->map(function ($reply) {
                 $reactions = \App\Helpers\AppHelper::countReactions($reply->reactions);
+
                 return [
                     'id' => $reply->id,
                     'content' => $reply->content,

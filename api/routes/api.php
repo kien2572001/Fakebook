@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\chatController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PostController;
@@ -10,7 +11,6 @@ use App\Http\Controllers\UserFriendController;
 use App\Http\Controllers\WebInit;
 use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\chatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,9 +72,10 @@ Route::prefix('reactions')->group(function () {
 });
 
 Route::prefix('chat')->group(function () {
-    Route::get('/fetchMessages', [chatController::class, 'fetchMessages']);
+    Route::get('/list', [chatController::class, 'getAllMessage']);
     Route::post('/sendMessage', [chatController::class, 'sendMessage']);
     Route::get('/test', [chatController::class, 'Test']);
+
 });
 
 
@@ -95,4 +96,3 @@ Route::prefix('friends')->group(function () {
     Route::get('/check/{friendId}', [UserFriendController::class, 'checkFriend']);
     Route::get('/', [UserFriendController::class, 'getListFriend']);
 });
-

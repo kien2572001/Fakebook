@@ -45,20 +45,6 @@ export default function CreatePostCard({ userData , handleAddPost}) {
     setPostStatus(value);
   };
 
-  const data = [
-    {
-      id: "1",
-      display: "Manh Nguyen",
-    },
-    {
-      id: "2",
-      display: "Long Nguyen",
-    },
-    {
-      id: "3",
-      display: "Viet Nguyen",
-    },
-  ];
 
   const onChangeSize = (e) => {
     const target = e.target;
@@ -189,7 +175,6 @@ export default function CreatePostCard({ userData , handleAddPost}) {
                     } else {
                       setPostMessage(postMessage + e.native);
                     }
-                    console.log(e);
                   }}
                 />
               </div>
