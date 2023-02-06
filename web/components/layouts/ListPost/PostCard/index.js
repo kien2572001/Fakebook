@@ -35,11 +35,14 @@ export default function PostCard({ item, index }) {
     const pusher = new Pusher("61ced07f1c5be563dc8f", {
       cluster: "ap1",
   });
-  const chanel = pusher.subscribe("7c4f33cd-ac0c-4b3b-9207-778f8b850749");
+  const chanel = pusher.subscribe(user.id);
   chanel.bind("signal", (data) => {
     setDataPusher(data);
     console.log("data:", data);
   });
+  return () => {
+    pusher.unsubscribe(user.id);
+  };
   })
   const handleReactions = async (reaction) => {
     if (reactions === null) {
@@ -47,6 +50,7 @@ export default function PostCard({ item, index }) {
         reactionable_id: item.id,
         reactionable_type: "App\\Models\\Post",
         reaction: reaction,
+        notification_target_id: item.user.id,
       });
       if (res.data.status === "success") {
         setReactions(reaction);

@@ -54,9 +54,11 @@ export default function Chat({ targetData, handleCloseChatBox }) {
     });
     const chanel = pusher.subscribe(`${chanelName}`);
     chanel.bind("message", (data) => {
-      allMessage.push(data);
-      setMessage(allMessage);
+      setMessage((message) => [...message, data]);
     });
+    return () => {
+      pusher.unsubscribe(chanelName);
+    };
   });
 
   useEffect(() => {
@@ -97,9 +99,7 @@ export default function Chat({ targetData, handleCloseChatBox }) {
                   {targetData.name}
                 </p>
               </Link>
-              <p className="text-white font-sans font-normal text-xs">
-                Online
-              </p>
+              <p className="text-white font-sans font-normal text-xs">Online</p>
             </div>
           </div>
           <div className="flex items-center">
