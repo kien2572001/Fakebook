@@ -1,7 +1,6 @@
 import { Popover, Tooltip } from "antd";
 import moment from "moment";
-import { useEffect, useState } from "react";
-
+import { useEffect, useState,useRef, useLayoutEffect, } from "react";
 import {
   MessageCircle,
   MessageSquare,
@@ -23,13 +22,24 @@ import ReactionsRender from "~/components/common/ReactionsRender";
 import ReactionBar from "~/components/common/ReactionsBar";
 import { Image } from "antd";
 import Link from "next/link";
+import Gallery from "./Gallery";
 
 export default function PostCard({ item, index }) {
   const [reactions, setReactions] = useState(null);
   const user = useSelector((state) => state.user.user);
   const [reactionArr, setReactionArr] = useState(item?.reactions);
   const [showComment, setShowComment] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const targetRef = useRef();
+  const [dimensions, setDimensions] = useState({ width:0, height: 0 });
+
+  useLayoutEffect(() => {
+    if (targetRef.current) {
+      setDimensions({
+        width: targetRef.current.offsetWidth,
+        height: targetRef.current.offsetHeight
+      });
+    }
+  }, []);
   
   const handleReactions = async (reaction) => {
     if (reactions === null) {
@@ -135,42 +145,8 @@ export default function PostCard({ item, index }) {
     const listImage = item?.sub_posts?.map((item) => {
       return item.image.path;
     });
-    if (listImage.length === 1) {
-      return (
-        <Image
-          src={listImage[0]}
-          style={{ width: "100%", cursor: "pointer" }}
-        />
-      );
-    } else if (listImage.length === 2) {
-      return (
-        <div className="flex cursor-pointer">
-          <img
-            src={listImage[0]}
-            className="w-1/2"
-            onClick={() => setVisible(true)}
-          />
-          <img
-            src={listImage[1]}
-            className="w-1/2"
-            onClick={() => setVisible(true)}
-          />
-          <div className="display-none">
-            <Image.PreviewGroup
-              preview={{
-                visible,
-                onVisibleChange: (visible) => setVisible(visible),
-              }}
-            >
-              <Image src={listImage[0]} />
-              <Image src={listImage[1]} />
-            </Image.PreviewGroup>
-          </div>
-        </div>
-      );
-    }
 
-    console.log("listImage", listImage);
+    return <Gallery listImage={listImage} boxSize={dimensions} />;
   };
 
   const renderPostPermission = (size) => {
@@ -196,7 +172,7 @@ export default function PostCard({ item, index }) {
   };
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} ref={targetRef}>
       {/* Avatar box */}
       <div className="flex justify-between">
         <div className="flex">

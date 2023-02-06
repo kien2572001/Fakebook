@@ -7,7 +7,6 @@ import AuthContext from "~/contexts/AuthContext";
 
 import "antd/dist/antd.css";
 import "~/styles/globals.css";
-
 import { Provider } from "react-redux";
 import { wrapper } from "~/store/store";
 
