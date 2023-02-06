@@ -38,12 +38,12 @@ class chatController extends Controller
 
     public function getAllMessage(Request $request)
     {
-        $user_src = $request->input('source_id'); 
+        $user_src = $request->input('source_id');
         $user_target = $request->input('target_id');
         $messages = Message::where([
             ['user_src', '=', $user_src],
             ['user_target', '=', $user_target],
-        ] )
+        ])
             ->orWhere([
                 ['user_src', '=', $user_target],
                 ['user_target', '=', $user_src],

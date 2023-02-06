@@ -16,7 +16,7 @@ class GroupMember extends Model
         'group_id',
         'user_id',
         'role',
-        'status'
+        'status',
     ];
 
     public function group()

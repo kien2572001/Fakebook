@@ -15,30 +15,31 @@ class UserFriendController extends Controller
         $friends = UserFriend::where([
             ['source_id', '=', $userId],
             ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
-        ] )
+        ])
             ->orWhere([
                 ['target_id', '=', $userId],
                 ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
             ])
             ->get();
-        
+
             $friends = $friends->map(function ($friend) use ($userId) {
-                $relationId = $friend->id ;
-                $temp  = null ;
+                $relationId = $friend->id;
+                $temp  = null;
                 if ($friend->source_id === $userId) {
                     $temp = $friend->target;
-                }
-                else{
+                } else {
                     $temp = $friend->source;
                 }
-               return [
-                     'id' => $temp->id,
-                     'name' => $temp->first_name . ' ' . $temp->last_name,
-                     'email' => $temp->email,
-                     'avatar' => $temp->avatar,
+
+                return [
+                    'id' => $temp->id,
+                    'name' => $temp->first_name.' '.$temp->last_name,
+                    'email' => $temp->email,
+                    'avatar' => $temp->avatar,
                     'relation_id' => $relationId,
-               ];                
+                ];
             });
+
         return response()->json([
             'status' => 'success',
             'data' => $friends,

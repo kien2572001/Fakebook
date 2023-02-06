@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('message_groups', function (Blueprint $table) {
-            $table->id();
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->uuid('user_src');
+            $table->uuid('user_target');
+            $table->string('signal');
+            $table->string('type');
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('message_groups');
+        Schema::dropIfExists('notifications');
     }
 };

@@ -20,7 +20,7 @@ export default function MainLayout({ children,userData }) {
   return (
     <div className=" w-full relative min-h-screen bg-background">
       <div className=" shadow-xs fixed top-0 left-0 right-0 bg-white z-10">
-        <Navbar />
+        <Navbar userData={userData} />
       </div>
       <div className=" w-full flex z">
         {/* Sidebar */}
