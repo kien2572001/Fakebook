@@ -1,7 +1,7 @@
 import { Popover, Tooltip } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import Pusher from "pusher-js";
+
 import {
   MessageCircle,
   MessageSquare,
@@ -30,20 +30,7 @@ export default function PostCard({ item, index }) {
   const [reactionArr, setReactionArr] = useState(item?.reactions);
   const [showComment, setShowComment] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [dataPusher, setDataPusher] = useState(null);
-  useEffect(() => {
-    const pusher = new Pusher("61ced07f1c5be563dc8f", {
-      cluster: "ap1",
-  });
-  const chanel = pusher.subscribe(user.id);
-  chanel.bind("signal", (data) => {
-    setDataPusher(data);
-    console.log("data:", data);
-  });
-  return () => {
-    pusher.unsubscribe(user.id);
-  };
-  })
+  
   const handleReactions = async (reaction) => {
     if (reactions === null) {
       const res = await axios.post("/reactions/create", {
@@ -66,7 +53,7 @@ export default function PostCard({ item, index }) {
       }
     }
   };
-  
+
   const updateReaction = (data, type) => {
     //console.log("data", data);
     if (type === "create") {

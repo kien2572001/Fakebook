@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\chatController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\UserController;
@@ -75,7 +76,6 @@ Route::prefix('chat')->group(function () {
     Route::get('/list', [chatController::class, 'getAllMessage']);
     Route::post('/sendMessage', [chatController::class, 'sendMessage']);
     Route::get('/test', [chatController::class, 'Test']);
-
 });
 
 
@@ -95,4 +95,9 @@ Route::prefix('friends')->group(function () {
     Route::post('/delete', [UserFriendController::class, 'deleteFriend']);
     Route::get('/check/{friendId}', [UserFriendController::class, 'checkFriend']);
     Route::get('/', [UserFriendController::class, 'getListFriend']);
+});
+
+
+Route::prefix('notifications')->group(function () {
+    Route::get('/list', [NotificationController::class, 'getNotification']);
 });
