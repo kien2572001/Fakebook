@@ -14,22 +14,19 @@ class MessageSent implements ShouldBroadcast
     public $user_src;
     public $user_target;
     public $message;
-    public $relation_id;
+    
 
-    public function __construct($user_src, $user_target, $message, $relation_id)
+    public function __construct($user_src, $user_target, $message)
     {
         $this->message = $message;
         $this->user_src = $user_src;
         $this->user_target = $user_target;
-        $this->relation_id = $relation_id;
     }
 
     public function broadcastOn()
     {
-        $channel = $this->relation_id;
-
+        $channel = "chat".$this->user_target;
         return [$channel];
-        //return ['chat'];
     }
 
     public function broadcastAs()

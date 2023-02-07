@@ -19,9 +19,9 @@ import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 
 export default function Chat({ targetData, handleCloseChatBox }) {
-  const [chanelName, setChanelName] = React.useState(targetData.relation_id);
   const messageEndRef = useRef(null);
   const user = useSelector((state) => state.user.user);
+  const [chanelName, setChanelName] = React.useState('chat'+user.id);
   const [currentMessage, setCurrentMessage] = useState("");
   const [message, setMessage] = useState([]);
   const scrollToBottom = () => {
@@ -52,6 +52,7 @@ export default function Chat({ targetData, handleCloseChatBox }) {
     const pusher = new Pusher("61ced07f1c5be563dc8f", {
       cluster: "ap1",
     });
+    
     const chanel = pusher.subscribe(`${chanelName}`);
     chanel.bind("message", (data) => {
       setMessage((message) => [...message, data]);
@@ -69,9 +70,9 @@ export default function Chat({ targetData, handleCloseChatBox }) {
     let data = {
       user_src: user.id,
       user_target: targetData.id,
-      message: currentMessage,
-      relation_id: targetData.relation_id,
+      message: currentMessage
     };
+    setMessage((message) => [...message, data]);
     const res = await axios.post(`/chat/sendMessage`, data);
     if (res.status === 200) {
       setCurrentMessage("");

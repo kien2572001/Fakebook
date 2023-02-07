@@ -19,9 +19,8 @@ class chatController extends Controller
         $message->user_src = $request->input('user_src');
         $message->user_target = $request->input('user_target');
         $message->message = $request->input('message');
-        //$message->relation_id = $request->input('relation_id');
         $message->save();
-        event(new MessageSent($request->input('user_src'), $request->input('user_target'), $request->input('message'), $request->input('relation_id')));
+        event(new MessageSent($request->input('user_src'), $request->input('user_target'), $request->input('message')));
 
         return 'connect successfully';
     }
