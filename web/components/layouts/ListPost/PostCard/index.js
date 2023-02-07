@@ -1,6 +1,6 @@
 import { Popover, Tooltip } from "antd";
 import moment from "moment";
-import { useEffect, useState,useRef, useLayoutEffect, } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import {
   MessageCircle,
   MessageSquare,
@@ -23,6 +23,7 @@ import ReactionBar from "~/components/common/ReactionsBar";
 import { Image } from "antd";
 import Link from "next/link";
 import Gallery from "./Gallery";
+import { message } from "antd";
 
 export default function PostCard({ item, index }) {
   const [reactions, setReactions] = useState(null);
@@ -30,17 +31,17 @@ export default function PostCard({ item, index }) {
   const [reactionArr, setReactionArr] = useState(item?.reactions);
   const [showComment, setShowComment] = useState(false);
   const targetRef = useRef();
-  const [dimensions, setDimensions] = useState({ width:0, height: 0 });
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useLayoutEffect(() => {
     if (targetRef.current) {
       setDimensions({
         width: targetRef.current.offsetWidth,
-        height: targetRef.current.offsetHeight
+        height: targetRef.current.offsetHeight,
       });
     }
   }, []);
-  
+
   const handleReactions = async (reaction) => {
     if (reactions === null) {
       const res = await axios.post("/reactions/create", {
@@ -52,6 +53,9 @@ export default function PostCard({ item, index }) {
       if (res.data.status === "success") {
         setReactions(reaction);
         updateReaction(res.data.data, "create");
+      } else {
+        setReactions(null);
+        message.error("Something went wrong");
       }
     } else {
       const res = await axios.post("/reactions/delete", {
@@ -60,6 +64,8 @@ export default function PostCard({ item, index }) {
       if (res.data.status === "success") {
         setReactions(null);
         updateReaction(res.data.data, "delete");
+      } else {
+        message.error("Something went wrong");
       }
     }
   };

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\NotificationType;
 use App\Enums\UserFriendStatusEnum;
+use App\Events\realTimeNotification;
 use App\Http\Requests\UserFriendRequest;
+use App\Models\Notification;
 use App\Models\UserFriend;
 use Illuminate\Http\Request;
 
@@ -123,6 +126,14 @@ class UserFriendController extends Controller
             $userFriend->status = UserFriendStatusEnum::PENDING->value;
             $userFriend->save();
 
+            $notification = new Notification();
+            $notification->user_src = $userId;
+            $notification->user_target = $friendId;
+            $notification->type = NotificationType::FRIEND_REQUEST->value;
+            $notification->signal = 'send a friend request to you';
+            $notification->save();
+            event(new realTimeNotification($userId, $friendId, $notification));
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Add friend successfully',
@@ -135,6 +146,15 @@ class UserFriendController extends Controller
         $userFriend->target_id = $friendId;
         $userFriend->status = UserFriendStatusEnum::PENDING->value;
         $userFriend->save();
+
+        //add event notification
+        $notification = new Notification();
+        $notification->user_src = $userId;
+        $notification->user_target = $friendId;
+        $notification->type = NotificationType::FRIEND_REQUEST->value;
+        $notification->signal = 'send a friend request to you';
+        $notification->save();
+        event(new realTimeNotification($userId, $friendId, $notification));
 
         return response()->json([
             'status' => 'success',
@@ -160,6 +180,14 @@ class UserFriendController extends Controller
 
         $userFriend->status = UserFriendStatusEnum::ACCEPTED->value;
         $userFriend->save();
+
+        $notification = new Notification();
+            $notification->user_src = $userId;
+            $notification->user_target = $friendId;
+            $notification->type = NotificationType::FRIEND_ACCEPT->value;
+            $notification->signal = 'accept your friend request';
+            $notification->save();
+            event(new realTimeNotification($userId, $friendId, $notification));
 
         return response()->json([
             'status' => 'success',

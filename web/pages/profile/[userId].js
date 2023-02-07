@@ -33,7 +33,6 @@ export async function getServerSideProps(context) {
   if (userId !== userData.id) {
     try {
       const response = await axios.get(
-        // `${process.env.SERVER_API_HOST}/api/users/${id}}`
         `${process.env.SERVER_API_HOST}/api/users/${userId}/information`
       );
       thisProfileUser = response.data?.data;
@@ -74,6 +73,7 @@ export default function profile({ userData, thisProfileUser }) {
         const response = await axios.get(
           "/friends/check/" + thisProfileUser.id
         );
+        console.log('response', response.data.data)
         if (response.status === 200) {
           setCheckRelation(response.data.data?.status);
         }

@@ -8,4 +8,6 @@ enum NotificationType: string
     case COMMENT = 'comment';
     case FOLLOW = 'follow';
     case FRIEND_REQUEST = 'friend_request';
+    case FRIEND_ACCEPT = 'friend_accept';
+    case FRIEND_REJECT = 'friend_reject';
 }

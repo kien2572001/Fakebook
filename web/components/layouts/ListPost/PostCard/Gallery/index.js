@@ -121,6 +121,7 @@ export default function Gallery({ listImage, boxSize }) {
               visible,
               onVisibleChange: (visible) => setVisible(visible),
             }}
+            
           >
             <Image src={listImage[0]} />
             <Image src={listImage[1]} />

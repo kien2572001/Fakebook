@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\NotificationType;
-use App\Events\realTimeNotification;
-use App\Models\Notification;
 use App\Models\Reaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\PushEvent;
 
 class ReactionController extends Controller
 {
@@ -20,38 +19,29 @@ class ReactionController extends Controller
                 'reactionable_type' => 'required|string',
                 'reaction' => 'required|string',
             ]);
-            'like your comment';
-
+            $notification_target_id = $request->notification_target_id;
+            $thisUserId = Auth::user()->id;
             $reactionable_id = $request->reactionable_id;
             $reactionable_type = $request->reactionable_type;
             $type = $request->reaction;
-            $notification_target_id = $request->notification_target_id;
 
             $reaction = new Reaction();
             $reaction->reactionable_id = $reactionable_id;
             $reaction->reactionable_type = $reactionable_type;
             $reaction->reaction = $type;
-            $reaction->user_id = Auth::user()->id;
+            $reaction->user_id = $thisUserId;
             $reaction->save();
 
-            if (Auth::user()->id !== $notification_target_id) {
+            if ($thisUserId !== $notification_target_id) {
                 $signal = '';
                 if ($reactionable_type === 'App\Models\Post') {
-                    $signal = $type.' your post';
+                    $signal = $type . ' your post';
                 } elseif ($reactionable_type === 'App\Models\Comment') {
-                    $signal = $type.' your comment';
+                    $signal = $type . ' your comment';
                 }
 
-                $notification = new Notification();
-                $notification->user_src = Auth::user()->id;
-                $notification->user_target = $notification_target_id;
-                $notification->signal = $signal;
-                $notification->type = NotificationType::REACTION;
-                $notification->save();
-
-                event(new realTimeNotification(Auth::user()->id, $notification_target_id, $notification));
+                PushEvent::dispatch($thisUserId, $notification_target_id, $signal, NotificationType::REACTION->value);
             }
-
             $reaction->load('user');
 
             return response()->json([
