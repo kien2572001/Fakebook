@@ -12,16 +12,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const id = JSON.parse(userCookie).id;
-  let userData = null;
-  try {
-    const response = await axios.get(
-      `${process.env.SERVER_API_HOST}/api/users/${id}`
-    );
-    userData = response.data?.data;
-  } catch (error) {
-    //console.log(error);
-  }
+  const userData = parserUserCookies(context.req.cookies);
 
   return {
     props: {

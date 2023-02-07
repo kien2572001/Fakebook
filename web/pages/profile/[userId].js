@@ -17,36 +17,21 @@ import { useState } from "react";
 import { Button, Dropdown, Menu, message } from "antd";
 
 export async function getServerSideProps(context) {
-  const userData = parserUserCookies(context.req.cookies);
-  if (!userData) {
+  const userCookie = context.req.cookies.user;
+  // console.log('user', userCookie)
+  if (!userCookie) {
     return {
       redirect: {
-        destination: "auth/login",
+        destination: "/auth/login",
         permanent: false,
       },
     };
   }
-
-  const userId = context.params.userId;
-  let thisProfileUser = null;
-  let checkFriend = "false";
-  if (userId !== userData.id) {
-    try {
-      const response = await axios.get(
-        `${process.env.SERVER_API_HOST}/api/users/${userId}/information`
-      );
-      thisProfileUser = response.data?.data;
-    } catch (error) {
-      //console.log(error);
-    }
-  } else {
-    thisProfileUser = userData;
-  }
+  const userData = parserUserCookies(context.req.cookies);
 
   return {
     props: {
       userData: userData,
-      thisProfileUser: thisProfileUser,
     },
   };
 }

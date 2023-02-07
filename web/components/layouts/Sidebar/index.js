@@ -57,7 +57,7 @@ export default function Sidebar({ userData }) {
               <Zap size="20" color="white" />
             </div>
             <div className="text-[15px] text-[#888888] font-semibold">
-              Popular Groups
+              <Link href="/group">Popular Groups</Link>
             </div>
           </div>
           {/* Author Profile */}
@@ -144,14 +144,16 @@ export default function Sidebar({ userData }) {
             </div>
           </div>
           {/* Chat button */}
-        <Link href="/testChat">
-          <div className="flex px-[20px] py-2 items-center min-h-[44px]">
-            <div className="w-[20px] h-[20px] flex justify-center items-center mr-4 ">
-              <MessageSquare size="20" color="#adb5bd" />
+          <Link href="/testChat">
+            <div className="flex px-[20px] py-2 items-center min-h-[44px]">
+              <div className="w-[20px] h-[20px] flex justify-center items-center mr-4 ">
+                <MessageSquare size="20" color="#adb5bd" />
+              </div>
+              <div className="text-[15px] text-[#888888] font-semibold">
+                Chat
+              </div>
             </div>
-            <div className="text-[15px] text-[#888888] font-semibold">Chat</div>
-          </div>
-        </Link>
+          </Link>
         </div>
       </div>
       {/* End of account box */}

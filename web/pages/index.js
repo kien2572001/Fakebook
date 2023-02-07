@@ -11,10 +11,11 @@ import axios from "~/api/axios";
 
 import { useDispatch } from "react-redux";
 import { setUser } from "~/store/userSlice";
+import { parserUserCookies } from "~/ultis/parser";
 
 export async function getServerSideProps(context) {
   const userCookie = context.req.cookies.user;
-  // console.log('user', userCookie)
+
   if (!userCookie) {
     return {
       redirect: {
@@ -23,17 +24,17 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const id = JSON.parse(userCookie).id;
-  let userData = null;
-  try {
-    const response = await axios.get(
-      // `${process.env.SERVER_API_HOST}/api/users/${id}}`
-      `${process.env.SERVER_API_HOST}/api/users/${id}`
-    );
-    userData = response.data?.data;
-  } catch (error) {
-    //console.log(error);
-  }
+  //const id = JSON.parse(userCookie).id;
+  const userData = parserUserCookies(context.req.cookies);
+  // try {
+  //   const response = await axios.get(
+  //     // `${process.env.SERVER_API_HOST}/api/users/${id}}`
+  //     `${process.env.SERVER_API_HOST}/api/users/${id}`
+  //   );
+  //   userData = response.data?.data;
+  // } catch (error) {
+  //   //console.log(error);
+  // }
 
   return {
     props: {

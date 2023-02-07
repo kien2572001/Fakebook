@@ -10,9 +10,8 @@ import { setUser } from "~/store/userSlice";
 export default function MainLayout({ children,userData }) {
 
   const dispatch = useDispatch();
-
   useLayoutEffect(() => {
-    //console.log("userData", userData);
+    console.log("userData", userData);
     dispatch(setUser(userData));
   }, []);
 
