@@ -7,6 +7,8 @@ import FriendCard from "../AllFriends/FriendCard";
 import { message, Badge, Dropdown, Spin } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FriendRequestBox from "../FriendRequestBox";
+import { useRouter } from "next/router";
+import { useRef } from "react";
 
 export default function FriendSuggestions(userData) {
   const [listFriends, setListFriends] = useState([]);
@@ -15,6 +17,7 @@ export default function FriendSuggestions(userData) {
   const [listRequest, setListRequest] = useState([]);
   const [requestCount, setRequestCount] = useState(0);
   const [showListRequest, setShowListRequest] = useState(false);
+  const router = useRouter();
 
   const fetchFriends = async () => {
     const res = await axios.get("/friends/suggestions", {
@@ -77,7 +80,31 @@ export default function FriendSuggestions(userData) {
   return (
     <div className="mx-32 w-4/5 mt-4">
       <div className="w-full p-6 flex justify-between h-[90px] bg-white items-center rounded-md">
-        <p className="text-2xl font-bold">Friend Suggestions</p>
+        <div className="flex items-center">
+          <Link href="/friends">
+            <span
+              className={
+                router.pathname === "/friends"
+                  ? "text-xl font-bold ml-2"
+                  : "text-xl font-bold ml-2 text-gray-400"
+              }
+            >
+              Friends
+            </span>
+          </Link>
+          <span className="text-gray-400 ml-2">/</span>
+          <Link href="/friends/friend-suggestions">
+            <span
+              className={
+                router.pathname === "/friends/friend-suggestions"
+                  ? "text-xl font-bold ml-2"
+                  : "text-xl font-bold ml-2 text-gray-400"
+              }
+            >
+              Friend Suggestions
+            </span>
+          </Link>
+        </div>
         <div className="flex h-full">
           <div className="flex bg-gray-100 text-gray-400 justify-center items-center rounded-md relative mr-2">
             <input

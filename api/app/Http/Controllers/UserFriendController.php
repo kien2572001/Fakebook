@@ -57,6 +57,7 @@ class UserFriendController extends Controller
         $userId  = auth()->user()->id;
         $haveRelationList = UserFriend::where('source_id', $userId)
             ->orWhere('target_id', $userId)
+            ->where('status', UserFriendStatusEnum::ACCEPTED->value)
             ->get();
 
         $listID = $haveRelationList->map(function ($friend) use ($userId) {

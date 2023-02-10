@@ -4,9 +4,10 @@ import { use, useEffect, useState } from "react";
 import axios from "~/api/axios";
 import { v4 as uuidv4 } from "uuid";
 import FriendCard from "./FriendCard";
-import { message, Badge, Dropdown, Spin } from "antd";
+import { message, Badge, Dropdown, Spin, Breadcrumb } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FriendRequestBox from "../FriendRequestBox";
+import { useRouter } from "next/router";
 export default function FriendManager(userData) {
   const [listFriends, setListFriends] = useState([]);
   const [pageParam, setPageParam] = useState(1);
@@ -14,7 +15,7 @@ export default function FriendManager(userData) {
   const [listRequest, setListRequest] = useState([]);
   const [requestCount, setRequestCount] = useState(0);
   const [showListRequest, setShowListRequest] = useState(false);
-
+  const router = useRouter();
   const fetchFriends = async () => {
     const res = await axios.get("/friends/all-friends", {
       params: {
@@ -77,7 +78,31 @@ export default function FriendManager(userData) {
   return (
     <div className="mx-32 w-4/5 mt-4">
       <div className="w-full p-6 flex justify-between h-[90px] bg-white items-center rounded-md">
-        <p className="text-2xl font-bold">Friends</p>
+        <div className="flex items-center">
+          <Link href="/friends">
+            <span
+              className={
+                router.pathname === "/friends"
+                  ? "text-xl font-bold ml-2"
+                  : "text-xl font-bold ml-2 text-gray-400"
+              }
+            >
+              Friends
+            </span>
+          </Link>
+          <span className="text-gray-400 ml-2">/</span>
+          <Link href="/friends/friend-suggestions">
+            <span
+              className={
+                router.pathname === "/friends/friend-suggestions"
+                  ? "text-xl font-bold ml-2"
+                  : "text-xl font-bold ml-2 text-gray-400"
+              }
+            >
+              Friend Suggestions
+            </span>
+          </Link>
+        </div>
         <div className="flex h-full">
           <div className="flex bg-gray-100 text-gray-400 justify-center items-center rounded-md relative mr-2">
             <input

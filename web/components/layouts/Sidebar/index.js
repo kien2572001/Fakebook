@@ -40,7 +40,7 @@ export default function Sidebar({ userData }) {
               <Users size="20" color="white" />
             </div>
             <div className="text-[15px] text-[#888888] font-semibold">
-              <Link href="friends/all-friends">Friends</Link>
+              <Link href="friends">Friends</Link>
             </div>
           </div>
           {/* Explore Stories */}
