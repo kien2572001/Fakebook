@@ -12,6 +12,7 @@ import {
   User,
   Youtube,
   Zap,
+  Users
 } from "react-feather";
 
 export default function Sidebar({ userData }) {
@@ -36,10 +37,10 @@ export default function Sidebar({ userData }) {
           {/* Badges */}
           <div className="flex px-[15px] py-3 items-center max-h-[54px]">
             <div className="w-[45px] h-[45px] flex justify-center items-center mr-4 rounded-[45px] bg-gradient-to-r from-[#e44d26] to-[#f16529]">
-              <Award size="20" color="white" />
+              <Users size="20" color="white" />
             </div>
             <div className="text-[15px] text-[#888888] font-semibold">
-              Badges
+              <Link href="friends/all-friends">Friends</Link>
             </div>
           </div>
           {/* Explore Stories */}

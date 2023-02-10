@@ -9,9 +9,12 @@ use App\Http\Requests\UserFriendRequest;
 use App\Models\Notification;
 use App\Models\UserFriend;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class UserFriendController extends Controller
 {
+    //used in contact bar
     public function getListFriend()
     {
         $userId  = auth()->user()->id;
@@ -51,6 +54,53 @@ class UserFriendController extends Controller
 
     public function getAllFriend()
     {
+        $userId  = auth()->user()->id;
+        $haveRelationList = UserFriend::where('source_id', $userId)
+            ->orWhere('target_id', $userId)
+            ->get();
+
+        $listID = $haveRelationList->map(function ($friend) use ($userId) {
+            $temp  = null;
+            if ($friend->source_id === $userId) {
+                $temp = $friend->target_id;
+            } else {
+                $temp = $friend->source_id;
+            }
+
+            return $temp;
+        });
+
+        $friends = User::whereIn('id', $listID)->paginate(8);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $friends,
+        ], 200);
+    }
+
+    public function getFriendSuggestions(){
+
+        $userId  = auth()->user()->id;
+        $haveRelationList = UserFriend::where('source_id', $userId)
+            ->orWhere('target_id', $userId)
+            ->get();
+
+        $listID = $haveRelationList->map(function ($friend) use ($userId) {
+            $temp  = null;
+            if ($friend->source_id === $userId) {
+                $temp = $friend->target_id;
+            } else {
+                $temp = $friend->source_id;
+            }
+
+            return $temp;
+        });
+
+        $friends = User::where('id', '!=', auth()->user()->id)->whereNotIn('id', $listID)->paginate(8);
+        return response()->json([
+            'status' => 'success',
+            'data' => $friends,
+        ], 200);
     }
 
     public function checkFriend($friendId)
@@ -93,6 +143,7 @@ class UserFriendController extends Controller
         $friends = UserFriend::where('target_id', $userId)
             ->where('status', UserFriendStatusEnum::PENDING->value)
             ->get();
+        $friends->load('source', 'target');
 
         return response()->json([
             'status' => 'success',

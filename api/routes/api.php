@@ -87,7 +87,7 @@ Route::prefix('comments')->group(function () {
 });
 
 Route::prefix('friends')->group(function () {
-    Route::get('/list', [UserFriendController::class, 'getAllFriend']);
+    //Route::get('/list', [UserFriendController::class, 'getAllFriend']);
     Route::get('/request', [UserFriendController::class, 'getListRequest']);
     Route::post('/add', [UserFriendController::class, 'addFriend']);
     Route::post('/accept', [UserFriendController::class, 'acceptFriend']);
@@ -95,6 +95,11 @@ Route::prefix('friends')->group(function () {
     Route::post('/delete', [UserFriendController::class, 'deleteFriend']);
     Route::get('/check/{friendId}', [UserFriendController::class, 'checkFriend']);
     Route::get('/', [UserFriendController::class, 'getListFriend']);
+
+    //used in all friends page
+    Route::get('/all-friends', [UserFriendController::class, 'getAllFriend']);
+    //used in friend suggestions
+    Route::get('/suggestions', [UserFriendController::class, 'getFriendSuggestions']);
 });
 
 

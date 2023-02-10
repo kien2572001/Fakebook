@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect,useState } from "react";
 import { parserUserCookies } from "~/ultis/parser";
 import {
   ExternalLink,
@@ -13,25 +13,39 @@ import MainLayout from "~/components/layouts/MainLayout";
 import AuthContext from "~/contexts/AuthContext";
 import ListPost from "~/components/layouts/ListPost";
 import axios from "~/api/axios";
-import { useState } from "react";
 import { Button, Dropdown, Menu, message } from "antd";
 
 export async function getServerSideProps(context) {
-  const userCookie = context.req.cookies.user;
-  // console.log('user', userCookie)
-  if (!userCookie) {
+  const userData = parserUserCookies(context.req.cookies);
+  if (!userData) {
     return {
       redirect: {
-        destination: "/auth/login",
+        destination: "auth/login",
         permanent: false,
       },
     };
   }
-  const userData = parserUserCookies(context.req.cookies);
+
+  const userId = context.params.userId;
+  let thisProfileUser = null;
+  let checkFriend = "false";
+  if (userId !== userData.id) {
+    try {
+      const response = await axios.get(
+        `${process.env.SERVER_API_HOST}/api/users/${userId}/information`
+      );
+      thisProfileUser = response.data?.data;
+    } catch (error) {
+      //console.log(error);
+    }
+  } else {
+    thisProfileUser = userData;
+  }
 
   return {
     props: {
       userData: userData,
+      thisProfileUser: thisProfileUser,
     },
   };
 }

@@ -16,7 +16,7 @@ const ContactBar = () => {
     const fetchListFriends = async () => {
       setLoading(true);
       const res = await axios.get("/friends");
-      console.log("friends", res.data);
+      //console.log("friends", res.data);
       setListFriends(res.data.data);
       setTimeout(() => {
         setLoading(false);

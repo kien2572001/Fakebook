@@ -2,29 +2,25 @@
 
 namespace App\Jobs;
 
+use App\Events\realTimeNotification;
+use App\Models\Notification;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Enums\NotificationType;
-use App\Events\realTimeNotification;
-use App\Models\Notification;
-
-
 
 class PushEvent implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    
+
     protected $userSrc;
     protected $userTarget;
     protected $notification;
 
     /**
      * Create a new job instance.
-     * 
+     *
      * @param $userSrc
      * @param $userTarget
      * @param $signal
@@ -52,7 +48,7 @@ class PushEvent implements ShouldQueue
      * @return void
      */
     public function handle()
-    {        
+    {
         event(new realTimeNotification($this->userSrc, $this->userTarget, $this->notification));
     }
 }

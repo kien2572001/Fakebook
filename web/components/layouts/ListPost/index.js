@@ -29,7 +29,7 @@ export default function ListPost({ userData }) {
   };
 
   return (
-    <div className="px-[15px] mt-3 laptop:px-0 laptop:mx-auto laptop:max-w-[650px]">
+    <div className="px-[15px] mt-3 laptop:px-0 laptop:mx-auto laptop:max-w-[800px]">
       <CreatePostCard userData={userData} handleAddPost={handleAddPost} />
       {/* <InfiniteScroll
         dataLength={items.length}

@@ -5,26 +5,15 @@ export default function Notification({ data }) {
   return (
     <div className="flex justify-center h-screen absolute right-4">
       <div className="relative my-[90px]">
-        {/* <button className="relative z-10 block rounded-md bg-white p-2 focus:outline-none">
-            <svg
-              className="h-5 w-5 text-gray-800"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
-            </svg>
-          </button> */}
-
-        {/* <div className="fixed inset-0 h-full w-full z-10"></div> */}
-
         <div
           className="absolute right-0 mt-2 bg-white rounded-md shadow-lg overflow-hidden z-20"
           style={{ width: "20rem" }}
         >
           <div
             className={`py-2 max-h-[341px] ${
-              data && data.length > 0 ? "overflow-x-hidden overflow-y-auto" : "overflow-hidden"
+              data && data.length > 0
+                ? "overflow-x-hidden overflow-y-auto"
+                : "overflow-hidden"
             } cursor-pointer`}
           >
             {data && data.length === 0 && (

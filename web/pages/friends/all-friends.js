@@ -1,7 +1,7 @@
-import AccountInformation from "~/components/user/AccountInformation";
-import axios from "axios";
+import MainLayout from "~/components/layouts/MainLayout";
 import { parserUserCookies } from "~/ultis/parser";
-//ssr
+import AllFriends from "~/components/friends/AllFriends";
+
 export async function getServerSideProps(context) {
   const userCookie = context.req.cookies.user;
   // console.log('user', userCookie)
@@ -22,6 +22,10 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function accountinformation({ userData }) {
-  return <AccountInformation userData={userData} />;
+export default function Index({ userData }) {
+  return (
+    <MainLayout userData={userData}>
+      <AllFriends userData={userData} />
+    </MainLayout>
+  );
 }
