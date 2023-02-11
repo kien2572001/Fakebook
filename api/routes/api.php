@@ -62,9 +62,10 @@ Route::resource('users', UserController::class)->only([
     'show',
 ]);
 Route::prefix('posts')->group(function () {
-    Route::get('/list', [PostController::class, 'getListPostInProfile']);
+    Route::get('/profile', [PostController::class, 'getListPostInProfile']);
     Route::post('/create', [PostController::class, 'createPost']);
     Route::get('/{id}/comments', [PostController::class, 'getCommentsOfPostById']);
+    Route::get('/newsfeed', [PostController::class, 'getNewsFeed']);
 });
 
 Route::prefix('reactions')->group(function () {
@@ -108,10 +109,10 @@ Route::prefix('notifications')->group(function () {
 });
 
 Route::prefix('groups')->group(function () {
-    Route::get('/', [GroupController::class, 'getMyGroups']);
     Route::get('/list', [GroupController::class, 'getListGroup']);
     Route::get('/{id}/members', [GroupController::class, 'getListMemberOfGroup']);
     Route::get('/{id}/posts', [GroupController::class, 'getListPostOfGroup']);
+    Route::get('/{id}', [GroupController::class, 'getGroupById']);
     Route::post('/create-post', [GroupController::class, 'createPostInGroup']);
     Route::post('/create', [GroupController::class, 'createGroup']);
     Route::post('/join', [GroupController::class, 'joinGroup']);

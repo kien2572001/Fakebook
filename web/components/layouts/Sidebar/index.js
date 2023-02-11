@@ -12,7 +12,7 @@ import {
   User,
   Youtube,
   Zap,
-  Users
+  Users,
 } from "react-feather";
 
 export default function Sidebar({ userData }) {
@@ -31,7 +31,7 @@ export default function Sidebar({ userData }) {
               <Tv size="20" color="white" />
             </div>
             <div className="text-[15px] text-[#888888] font-semibold">
-              Newsfeed
+              <Link href="/">Newsfeed</Link>
             </div>
           </div>
           {/* Badges */}
@@ -58,7 +58,7 @@ export default function Sidebar({ userData }) {
               <Zap size="20" color="white" />
             </div>
             <div className="text-[15px] text-[#888888] font-semibold">
-              <Link href="/group">Popular Groups</Link>
+              <Link href="/groups">Popular Groups</Link>
             </div>
           </div>
           {/* Author Profile */}

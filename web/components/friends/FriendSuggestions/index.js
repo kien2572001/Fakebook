@@ -8,7 +8,6 @@ import { message, Badge, Dropdown, Spin } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FriendRequestBox from "../FriendRequestBox";
 import { useRouter } from "next/router";
-import { useRef } from "react";
 
 export default function FriendSuggestions(userData) {
   const [listFriends, setListFriends] = useState([]);
@@ -27,7 +26,7 @@ export default function FriendSuggestions(userData) {
     });
     if (res.status === 200) {
       setListFriends([...listFriends, ...res.data.data.data]);
-      setLastPage(res.data.data.last_page);
+      setLastPage(res.data.data.last_page)
       setPageParam(pageParam + 1);
     }
   };
@@ -46,9 +45,6 @@ export default function FriendSuggestions(userData) {
     getListFriendRequest();
   }, []);
 
-  // useEffect(() => {
-  //   console.log("friend suggestions", listFriends);
-  // }, [listFriends]);
 
   const handleAcceptFriendRequest = async (id) => {
     const res = await axios.post("/friends/accept", {

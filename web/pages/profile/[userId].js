@@ -421,7 +421,7 @@ export default function profile({ userData, thisProfileUser }) {
           </div>
           {/* List posts */}
           <div className="basis-2/3">
-            <ListPost userData={thisProfileUser} />
+            <ListPost userData={thisProfileUser} location={'profile'} />
           </div>
         </div>
       </div>

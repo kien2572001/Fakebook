@@ -8,6 +8,8 @@ use App\Models\SubPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Models\UserFriend;
 
 class PostController extends Controller
 {
@@ -19,7 +21,7 @@ class PostController extends Controller
 
         $user_id = $request->user_id;
 
-        $posts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->orderBy('created_at', 'desc')->get();
+        $posts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->orderBy('created_at', 'desc')->where('user_id', $user_id)->get();
         $posts = $posts->map(function ($post) {
             $reactions = \App\Helpers\AppHelper::countReactions($post->reactions);
 
@@ -36,9 +38,56 @@ class PostController extends Controller
             ];
         });
 
+        $posts = collect($posts)->paginate(4);
+
         return response()->json([
             'status' => 'success',
             'data' => $posts,
+        ], 200);
+    }
+
+    public function getNewsFeed(Request $request){
+        $validate = $request->validate([
+            'user_id' => 'required|string',
+        ]);
+
+        $user_id = $request->user_id;
+
+        //get my posts
+        $posts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+        //get friend posts
+        $friends = UserFriend::where('source_id', $user_id)->orWhere('target_id', $user_id)->where('status', 'accepted')->orderBy('created_at', 'desc')->get();
+        $friends = $friends->map(function($friend) use ($user_id){
+            if($friend->source_id == $user_id){
+                return $friend->target_id;
+            }else{
+                return $friend->source_id;
+            }
+        });
+
+        $friendPosts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->whereIn('user_id', $friends)->get();
+
+        $mergedPosts = $posts->merge($friendPosts)->sortByDesc('created_at')->values()->all();
+        $mergedPosts  = array_map(function ($post) {
+            $reactions = \App\Helpers\AppHelper::countReactions($post->reactions);
+
+            return [
+                'id' => $post->id,
+                'content' => $post->content,
+                'user' => $post->user,
+                'image' => $post->image ? $post->image->path : null,
+                'sub_posts' => $post->subPosts,
+                'reactions' => $reactions,
+                'permission' => $post->permission,
+                'created_at' => $post->created_at,
+                'updated_at' => $post->updated_at,
+            ];
+        }, $mergedPosts);
+        $mergedPosts = collect($mergedPosts)->paginate(4);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $mergedPosts,
         ], 200);
     }
 

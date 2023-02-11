@@ -31,7 +31,7 @@ export const config = {
     "/defaultsettings",
     "/auth/login",
     "/user/:path*",
-    "/group, /group/:path*",
+    "/groups, /groups/:path*",
     "/friends/:path*",
   ],
 };

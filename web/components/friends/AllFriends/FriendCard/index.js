@@ -3,16 +3,26 @@ import {
   EllipsisOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { Avatar, Card } from "antd";
+import { Avatar, Card, message } from "antd";
 const { Meta } = Card;
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "~/api/axios";
 
 export default function FriendCard({ friend }) {
   const user = useSelector((state) => state.user.user);
-  const [type, setType] = useState("none");
+  const [type, setType] = useState(
+    friend?.status === "accepted"
+      ? "accepted"
+      : friend.status === "pending"
+      ? "pending"
+      : "none"
+  );
+
+  useEffect(() => {
+    console.log("friend", friend);
+  }, []);
 
   const handleAddFriend = async () => {
     try {
@@ -20,7 +30,7 @@ export default function FriendCard({ friend }) {
         target_id: friend.id,
       });
       if (response.status === 200) {
-        setType("sending-request");
+        setType("pending");
         message.success("Send friend request successfully");
       } else {
         message.error("Send friend request failed");
@@ -32,11 +42,11 @@ export default function FriendCard({ friend }) {
 
   const handleCancelFriendRequest = async () => {
     try {
-      const response = await axios.post("/friends/cancel/", {
-        target_id: friend.id,
+      const response = await axios.post("/friends/delete/", {
+        user_id: friend.id,
       });
       if (response.status === 200) {
-        setCheckRelation("none");
+        setType("none");
         message.success("Cancel friend request successfully");
       } else {
         message.error("Cancel friend request failed");
@@ -60,24 +70,18 @@ export default function FriendCard({ friend }) {
         </Link>
       }
       actions={[
-        // <SettingOutlined key="setting" />,
-        // <EditOutlined key="edit" />,
-        // <EllipsisOutlined key="ellipsis" />,
         <div className="flex items-center justify-center">
           {type === "none" && <div onClick={handleAddFriend}>Add Friend</div>}
-          {type === "sending-request" && (
+          {type === "pending" && (
             <div onClick={handleCancelFriendRequest}>Cancel Request</div>
           )}
+          {type === "accepted" && <div>Friends</div>}
         </div>,
       ]}
     >
       <Meta
         // avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-        title={
-          <Link href={`/profile/${friend.id}`}>
-            {friend.first_name + " " + friend.last_name}
-          </Link>
-        }
+        title={<Link href={`/profile/${friend.id}`}>{friend.name}</Link>}
         description="This is the description"
       />
     </Card>

@@ -1,5 +1,3 @@
-
-import { Filter, Search, Video } from "react-feather";
 import MainLayout from "~/components/layouts/MainLayout";
 import Group from "~/components/group/Group";
 import { parserUserCookies } from "~/ultis/parser";
@@ -25,7 +23,7 @@ export async function getServerSideProps(context) {
 }
 
 
-export default function group({
+export default function groups({
   userData,
 })
 {

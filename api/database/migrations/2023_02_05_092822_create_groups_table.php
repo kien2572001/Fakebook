@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('title');
-            $table->string('profile_image');
-            $table->string('content');
+            $table->string('name');
+            $table->string('cover_image');
+            $table->string('about');
+            $table->string('privacy')->comment('public, private');
             $table->timestamps();
         });
     }

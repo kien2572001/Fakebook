@@ -141,11 +141,11 @@ export default function Chat({ targetData, handleCloseChatBox }) {
                       </Link>
                     </div>
                     <div className="max-w-200 mx-2">
-                      <p className="font-sans font-normal text-xs">
+                      {/* <p className="font-sans font-normal text-xs">
                         {targetData.name}
-                      </p>
-                      <div className="bg-[#e4e6eb] max-w-200 rounded-full">
-                        <p className="text-xs px-2 max-w-200 py-1 block">
+                      </p> */}
+                      <div className="bg-[#e4e6eb] max-w-200 rounded-[10px]">
+                        <p className="text-xs px-2 max-w-200 py-1 block break-words">
                           {item.message}
                         </p>
                       </div>
@@ -153,10 +153,10 @@ export default function Chat({ targetData, handleCloseChatBox }) {
                   </div>
                 );
               return (
-                <div className="flex mb-2 px-2 py-3 justify-end" key={uuidv4()}>
+                <div className="flex mb-2 px-2 py-1 justify-end" key={uuidv4()}>
                   <div className="max-w-200 mx-2">
-                    <div className="bg-[#0084FF] max-w-200 rounded-full">
-                      <p className="text-xs px-2 py-1 max-w-200 block text-white">
+                    <div className="bg-[#0084FF] max-w-200 rounded-[10px]">
+                      <p className="text-xs px-2 py-1 max-w-200 block text-white break-words">
                         {item.message}
                       </p>
                     </div>

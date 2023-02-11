@@ -7,10 +7,9 @@ use App\Enums\UserFriendStatusEnum;
 use App\Events\realTimeNotification;
 use App\Http\Requests\UserFriendRequest;
 use App\Models\Notification;
+use App\Models\User;
 use App\Models\UserFriend;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class UserFriendController extends Controller
 {
@@ -55,23 +54,32 @@ class UserFriendController extends Controller
     public function getAllFriend()
     {
         $userId  = auth()->user()->id;
-        $haveRelationList = UserFriend::where('source_id', $userId)
+        $friends = UserFriend::where('source_id', $userId)
             ->orWhere('target_id', $userId)
-            ->where('status', UserFriendStatusEnum::ACCEPTED->value)
-            ->get();
+            ->whereIn('status', [UserFriendStatusEnum::ACCEPTED->value, UserFriendStatusEnum::PENDING->value])
+            ->with('source', 'target')
+            ->paginate(8);
 
-        $listID = $haveRelationList->map(function ($friend) use ($userId) {
+        $temp = $friends->getCollection();
+        $temp = $temp->map(function ($friend) use ($userId) {
+            $relationId = $friend->id;
             $temp  = null;
             if ($friend->source_id === $userId) {
-                $temp = $friend->target_id;
+                $temp = $friend->target;
             } else {
-                $temp = $friend->source_id;
+                $temp = $friend->source;
             }
 
-            return $temp;
+            return [
+                'id' => $temp->id,
+                'name' => $temp->first_name.' '.$temp->last_name,
+                'email' => $temp->email,
+                'avatar' => $temp->avatar,
+                'relation_id' => $relationId,
+                'status' => $friend->status,
+            ];
         });
-
-        $friends = User::whereIn('id', $listID)->paginate(8);
+        $friends->setCollection($temp);
 
         return response()->json([
             'status' => 'success',
@@ -79,8 +87,8 @@ class UserFriendController extends Controller
         ], 200);
     }
 
-    public function getFriendSuggestions(){
-
+    public function getFriendSuggestions()
+    {
         $userId  = auth()->user()->id;
         $haveRelationList = UserFriend::where('source_id', $userId)
             ->orWhere('target_id', $userId)
@@ -98,6 +106,17 @@ class UserFriendController extends Controller
         });
 
         $friends = User::where('id', '!=', auth()->user()->id)->whereNotIn('id', $listID)->paginate(8);
+        $temp = $friends->getCollection();
+        $temp = $temp->map(function ($friend) {
+            return [
+                'id' => $friend->id,
+                'name' => $friend->first_name.' '.$friend->last_name,
+                'email' => $friend->email,
+                'avatar' => $friend->avatar,
+            ];
+        });
+        $friends->setCollection($temp);
+
         return response()->json([
             'status' => 'success',
             'data' => $friends,

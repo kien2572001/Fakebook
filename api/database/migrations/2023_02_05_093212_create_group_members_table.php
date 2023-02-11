@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreign('group_id')->references('id')->on('groups');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('role')->default('member');
-            $table->boolean('status')->default(true);
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

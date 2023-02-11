@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GroupMemberRole;
 use App\Enums\GroupMemberStatusEnum;
 use App\Models\Group;
 use App\Models\GroupMember;
@@ -12,9 +13,62 @@ class GroupController extends Controller
 {
     public function getListGroup()
     {
+        $groups = Group::withCount('groupMembers')
+            ->paginate(6);
+
         return response()->json([
             'message' => 'Get all groups success',
-            'data' => Group::all(),
+            'data' => $groups,
+        ], 200);
+    }
+
+    public function getGroupById(Request $request, $id)
+    {
+        $group = Group::find($id);
+        if (!$group) {
+            return response()->json([
+                'message' => 'Group not found',
+                'data' => null,
+            ], 404);
+        }
+
+        $group->load('groupMembers.user');
+        $groupMembers = $group->groupMembers->map(function ($groupMember) {
+            return [
+                'id' => $groupMember->user->id,
+                'name' => $groupMember->user->first_name . ' ' . $groupMember->user->last_name,
+                'avatar' => $groupMember->user->avatar,
+                'role' => $groupMember->role,
+                'status' => $groupMember->status,
+            ];
+        });
+        $isAdmin = 'none';
+        $userId = $request->user_id;
+        foreach ($groupMembers as $member) {
+            if ($member['id'] == $userId) {
+                if ($member['role'] == 'admin') {
+                    $isAdmin = 'admin';
+                } else {
+                    $isAdmin = 'member';
+                }
+                break;
+            }
+        }
+        $group = [
+            'id' => $group->id,
+            'name' => $group->name,
+            'cover_image' => $group->cover_image,
+            'about' => $group->about,
+            'created_at' => $group->created_at,
+            'updated_at' => $group->updated_at,
+            'privacy' => $group->privacy,
+            'isAdmin' => $isAdmin,
+            'members' => $groupMembers,
+        ];
+
+        return response()->json([
+            'message' => 'Get group by id success',
+            'data' => $group,
         ], 200);
     }
 
@@ -73,48 +127,29 @@ class GroupController extends Controller
     public function createGroup(Request $request)
     {
         $request->validate([
-            'title' => 'required',
-            'content' => 'required',
-            'profile_image' => 'required',
+            'name' => 'required|max:100',
+            'about' => 'required|max:255',
+            'privacy' => 'required|in:public,private',
         ]);
+
         $group = new Group();
-        $group->title = $request->title;
-        $group->content = $request->content;
-        if ($request->hasFile('profile_image')) {
-            $avatar = $request->file('profile_image');
-            $avatarName = time().'.'.$avatar->getClientOriginalExtension();
-            $avatarPath = 'images/avatars/'.$avatarName;
-            $path = Storage::disk('s3')->put($avatarPath, file_get_contents($avatar));
-            if (!$path) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Error uploading avatar',
-                ], 500);
-            }
-
-            $path = Storage::disk('s3')->url($avatarPath);
-            $group->profile_image = $path;
-        }
-
-        $group->profile_image = $request->profile_image;
+        $group->name = $request->name;
+        $group->about = $request->about;
+        $group->privacy = $request->privacy;
+        $group->cover_image = 'https://img-cdn.xemgame.com/2020/05/22/valorant-xac-nhan-se-do-vng-phat-hanh-thumb.jpg';
         $group->save();
-        if (!$group) {
-            return response()->json([
-                'message' => 'Create group failed',
-                'data' => null,
-            ], 500);
-        }
 
         $userId  = auth()->user()->id;
         GroupMember::create([
             'user_id' => $userId,
             'group_id' => $group->id,
-            'role' => GroupMemberStatusEnum::ADMIN->value,
+            'role' => GroupMemberRole::ADMIN->value,
+            'status' => GroupMemberStatusEnum::ACCEPTED->value,
         ]);
 
         return response()->json([
             'message' => 'Create group success',
-            'data' => null,
+            'data' => $group->load('groupMembers'),
         ], 200);
     }
 
