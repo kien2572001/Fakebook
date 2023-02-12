@@ -51,10 +51,20 @@ export default function Friends({ thisProfileUser }) {
         >
           <div className="grid grid-cols-4 gap-4">
             {friends.map((friend) => {
-              return <FriendCardProfile friend={friend} key={uuidv4()} thisProfileUser={thisProfileUser} />;
+              return (
+                <FriendCardProfile
+                  friend={friend}
+                  key={uuidv4()}
+                  thisProfileUser={thisProfileUser}
+                />
+              );
             })}
           </div>
-          {friends.length === 0 && <Empty />}
+          {friends.length === 0 && (
+            <div className="flex justify-center items-center w-full h-full mt-2">
+              <Empty description="No friends" />
+            </div>
+          )}
         </InfiniteScroll>
       </div>
     </div>

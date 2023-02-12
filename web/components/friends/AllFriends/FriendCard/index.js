@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import axios from "~/api/axios";
+import Image from "next/image";
 
 export default function FriendCard({ friend }) {
   const user = useSelector((state) => state.user.user);
@@ -60,13 +61,14 @@ export default function FriendCard({ friend }) {
     <Card
       style={
         {
-          //width: 300,
-          //height: 300,
         }
       }
       cover={
         <Link href={`/profile/${friend.id}`}>
-          <img alt="example" src={friend.avatar} />
+          <Image alt="example" src={friend.avatar}
+            width={300}
+            height={300}
+          />
         </Link>
       }
       actions={[

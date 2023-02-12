@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
                 'city' => $faker->city,
                 'country' => $faker->country,
                 'date_of_birth' => $faker->date,
-                'avatar' => 'https://fakebook-kien2572001.s3.ap-southeast-1.amazonaws.com/images/default/anh-avatar-cute-002.jpg',
+                'avatar' => 'https://fakebook-kien2572001.s3.ap-southeast-1.amazonaws.com/images/avatars/01480f29ce376005edcbec0b30cf367d.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
                 'social_id' => null,
