@@ -18,7 +18,8 @@ import axios from "~/api/axios";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
 import InfiniteScroll from "react-infinite-scroll-component";
-import EmojiPicker from "@emoji-mart/react";
+import emojiData from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 export default function Chat({ targetData, handleCloseChatBox }) {
   const messageEndRef = useRef(null);
@@ -178,8 +179,22 @@ export default function Chat({ targetData, handleCloseChatBox }) {
               <div className="px-2">
                 <Image color="#0084FF" size={22} />
               </div>
-              <div className="px-2">
+              <div
+                className="px-2 relative"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              >
                 <Smile color="#0084FF" size={22} />
+                {showEmojiPicker && (
+                  <div className="absolute bottom-0 right-0">
+                    <Picker
+                      data={emojiData}
+                      onEmojiSelect={(e) => {
+                        //console.log(e);
+                        setCurrentMessage(currentMessage + e.native);
+                      }}
+                    />
+                  </div>
+                )}
               </div>
               <div className="px-2">
                 <Mic color="#0084FF" size={22} />

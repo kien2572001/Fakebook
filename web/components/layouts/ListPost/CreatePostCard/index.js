@@ -181,7 +181,7 @@ export default function CreatePostCard({ userData, handleAddPost }) {
                 <Picker
                   data={data}
                   onEmojiSelect={(e) => {
-                    console.log(e);
+                    //console.log(e);
                     if (postMessage === "What's on your mind ?") {
                       setPostMessage(e.native);
                     } else {
