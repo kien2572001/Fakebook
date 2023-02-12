@@ -12,10 +12,18 @@ import {
   User,
   Youtube,
   Zap,
-  Users,
+  PlayCircle,
+  Users
 } from "react-feather";
-
+import { Popover, Button } from "antd";
 export default function Sidebar({ userData }) {
+  const contentGame = (
+    <div>  
+            <img src="https://cdn-icons-png.flaticon.com/512/528/528105.png" className="px-2 py-2 w-16 h-16 rounded-md" />
+            <img src="https://upload.wikimedia.org/wikipedia/vi/0/0a/Flappy_Bird_icon.png" className="px-2 py-2 w-16 h-16 rounded-md" />
+            <img src="https://play-lh.googleusercontent.com/tttjvR4K5iwNhHsY1u3IbAYnp4Bw7XT_Y3YjLKmSRb2ReYxjrOH0CbYm1LHeq4yofQ4" className="px-2 py-2 w-16 h-16 rounded-md" />
+    </div>
+  );
   return (
     // Sidebar
     <div className="px-[15px] w-full font-openSans">
@@ -88,13 +96,14 @@ export default function Sidebar({ userData }) {
               Email Box
             </div>
           </div>
-          {/* Near Hotel button */}
+          {/* Game button */}
           <div className="flex px-[20px] py-3 items-center min-h-[54px]">
-            <div className="w-[28px] h-[28px] flex justify-center items-center mr-4 ">
-              <Home size="28" color="blue" />
-            </div>
-            <div className="text-[15px] text-[#888888] font-semibold">
-              Near Hotel
+          <Popover placement="right" content={contentGame} trigger="click">
+            <Button type="primary" shape="circle" className="w-[28px] h-[28px] flex justify-center items-center mr-4 " icon={<PlayCircle size="28" color="blue" />}>
+            </Button>
+          </Popover>
+          <div className="text-[15px] text-[#888888] font-semibold">
+              Game
             </div>
           </div>
           {/* Latest Event */}
