@@ -14,6 +14,46 @@ use Illuminate\Http\Request;
 class UserFriendController extends Controller
 {
     //used in contact bar
+    public function getMutualFriends(Request $request){
+        $id1 = $request->source_id;
+        $id2 = $request->target_id;
+        $mutualFriendsList_1 =UserFriend::select('target_id')->where([
+            ['source_id', '=', $id1],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->get()->toArray();
+        $mutualFriendsList_2 =UserFriend::select('source_id')->where([
+            ['target_id', '=', $id1],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->get()->toArray();
+        $mutualFriendsList_3 =UserFriend::select('target_id')->where([
+            ['source_id', '=', $id2],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->get()->toArray();
+        $mutualFriendsList_4 =UserFriend::select('source_id')->where([
+            ['target_id', '=', $id2],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->get()->toArray();
+        $mutualFriendsSource = array_merge($mutualFriendsList_1,$mutualFriendsList_2);
+        $mutualFriendsTarget = array_merge($mutualFriendsList_3,$mutualFriendsList_4);
+        $mutualFriendsSource1;
+        $i = 0;
+        foreach($mutualFriendsSource as $mutualFriendSource){
+            $mutualFriendsSource1[$i] = $mutualFriendSource['target_id'];
+            $i++;
+        }
+        $mutualFriendsTarget1;
+        $i = 0;
+        foreach($mutualFriendsTarget as $mutualFriendTarget){
+            $mutualFriendsTarget1[$i] = $mutualFriendTarget['target_id'];
+            $i++;
+        }
+        $ans = array_intersect($mutualFriendsSource1,$mutualFriendsTarget1);
+        return response()->json([
+            'status' => 'success',
+            'data' => $ans,
+        ], 200);
+            
+    }
     public function getListFriend()
     {
         $userId  = auth()->user()->id;

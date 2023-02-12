@@ -98,6 +98,7 @@ Route::prefix('friends')->group(function () {
     Route::post('/reject', [UserFriendController::class, 'rejectFriend']);
     Route::post('/delete', [UserFriendController::class, 'deleteFriend']);
     Route::get('/check/{friendId}', [UserFriendController::class, 'checkFriend']);
+    Route::post('/mutual', [UserFriendController::class, 'getMutualFriends']);
     Route::get('/', [UserFriendController::class, 'getListFriend']);
 
     //used in all friends page
