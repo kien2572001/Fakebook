@@ -1,6 +1,6 @@
 import App from "next/app";
 import { useEffect, useState } from "react";
-
+import "~/styles/SnakeGame.css";
 import ky from "~/api/ky";
 
 import AuthContext from "~/contexts/AuthContext";
