@@ -14,7 +14,6 @@ class MessageSent implements ShouldBroadcast
     public $user_src;
     public $user_target;
     public $message;
-    
 
     public function __construct($user_src, $user_target, $message)
     {
@@ -25,7 +24,8 @@ class MessageSent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        $channel = "chat".$this->user_target;
+        $channel = 'chat'.$this->user_target;
+
         return [$channel];
     }
 

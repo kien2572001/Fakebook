@@ -1,7 +1,7 @@
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { Button, Input, message, Modal, Select, Tooltip } from "antd";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Camera,
   Edit3,
@@ -49,8 +49,17 @@ export default function CreatePostCard({ userData, handleAddPost }) {
   };
 
   const handleSubmitPost = async () => {
+    if (postMessage === "") {
+      message.error("Please enter your post!");
+      return;
+    }
+    let temp = postMessage;
+    if (postMessage.includes("\n")) {
+      temp = postMessage.replace(/\n/g, "<br>");
+    }
+
     let data = new FormData();
-    data.append("content", postMessage);
+    data.append("content", temp);
     data.append("permission", postStatus);
     let i = 0;
     fileList.forEach((item) => {
@@ -73,6 +82,15 @@ export default function CreatePostCard({ userData, handleAddPost }) {
     handleCancel();
     setFileList([]);
   };
+
+  useEffect(() => {
+    console.log("postMessage: ", postMessage);
+    let temp = postMessage;
+    if (temp.includes("\n")) {
+      temp = temp.replace(/\n/g, "<br/>");
+    }
+    console.log("temp: ", temp);
+  }, [postMessage]);
 
   return (
     <>
@@ -135,7 +153,7 @@ export default function CreatePostCard({ userData, handleAddPost }) {
               postMessage === "What's on your mind ?"
                 ? "text-gray-text"
                 : "text-black"
-            } w-full outline-none  text-2xl block z-50 break-all mb-2 relative px-4 min-h-[150px] resize-none	overflow-hidden`}
+            } w-full outline-none  text-2xl block z-50 break-all mb-2 relative px-4 min-h-[150px] resize-none	overflow-hidden whitespace-pre-wrap`}
             value={postMessage}
             onChange={(e) => {
               setPostMessage(e.target.value);
@@ -163,6 +181,7 @@ export default function CreatePostCard({ userData, handleAddPost }) {
                 <Picker
                   data={data}
                   onEmojiSelect={(e) => {
+                    //console.log(e);
                     if (postMessage === "What's on your mind ?") {
                       setPostMessage(e.native);
                     } else {

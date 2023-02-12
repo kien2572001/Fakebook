@@ -9,6 +9,7 @@ import "antd/dist/antd.css";
 import "~/styles/globals.css";
 import { Provider } from "react-redux";
 import { wrapper } from "~/store/store";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 NextApp.getInitialProps = async (ctx) => {
   // Is SSR
@@ -32,6 +33,7 @@ NextApp.getInitialProps = async (ctx) => {
 function NextApp({ Component, data, userData, ...rest }) {
   const { store, props } = wrapper.useWrappedStore(rest);
   const { pageProps } = props;
+  const queryClient = new QueryClient();
 
   return (
     <Provider store={store}>
@@ -40,7 +42,9 @@ function NextApp({ Component, data, userData, ...rest }) {
           user: userData,
         }}
       >
-        <Component {...pageProps} />
+        <QueryClientProvider client={queryClient}>
+          <Component {...pageProps} />
+        </QueryClientProvider>
       </AuthContext.Provider>
     </Provider>
   );

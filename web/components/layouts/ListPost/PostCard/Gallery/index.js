@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Image } from "antd";
 
-export default function Gallery({ listImage, boxSize }) {
+export default function Gallery({ listImage,boxSize }) {
   const [visible, setVisible] = useState(false);
 
   if (listImage.length === 1) {

@@ -25,5 +25,13 @@ export function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/", "/profile/:path*", "/defaultsettings", "/auth/login", "/user/:path*", "/group, /group/:path*"],
+  matcher: [
+    "/",
+    "/profile/:path*",
+    "/defaultsettings",
+    "/auth/login",
+    "/user/:path*",
+    "/groups, /groups/:path*",
+    "/friends/:path*",
+  ],
 };

@@ -1,8 +1,6 @@
-
-import { Filter, Search, Video } from "react-feather";
 import MainLayout from "~/components/layouts/MainLayout";
-import Group from "~/components/group/Group";
 import { parserUserCookies } from "~/ultis/parser";
+import AllFriends from "~/components/friends/AllFriends";
 
 export async function getServerSideProps(context) {
   const userCookie = context.req.cookies.user;
@@ -24,14 +22,10 @@ export async function getServerSideProps(context) {
   };
 }
 
-
-export default function group({
-  userData,
-})
-{
+export default function Index({ userData }) {
   return (
     <MainLayout userData={userData}>
-      <Group userData={userData} />
+      <AllFriends userData={userData} />
     </MainLayout>
   );
 }

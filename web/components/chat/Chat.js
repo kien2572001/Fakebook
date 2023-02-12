@@ -17,6 +17,9 @@ import Pusher from "pusher-js";
 import axios from "~/api/axios";
 import { v4 as uuidv4 } from "uuid";
 import Link from "next/link";
+import InfiniteScroll from "react-infinite-scroll-component";
+import emojiData from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 export default function Chat({ targetData, handleCloseChatBox }) {
   const messageEndRef = useRef(null);
@@ -27,22 +30,26 @@ export default function Chat({ targetData, handleCloseChatBox }) {
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
+  const fetchMessages = async () => {
+    const res = await axios.get(`/chat/list`, {
+      params: {
+        source_id: user.id,
+        target_id: targetData.id,
+        page: page,
+      },
+    });
+    if (res.status === 200) {
+      setMessage(res.data.data);
+    } else {
+      console.log("error");
+    }
+  };
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      const res = await axios.get(`/chat/list`, {
-        params: {
-          source_id: user.id,
-          target_id: targetData.id,
-        },
-      });
-      if (res.status === 200) {
-        setMessage(res.data.data);
-      } else {
-        console.log("error");
-      }
-    };
     fetchMessages();
   }, []);
 
@@ -141,11 +148,11 @@ export default function Chat({ targetData, handleCloseChatBox }) {
                       </Link>
                     </div>
                     <div className="max-w-200 mx-2">
-                      <p className="font-sans font-normal text-xs">
+                      {/* <p className="font-sans font-normal text-xs">
                         {targetData.name}
-                      </p>
-                      <div className="bg-[#e4e6eb] max-w-200 rounded-full">
-                        <p className="text-xs px-2 max-w-200 py-1 block">
+                      </p> */}
+                      <div className="bg-[#e4e6eb] max-w-200 rounded-[10px]">
+                        <p className="text-xs px-2 max-w-200 py-1 block break-words">
                           {item.message}
                         </p>
                       </div>
@@ -153,10 +160,10 @@ export default function Chat({ targetData, handleCloseChatBox }) {
                   </div>
                 );
               return (
-                <div className="flex mb-2 px-2 py-3 justify-end" key={uuidv4()}>
+                <div className="flex mb-2 px-2 py-1 justify-end" key={uuidv4()}>
                   <div className="max-w-200 mx-2">
-                    <div className="bg-[#0084FF] max-w-200 rounded-full">
-                      <p className="text-xs px-2 py-1 max-w-200 block text-white">
+                    <div className="bg-[#0084FF] max-w-200 rounded-[10px]">
+                      <p className="text-xs px-2 py-1 max-w-200 block text-white break-words">
                         {item.message}
                       </p>
                     </div>
@@ -168,22 +175,35 @@ export default function Chat({ targetData, handleCloseChatBox }) {
         {/* Input */}
         <div className="flex flex-row px-2 py-2 bg-[#FFFFFF] rounded-b-lg shadow-lg items-center">
           {currentMessage.length === 0 && (
-            <div className="px-2">
-              <Image color="#0084FF" size={22} />
-            </div>
+            <>
+              <div className="px-2">
+                <Image color="#0084FF" size={22} />
+              </div>
+              <div
+                className="px-2 relative"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              >
+                <Smile color="#0084FF" size={22} />
+                {showEmojiPicker && (
+                  <div className="absolute bottom-0 right-0">
+                    <Picker
+                      data={emojiData}
+                      onEmojiSelect={(e) => {
+                        //console.log(e);
+                        setCurrentMessage(currentMessage + e.native);
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="px-2">
+                <Mic color="#0084FF" size={22} />
+              </div>
+            </>
           )}
-          {currentMessage.length === 0 && (
-            <div className="px-2">
-              <Smile color="#0084FF" size={22} />
-            </div>
-          )}
-          {currentMessage.length === 0 && (
-            <div className="px-2">
-              <Mic color="#0084FF" size={22} />
-            </div>
-          )}
+
           <input
-            className="w-full px-2 py-2 rounded-full bg-[#f0f2f5] focus:outline-none"
+            className="w-full px-2 py-2 rounded-full bg-[#f0f2f5] focus:outline-none break-words"
             placeholder="Nhập tin nhắn..."
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}

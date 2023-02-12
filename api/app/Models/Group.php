@@ -13,9 +13,9 @@ class Group extends Model
     protected $table = 'groups';
 
     protected $fillable = [
-        'title',
-        'profile_image',
-        'content',
+        'name',
+        'about',
+        'privacy',
     ];
 
     public function groupPosts()

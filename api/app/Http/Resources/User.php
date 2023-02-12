@@ -28,7 +28,7 @@ class User extends JsonResource
             'about' => $this->about,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
-            'gender' =>$this->gender,
+            'gender' => $this->gender,
         ];
     }
 }

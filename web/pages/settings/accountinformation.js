@@ -1,5 +1,6 @@
 import AccountInformation from "~/components/user/AccountInformation";
 import axios from "axios";
+import { parserUserCookies } from "~/ultis/parser";
 //ssr
 export async function getServerSideProps(context) {
   const userCookie = context.req.cookies.user;

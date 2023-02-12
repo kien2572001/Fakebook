@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\NotificationType;
+use App\Jobs\PushEvent;
 use App\Models\Reaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Jobs\PushEvent;
 
 class ReactionController extends Controller
 {
@@ -35,13 +35,14 @@ class ReactionController extends Controller
             if ($thisUserId !== $notification_target_id) {
                 $signal = '';
                 if ($reactionable_type === 'App\Models\Post') {
-                    $signal = $type . ' your post';
+                    $signal = $type.' your post';
                 } elseif ($reactionable_type === 'App\Models\Comment') {
-                    $signal = $type . ' your comment';
+                    $signal = $type.' your comment';
                 }
 
                 PushEvent::dispatch($thisUserId, $notification_target_id, $signal, NotificationType::REACTION->value);
             }
+
             $reaction->load('user');
 
             return response()->json([

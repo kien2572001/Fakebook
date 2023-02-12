@@ -12,6 +12,7 @@ import {
   Globe,
   Lock,
 } from "react-feather";
+
 import { useSelector } from "react-redux";
 import styles from "~/styles/Main.module.css";
 import axios from "~/api/axios";
@@ -32,6 +33,7 @@ export default function PostCard({ item, index }) {
   const [showComment, setShowComment] = useState(false);
   const targetRef = useRef();
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [comments_count, setCommentsCount] = useState(item.comments_count);
 
   useLayoutEffect(() => {
     if (targetRef.current) {
@@ -123,8 +125,28 @@ export default function PostCard({ item, index }) {
     );
   };
 
+  const renderContent = () => {
+    if (item.content === null) {
+      return null;
+    }
+    let temp = item.content;
+    if (item.content.includes("<br>")) {
+      temp = item.content.split("<br>");
+      console.log("temp", temp);
+    } else {
+      return temp;
+    }
+    return (
+      <>
+        {temp.map((item, index) => {
+          return <p key={uuidv4()}>{item}</p>;
+        })}
+      </>
+    );
+  };
+
   useEffect(() => {
-    console.log("item", item);
+    //console.log("item", item);
     let reaction = null;
     let check = false;
     for (let i = 0; i < reactionArr.length; i++) {
@@ -213,9 +235,9 @@ export default function PostCard({ item, index }) {
         </div>
       </div>
       {/* Content */}
-      <div className="text-lg mb-2 text-gray-text break-all leading-[26px] font-medium ">
-        {item?.content}
-      </div>
+      <span className="text-lg mb-2 text-black  leading-[26px] font-medium break-words">
+        {renderContent()}
+      </span>
       {/* Image */}
       <div className="mb-3 w-full">{renderListImage()}</div>
       {/* Like, Comment, Share count*/}
@@ -238,7 +260,14 @@ export default function PostCard({ item, index }) {
             <div className="w-[25px] h-[25px] mr-2 flex justify-center rounded-[25px] items-center ">
               <MessageCircle size={25} color="black" className="" />
             </div>
-            <div className="font-semibold">22 Comment</div>
+            {comments_count > 0 && (
+              <div className="font-semibold">
+                {comments_count} {
+                  " "
+                }
+                comments
+              </div>
+            )}
           </div>
         </div>
         {/* Share */}

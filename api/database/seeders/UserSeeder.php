@@ -15,6 +15,31 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
+        $faker = \Faker\Factory::create();
+
+        $limits = 100;
+
+        for ($i = 0; $i < $limits; $i++) {
+            DB::table('users')->insert([
+                'id' => Str::uuid(),
+                'email' => $faker->email,
+                'password' => bcrypt('123456'),
+                'first_name' => $faker->firstName,
+                'last_name' => $faker->lastName,
+                'phone' => $faker->phoneNumber,
+                'address' => $faker->address,
+                'city' => $faker->city,
+                'country' => $faker->country,
+                'date_of_birth' => $faker->date,
+                'avatar' => 'https://fakebook-kien2572001.s3.ap-southeast-1.amazonaws.com/images/avatars/01480f29ce376005edcbec0b30cf367d.jpg',
+                'created_at' => now(),
+                'updated_at' => now(),
+                'social_id' => null,
+                'social_type' => null,
+                'about' => $faker->text(200),
+            ]);
+        }
+
         DB::table('users')->insert([
             [
                 'id' => Str::uuid(),
@@ -90,6 +115,7 @@ class UserSeeder extends Seeder
                 'social_type' => null,
                 'about' => 'I am Manh Nguyen',
             ],
+
         ]);
     }
 }
