@@ -21,7 +21,7 @@ class PostController extends Controller
 
         $user_id = $request->user_id;
 
-        $posts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->orderBy('created_at', 'desc')->where('user_id', $user_id)->get();
+        $posts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->orderBy('created_at', 'desc')->where('user_id', $user_id)->withCount('comments')->get();
         $posts = $posts->map(function ($post) {
             $reactions = \App\Helpers\AppHelper::countReactions($post->reactions);
 
@@ -54,7 +54,7 @@ class PostController extends Controller
         $user_id = $request->user_id;
 
         //get my posts
-        $posts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->where('user_id', $user_id)->orderBy('created_at', 'desc')->get();
+        $posts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->where('user_id', $user_id)->orderBy('created_at', 'desc')->withCount('comments')->get();
         //get friend posts
         $friends = UserFriend::where('source_id', $user_id)->orWhere('target_id', $user_id)->where('status', 'accepted')->orderBy('created_at', 'desc')->get();
         $friends = $friends->map(function($friend) use ($user_id){
@@ -65,7 +65,7 @@ class PostController extends Controller
             }
         });
 
-        $friendPosts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->whereIn('user_id', $friends)->get();
+        $friendPosts = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->whereIn('user_id', $friends)->withCount('comments')->get();
 
         $mergedPosts = $posts->merge($friendPosts)->sortByDesc('created_at')->values()->all();
         $mergedPosts  = array_map(function ($post) {
@@ -81,6 +81,7 @@ class PostController extends Controller
                 'permission' => $post->permission,
                 'created_at' => $post->created_at,
                 'updated_at' => $post->updated_at,
+                'comments_count' => $post->comments_count,
             ];
         }, $mergedPosts);
         $mergedPosts = collect($mergedPosts)->paginate(4);

@@ -26,7 +26,6 @@ export default function ListPost({ userData, location = "newsfeed" }) {
       if (typeof data === "object"){
         data = Object.values(data);
       }
-
       setItems([...items, ...data]);
       setPage(page + 1);
       setLastPage(res.data.data.last_page);

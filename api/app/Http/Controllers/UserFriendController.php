@@ -51,12 +51,24 @@ class UserFriendController extends Controller
         ], 200);
     }
 
-    public function getAllFriend()
+    public function getAllFriend(Request $request)
     {
+        $userFriends = [];
+        if ($request->has('accepted')){
+            $userFriends  = [
+                 UserFriendStatusEnum::ACCEPTED->value,
+            ];
+        }
+        else {
+            $userFriends  = [
+                UserFriendStatusEnum::ACCEPTED->value,
+                UserFriendStatusEnum::PENDING->value,
+            ];
+        }
         $userId  = auth()->user()->id;
         $friends = UserFriend::where('source_id', $userId)
             ->orWhere('target_id', $userId)
-            ->whereIn('status', [UserFriendStatusEnum::ACCEPTED->value, UserFriendStatusEnum::PENDING->value])
+            ->whereIn('status', $userFriends)
             ->with('source', 'target')
             ->paginate(8);
 
