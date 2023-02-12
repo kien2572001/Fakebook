@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Post;
+use App\Models\SubPost;
 
 class UserController extends Controller
 {
@@ -66,6 +69,37 @@ class UserController extends Controller
             'message' => 'User not found',
         ], 404);
     }
+
+    public function getMax6PhotoForProfile(
+        Request $request,
+        $id
+    ) {
+        $user = User::find($id);
+        if ($user) {
+            $posts = $user->posts();
+            $subPosts = $posts->with('subPosts.image')->orderBy('created_at', 'desc')->get()->pluck('subPosts')->flatten();
+            $subPosts = $subPosts->map(function ($subPost) {
+                return [
+                    'sub_post_id' => $subPost->id,
+                    'image_id' => $subPost->image ? $subPost->image->id : null,
+                    'image' => $subPost->image ? $subPost->image->path : null,
+                ];
+            });
+
+            $subPosts = $subPosts->take(6);
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $subPosts,
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'User not found',
+        ], 404);
+    }
+
 
     public function modifyAccountInfomation(Request $request)
     {

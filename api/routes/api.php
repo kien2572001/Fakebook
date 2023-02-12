@@ -45,6 +45,7 @@ Route::prefix('users')->group(function () {
     Route::get('/mentions-list', [UserController::class, 'getMentionsList']);
     Route::get('/my-information', [UserController::class, 'getMyInformation']);
     Route::get('/{id}/information', [UserController::class, 'getUserInformationForProfilePage']);
+    Route::get('/{id}/6photos', [UserController::class, 'getMax6PhotoForProfile']);
     Route::post('/modify-account-information', [UserController::class, 'modifyAccountInfomation']);
     Route::get('/test', [UserController::class, 'showall']);
     Route::get('/{id}', [UserController::class, 'show']);
@@ -56,6 +57,8 @@ Route::prefix('users')->group(function () {
         ], 200);
     });
 });
+
+
 
 
 Route::resource('users', UserController::class)->only([
