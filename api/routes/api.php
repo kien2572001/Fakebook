@@ -10,9 +10,12 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserFriendController;
+use App\Http\Controllers\SnakeController;
 use App\Http\Controllers\WebInit;
 use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -122,4 +125,10 @@ Route::prefix('groups')->group(function () {
     Route::post('/join', [GroupController::class, 'joinGroup']);
     Route::post('/leave', [GroupController::class, 'leaveGroup']);
     Route::post('/update', [GroupController::class, 'updateGroup']);
+});
+
+
+Route::prefix('snake')->group(function () {
+    Route::post('/store', [SnakeController::class, 'store']);
+    Route::get('/show', [SnakeController::class, 'show']);
 });
