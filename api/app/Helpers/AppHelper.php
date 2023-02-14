@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Helpers;
-
+use App\Models\UserFriend;
+use App\Enums\UserFriendStatusEnum;
+use App\Models\User;
 class AppHelper
 {
     public static function countReactions($reactions)
@@ -55,5 +57,83 @@ class AppHelper
         });
 
         return $arr;
+    }
+
+    public static function countMutualFriends($id1 ,$id2)
+    {
+        $friend1 = UserFriend::where([
+            ['source_id', '=', $id1],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->orWhere([
+            ['target_id', '=', $id1],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->get();
+
+        $friend2 = UserFriend::where([
+            ['source_id', '=', $id2],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->orWhere([
+            ['target_id', '=', $id2],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->get();
+
+        $friend1 = $friend1->map(function ($item) {
+            if ($item->source_id == $id1) {
+                return $item->target_id;
+            } else {
+                return $item->source_id;
+            }
+        });
+
+        $friend2 = $friend2->map(function ($item) {
+            if ($item->source_id == $id2) {
+                return $item->target_id;
+            } else {
+                return $item->source_id;
+            }
+        });
+
+        $mutualFriends = $friend1->intersect($friend2);
+
+        return $mutualFriends->count();
+    }
+
+    public static function getMutualFriends($id1 ,$id2)
+    {
+        $friend1 = UserFriend::where([
+            ['source_id', '=', $id1],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->orWhere([
+            ['target_id', '=', $id1],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->get();
+
+        $friend2 = UserFriend::where([
+            ['source_id', '=', $id2],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->orWhere([
+            ['target_id', '=', $id2],
+            ['status', '=', UserFriendStatusEnum::ACCEPTED->value],
+        ])->get();
+
+        $friend1 = $friend1->map(function ($item) use ($id1) {
+            if ($item->source_id == $id1) {
+                return $item->target_id;
+            } else {
+                return $item->source_id;
+            }
+        });
+
+        $friend2 = $friend2->map(function ($item) use ($id2) {
+            if ($item->source_id == $id2) {
+                return $item->target_id;
+            } else {
+                return $item->source_id;
+            }
+        });
+
+        $mutualFriends = $friend1->intersect($friend2);
+
+        return User::whereIn('id', $mutualFriends)->select('id', 'first_name', 'last_name', 'avatar')->get();
     }
 }

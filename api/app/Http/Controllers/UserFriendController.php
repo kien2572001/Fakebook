@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Models\UserFriend;
 use Illuminate\Http\Request;
+use App\Helpers\AppHelper;
 
 class UserFriendController extends Controller
 {
@@ -65,7 +66,12 @@ class UserFriendController extends Controller
                 UserFriendStatusEnum::PENDING->value,
             ];
         }
-        $userId  = auth()->user()->id;
+        $userId  = null;
+        if ($request->has('user_id')) {
+            $userId = $request->user_id;
+        } else {
+            $userId = auth()->user()->id;
+        }
         $friends = UserFriend::where('source_id', $userId)
             ->orWhere('target_id', $userId)
             ->whereIn('status', $userFriends)
@@ -89,6 +95,7 @@ class UserFriendController extends Controller
                 'avatar' => $temp->avatar,
                 'relation_id' => $relationId,
                 'status' => $friend->status,
+                'mutual_friends' => AppHelper::getMutualFriends($userId, $temp->id),
             ];
         });
         $friends->setCollection($temp);
@@ -99,9 +106,13 @@ class UserFriendController extends Controller
         ], 200);
     }
 
-    public function getFriendSuggestions()
+    public function getFriendSuggestions(Request $request)
     {
-        $userId  = auth()->user()->id;
+        if ($request->has('user_id')) {
+            $userId = $request->user_id;
+        } else {
+            $userId = auth()->user()->id;
+        }
         $haveRelationList = UserFriend::where('source_id', $userId)
             ->orWhere('target_id', $userId)
             ->get();
@@ -119,12 +130,13 @@ class UserFriendController extends Controller
 
         $friends = User::where('id', '!=', auth()->user()->id)->whereNotIn('id', $listID)->paginate(8);
         $temp = $friends->getCollection();
-        $temp = $temp->map(function ($friend) {
+        $temp = $temp->map(function ($friend) use ($userId) {
             return [
                 'id' => $friend->id,
                 'name' => $friend->first_name.' '.$friend->last_name,
                 'email' => $friend->email,
                 'avatar' => $friend->avatar,
+                'mutual_friends' => AppHelper::getMutualFriends($userId, $friend->id),
             ];
         });
         $friends->setCollection($temp);

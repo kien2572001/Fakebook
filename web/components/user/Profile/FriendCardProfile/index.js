@@ -9,8 +9,9 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import axios from "~/api/axios";
+import Image from "next/image";
 
-export default function FriendCardProfile({ friend ,thisProfileUser}) {
+export default function FriendCardProfile({ friend, thisProfileUser }) {
   const user = thisProfileUser;
   const [type, setType] = useState(
     friend?.status === "accepted"
@@ -34,7 +35,7 @@ export default function FriendCardProfile({ friend ,thisProfileUser}) {
       }
       cover={
         <Link href={`/profile/${friend.id}`}>
-          <img alt="example" src={friend.avatar} />
+          <Image alt="example" src={friend.avatar} width={300} height={300} />
         </Link>
       }
       actions={[
@@ -44,8 +45,22 @@ export default function FriendCardProfile({ friend ,thisProfileUser}) {
       ]}
     >
       <Meta
+        // avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
         title={<Link href={`/profile/${friend.id}`}>{friend.name}</Link>}
-        description="This is the description"
+        description={
+          <div className="flex items-center justify-start">
+            <Avatar.Group maxCount={5} size="small">
+              {friend.mutual_friends.map((friend) => {
+                return <Avatar src={friend.avatar} />;
+              })}
+              {friend.mutual_friends.length === 0 && (
+                <div className="text-gray-500 leading-[24px]">
+                  No mutual friends
+                </div>
+              )}
+            </Avatar.Group>
+          </div>
+        }
       />
     </Card>
   );

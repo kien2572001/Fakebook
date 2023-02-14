@@ -3,7 +3,7 @@ import {
   EllipsisOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import { Avatar, Card, message } from "antd";
+import { Card, message, Avatar, Tooltip } from "antd";
 const { Meta } = Card;
 import Link from "next/link";
 import { useSelector } from "react-redux";
@@ -59,16 +59,10 @@ export default function FriendCard({ friend }) {
 
   return (
     <Card
-      style={
-        {
-        }
-      }
+      style={{}}
       cover={
         <Link href={`/profile/${friend.id}`}>
-          <Image alt="example" src={friend.avatar}
-            width={300}
-            height={300}
-          />
+          <Image alt="example" src={friend.avatar} width={300} height={300} />
         </Link>
       }
       actions={[
@@ -83,8 +77,21 @@ export default function FriendCard({ friend }) {
     >
       <Meta
         // avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-        title={<Link href={`/profile/${friend.id}`}>{friend.name}</Link>}
-        description="This is the description"
+        title={<a href={`/profile/${friend.id}`}>{friend.name}</a>}
+        description={
+          <div className="flex items-center justify-start">
+            <Avatar.Group maxCount={5} size="small">
+              {friend.mutual_friends.map((friend) => {
+                return <Avatar src={friend.avatar} />;
+              })}
+              {friend.mutual_friends.length === 0 && (
+                <div className="text-gray-500 leading-[24px]">
+                  No mutual friends
+                </div>
+              )}
+            </Avatar.Group>
+          </div>
+        }
       />
     </Card>
   );

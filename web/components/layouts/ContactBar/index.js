@@ -73,7 +73,7 @@ const ContactBar = () => {
                 })}
               </>
             ) : (
-              listFriends.map((friend, index) => {
+              listFriends.slice(0,5).map((friend, index) => {
                 return (
                   <div
                     className="py-2 flex items-center justify-between"
