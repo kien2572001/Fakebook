@@ -120,7 +120,8 @@ export default function Login() {
         //localStorage.setItem("userInfo", JSON.stringify(response.data.user));
         router.push("/");
       } else {
-        alert("Login failed");
+        setPasswordError(["Email or password is incorrect"]);
+        setIsErrorPassword(true);
       }
     }
   };

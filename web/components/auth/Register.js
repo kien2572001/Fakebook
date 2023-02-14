@@ -166,7 +166,7 @@ const Register = () => {
         router.push("/auth/login");
         console.log(response);
       } else {
-        console.log("error");
+        setEmailError(["Email is already taken"]);
       }
     }
   };
