@@ -90,7 +90,7 @@ export default function MyGroup({ userData, groupData }) {
         <div className="flex items-center justify-between bg-white rounded-md p-6">
           <div>
             <p className="font-semibold text-2xl">{groupData?.name}</p>
-            <Avatar.Group>
+            <Avatar.Group maxCount={10} maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}>
               {listMember.map((member) => (
                 <Tooltip title={member.name}>
                   <Avatar

@@ -88,7 +88,7 @@ class GroupController extends Controller
                 $groupMember->group_id = $groupId;
                 $groupMember->user_id = $users[$i];
                 $groupMember->role = GroupMemberRole::MEMBER;
-                $groupMember->status = GroupMemberStatusEnum::PENDING;
+                $groupMember->status = GroupMemberStatusEnum::INVITED;
                 $groupMember->save();
             }
         }
@@ -118,6 +118,9 @@ class GroupController extends Controller
                 'role' => $groupMember->role,
                 'status' => $groupMember->status,
             ];
+        });
+        $groupMembers = $groupMembers->filter(function ($groupMember) {
+            return $groupMember['status'] == 'accepted';
         });
         $isAdmin = 'none';
         $userId = $request->user_id;
