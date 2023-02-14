@@ -13,15 +13,24 @@ import {
   Youtube,
   Zap,
   PlayCircle,
-  Users
+  Users,
 } from "react-feather";
 import { Popover, Button } from "antd";
 export default function Sidebar({ userData }) {
   const contentGame = (
-    <div>  
-            <img src="https://cdn-icons-png.flaticon.com/512/528/528105.png" className="px-2 py-2 w-16 h-16 rounded-md" />
-            <img src="https://upload.wikimedia.org/wikipedia/vi/0/0a/Flappy_Bird_icon.png" className="px-2 py-2 w-16 h-16 rounded-md" />
-            <img src="https://play-lh.googleusercontent.com/tttjvR4K5iwNhHsY1u3IbAYnp4Bw7XT_Y3YjLKmSRb2ReYxjrOH0CbYm1LHeq4yofQ4" className="px-2 py-2 w-16 h-16 rounded-md" />
+    <div>
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/528/528105.png"
+        className="px-2 py-2 w-16 h-16 rounded-md"
+      />
+      <img
+        src="https://upload.wikimedia.org/wikipedia/vi/0/0a/Flappy_Bird_icon.png"
+        className="px-2 py-2 w-16 h-16 rounded-md"
+      />
+      <img
+        src="https://play-lh.googleusercontent.com/tttjvR4K5iwNhHsY1u3IbAYnp4Bw7XT_Y3YjLKmSRb2ReYxjrOH0CbYm1LHeq4yofQ4"
+        className="px-2 py-2 w-16 h-16 rounded-md"
+      />
     </div>
   );
   return (
@@ -84,35 +93,46 @@ export default function Sidebar({ userData }) {
       {/* More pages */}
       <div className="w-full flex flex-col my-2 pt-4 pb-1 bg-white rounded-[15px] shadow-[0_8px_30px_8px_rgba(0,0,0,0.05)]">
         <div className="text-xs text-gray-text font-semibold pl-[25px] mb-[5px] font-montserrat leading-[21px]">
-          More Pages
+          Games
         </div>
         <div className="flex flex-col mb-4">
           {/* Email Box button */}
-          <div className="flex px-[20px] py-3 items-center min-h-[54px]">
+          <Link className="flex px-[20px] py-3 items-center min-h-[54px]" href="/game/SnakeGame">
             <div className="w-[28px] h-[28px] flex justify-center items-center mr-4 ">
-              <Inbox size="28" color="blue" />
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/528/528105.png"
+                className="w-[28px] h-[28px] rounded-md"
+              />
+              {/* <Inbox size="28" color="blue" /> */}
             </div>
             <div className="text-[15px] text-[#888888] font-semibold">
-              Email Box
+              Snake
             </div>
-          </div>
+          </Link>
           {/* Game button */}
-          <div className="flex px-[20px] py-3 items-center min-h-[54px]">
-          <Popover placement="right" content={contentGame} trigger="click">
-            <Button type="primary" shape="circle" className="w-[28px] h-[28px] flex justify-center items-center mr-4 " icon={<PlayCircle size="28" color="blue" />}>
-            </Button>
-          </Popover>
-          <div className="text-[15px] text-[#888888] font-semibold">
-              Game
+          <Link className="flex px-[20px] py-3 items-center min-h-[54px]" href="/game/chess">
+            <div className="w-[28px] h-[28px] flex justify-center items-center mr-4 ">
+              <img
+                src="https://play-lh.googleusercontent.com/tttjvR4K5iwNhHsY1u3IbAYnp4Bw7XT_Y3YjLKmSRb2ReYxjrOH0CbYm1LHeq4yofQ4"
+                className="w-[28px] h-[28px] rounded-md"
+              />
+              {/* <Inbox size="28" color="blue" /> */}
             </div>
-          </div>
+            <div className="text-[15px] text-[#888888] font-semibold">
+              Chess
+            </div>
+          </Link>
           {/* Latest Event */}
           <div className="flex px-[20px] py-3 items-center min-h-[54px]">
-            <div className="w-[28px] h-[28px] flex justify-center items-center mr-4 ">
-              <MapPin size="28" color="blue" />
+          <div className="w-[28px] h-[28px] flex justify-center items-center mr-4 ">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/vi/0/0a/Flappy_Bird_icon.png"
+                className="w-[28px] h-[28px] rounded-md"
+              />
+              {/* <Inbox size="28" color="blue" /> */}
             </div>
             <div className="text-[15px] text-[#888888] font-semibold">
-              Latest Event
+              Flappy Bird
             </div>
           </div>
           {/* Live Stream */}
