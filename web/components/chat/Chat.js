@@ -185,7 +185,7 @@ export default function Chat({ targetData, handleCloseChatBox }) {
               >
                 <Smile color="#0084FF" size={22} />
                 {showEmojiPicker && (
-                  <div className="absolute bottom-0 right-0">
+                  <div className="absolute bottom-10 right-0">
                     <Picker
                       data={emojiData}
                       onEmojiSelect={(e) => {
@@ -213,6 +213,27 @@ export default function Chat({ targetData, handleCloseChatBox }) {
               }
             }}
           ></input>
+          {currentMessage.length > 0 && (
+            <>
+              <div
+                className="px-2 relative"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              >
+                <Smile color="#0084FF" size={22} />
+                {showEmojiPicker && (
+                  <div className="absolute bottom-10 right-0">
+                    <Picker
+                      data={emojiData}
+                      onEmojiSelect={(e) => {
+                        //console.log(e);
+                        setCurrentMessage(currentMessage + e.native);
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            </>
+          )}
           {currentMessage.length == 0 && (
             <div className="px-2">
               <ThumbsUp color="#0084FF" size={22} />

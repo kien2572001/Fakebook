@@ -27,6 +27,8 @@ class NotificationController extends Controller
                         'signal' => $notification->signal,
                         'type' => $notification->type,
                         'created_at' => $notification->created_at,
+                        'notificationable_id' => $notification->notificationable_id,
+                        'notificationable_type' => $notification->notificationable_type,
                     ],
                     'user_src' => $notification->user_src,
                     'user_target' => $notification->user_target,

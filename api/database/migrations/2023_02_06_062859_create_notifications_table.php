@@ -19,6 +19,9 @@ return new class extends Migration
             $table->uuid('user_target');
             $table->string('signal');
             $table->string('type');
+            $table->boolean('is_read')->default(false);
+            $table->string('notificationable_id')->nullable();
+            $table->string('notificationable_type')->nullable();
             $table->timestamps();
         });
     }

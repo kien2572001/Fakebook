@@ -92,6 +92,28 @@ class PostController extends Controller
         ], 200);
     }
 
+    public function getPostById($id){
+        $post = Post::with('image', 'subPosts.image', 'reactions.user', 'user')->where('id', $id)->withCount('comments')->first();
+        $reactions = \App\Helpers\AppHelper::countReactions($post->reactions);
+        $post = [
+            'id' => $post->id,
+            'content' => $post->content,
+            'user' => $post->user,
+            'image' => $post->image ? $post->image->path : null,
+            'sub_posts' => $post->subPosts,
+            'reactions' => $reactions,
+            'permission' => $post->permission,
+            'created_at' => $post->created_at,
+            'updated_at' => $post->updated_at,
+            'comments_count' => $post->comments_count,
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $post,
+        ], 200);
+    }
+
     public function createPost(Request $request)
     {
         $isAuth = Auth::check();

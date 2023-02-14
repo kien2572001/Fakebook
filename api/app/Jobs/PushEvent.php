@@ -29,13 +29,15 @@ class PushEvent implements ShouldQueue
      * @return void
      */
 
-    public function __construct($userSrc, $userTarget, $signal, $type)
+    public function __construct($userSrc, $userTarget, $signal, $type, $notificationable_id = null, $notificationable_type = null)
     {
         $notification = new Notification();
         $notification->user_src = $userSrc;
         $notification->user_target = $userTarget;
         $notification->signal = $signal;
         $notification->type = $type;
+        $notification->notificationable_id = $notificationable_id;
+        $notification->notificationable_type = $notificationable_type;
         $notification->save();
         $this->userSrc = $userSrc;
         $this->userTarget = $userTarget;

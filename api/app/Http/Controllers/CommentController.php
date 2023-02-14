@@ -7,6 +7,12 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\SendNotification;
+use App\Enums\NotificationType;
+use App\Models\Post;
+use App\Models\Reaction;
+use App\Models\User;
+use App\Jobs\PushEvent;
 
 class CommentController extends Controller
 {
@@ -35,6 +41,30 @@ class CommentController extends Controller
             $image->imageable_type = 'App\Models\Comment';
             $image->save();
         }
+
+        $notification_target_id = null;
+        if ($request->commentable_type === 'App\Models\Post') {
+            $notification_target_id =  Post::find($request->commentable_id)->user_id;
+            $link = $request->commentable_id;
+        } elseif ($request->commentable_type === 'App\Models\Comment') {
+            $post = Comment::find($request->commentable_id)->commentable;
+            $notification_target_id = $post->user_id;
+            $link = $post->id;
+        }
+        $thisUserId = Auth::user()->id;
+        $commentable_id = $request->commentable_id;
+        $commentable_type = $request->commentable_type;
+        if ($thisUserId !== $notification_target_id){
+            $signal = '';
+            if ($commentable_type === 'App\Models\Post') {    
+                $signal = 'commented on your post';
+            } elseif ($commentable_type === 'App\Models\Comment') {
+                $signal = 'replied to your comment';
+            }
+            PushEvent::dispatch($thisUserId, $notification_target_id, $signal, 'comment', $link, $commentable_type);
+        }
+
+
 
         return response()->json([
             'message' => 'Comment created successfully',

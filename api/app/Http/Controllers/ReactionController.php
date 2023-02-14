@@ -40,7 +40,7 @@ class ReactionController extends Controller
                     $signal = $type.' your comment';
                 }
 
-                PushEvent::dispatch($thisUserId, $notification_target_id, $signal, NotificationType::REACTION->value);
+                PushEvent::dispatch($thisUserId, $notification_target_id, $signal, NotificationType::REACTION->value, $reactionable_id, $reactionable_type);
             }
 
             $reaction->load('user');

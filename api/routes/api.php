@@ -73,6 +73,7 @@ Route::prefix('posts')->group(function () {
     Route::post('/create', [PostController::class, 'createPost']);
     Route::get('/{id}/comments', [PostController::class, 'getCommentsOfPostById']);
     Route::get('/newsfeed', [PostController::class, 'getNewsFeed']);
+    Route::get('/{id}', [PostController::class, 'getPostById']);
 });
 
 Route::prefix('reactions')->group(function () {

@@ -54,6 +54,7 @@ export default function CreateComment({
     const formData = new FormData();
     formData.append("content", content);
     formData.append("commentable_id", postId);
+    formData.append("notification_target_id", postId);//
     if (type === "comment") {
       formData.append("commentable_type", "App\\Models\\Post");
     }
