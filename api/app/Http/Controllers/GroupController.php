@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserFriend;
 use App\Helpers\AppHelper;
+use App\Jobs\PushEvent;
 
 class GroupController extends Controller
 {
@@ -79,6 +80,7 @@ class GroupController extends Controller
     public function sendInviteToListUser(Request $request){
         $users = $request->users;
         $groupId = $request->group_id;
+        $thisUserId = auth()->user()->id;
         for ($i = 0; $i < count($users); $i++) {
             $groupMember = GroupMember::where('group_id', $groupId)
                 ->where('user_id', $users[$i])
@@ -90,6 +92,7 @@ class GroupController extends Controller
                 $groupMember->role = GroupMemberRole::MEMBER;
                 $groupMember->status = GroupMemberStatusEnum::INVITED;
                 $groupMember->save();
+                PushEvent::dispatch($thisUserId, $users[$i], 'invite you to join group', 'group_invite', $groupId);
             }
         }
 
@@ -258,6 +261,59 @@ class GroupController extends Controller
 
         return response()->json([
             'message' => 'Join group success',
+            'data' => null,
+        ], 200);
+    }
+
+    public function acceptJoinGroup(Request $request)
+    {
+        $request->validate([
+            'group_id' => 'required',
+            'user_id' => 'required',
+        ]);
+        $groupId = $request->group_id;
+        $userId  = $request->user_id;
+        $groupMember = GroupMember::where('user_id', $userId)
+            ->where('group_id', $groupId)
+            ->first();
+        if (!$groupMember) {
+            return response()->json([
+                'message' => 'User not found',
+                'data' => null,
+            ], 404);
+        }
+
+        $groupMember->status = GroupMemberStatusEnum::ACCEPTED->value;
+        $groupMember->save();
+
+        return response()->json([
+            'message' => 'Accept join group success',
+            'data' => null,
+        ], 200);
+    }
+
+    public function rejectJoinGroup(Request $request)
+    {
+        $request->validate([
+            'group_id' => 'required',
+            'user_id' => 'required',
+        ]);
+        $groupId = $request->group_id;
+        $userId  = $request->user_id;
+        $groupMember = GroupMember::where('user_id', $userId)
+            ->where('group_id', $groupId)
+            ->first();
+        if (!$groupMember) {
+            return response()->json([
+                'message' => 'User not found',
+                'data' => null,
+            ], 404);
+        }
+
+        $groupMember->delete();
+
+        return response()->json([
+            'message' => 'Reject join group success',
             'data' => null,
         ], 200);
     }

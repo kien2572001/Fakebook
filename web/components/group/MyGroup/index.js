@@ -90,8 +90,11 @@ export default function MyGroup({ userData, groupData }) {
         <div className="flex items-center justify-between bg-white rounded-md p-6">
           <div>
             <p className="font-semibold text-2xl">{groupData?.name}</p>
-            <Avatar.Group maxCount={10} maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}>
-              {listMember.map((member) => (
+            <Avatar.Group
+              maxCount={10}
+              maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+            >
+              {listMember?.map((member) => (
                 <Tooltip title={member.name}>
                   <Avatar
                     key={member.id}
@@ -159,7 +162,7 @@ export default function MyGroup({ userData, groupData }) {
                 {inviteSuggestions.slice(0, 5).map((suggestion) => {
                   return (
                     <div className="flex mt-3 w-full" key={uuidv4()}>
-                      <Avatar src={suggestion.avatar} size={40} />
+                      <img src={suggestion.avatar} className="w-10 h-10 rounded-full" />
                       <div className="ml-3 flex items-center justify-between w-full mr-2">
                         <p className="font-semibold ">{suggestion.name}</p>
                         <Button
@@ -187,7 +190,7 @@ export default function MyGroup({ userData, groupData }) {
                 inviteSelected.map((selected) => {
                   return (
                     <div className="flex mt-3 w-full" key={uuidv4()}>
-                      <Avatar src={selected.avatar} size={40} />
+                      <img src={selected.avatar} className="w-10 h-10 rounded-full" />
                       <div className="ml-3 flex items-center justify-between w-full mr-2">
                         <p className="font-semibold ">{selected.name}</p>
                         <Button

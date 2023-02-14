@@ -128,6 +128,8 @@ Route::prefix('groups')->group(function () {
     Route::post('/join', [GroupController::class, 'joinGroup']);
     Route::post('/leave', [GroupController::class, 'leaveGroup']);
     Route::post('/update', [GroupController::class, 'updateGroup']);
+    Route::post('/accept-invite', [GroupController::class, 'acceptJoinGroup']);
+    Route::post('/reject-invite', [GroupController::class, 'rejectJoinGroup']);
 
     //recomend friend to join group
     

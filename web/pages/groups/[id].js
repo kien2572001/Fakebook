@@ -32,6 +32,9 @@ export async function getServerSideProps(context) {
       }
     );
     groupData = response.data.data;
+    if (typeof groupData.members === "object") {
+      groupData.members = Object.values(groupData.members);
+    }
   } catch (error) {
     console.log("error", error);
   }

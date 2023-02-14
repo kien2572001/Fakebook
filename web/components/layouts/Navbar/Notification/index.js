@@ -1,21 +1,61 @@
 import { v4 as uuidv4 } from "uuid";
-import { Result, Empty } from "antd";
+import { Result, Empty, Modal } from "antd";
 import moment from "moment";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+import axios from "~/api/axios";
 export default function Notification({ data }) {
+  const user = useSelector((state) => state.user);
   useEffect(() => {
     console.log("data", data);
   }, [data]);
 
   const router = useRouter();
 
+  const showConfirm = (item) => {
+    Modal.confirm({
+      title: "Do you want to accept this group invite?",
+      onOk() {
+        handleAcceptGroupInvite(item);
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
+  };
+
+  const handleAcceptGroupInvite = async (item) => {
+    const res = await axios.post("/groups/accept-invite", {
+      group_id: item.notification.notificationable_id,
+      user_id: user.id,
+    });
+    if (res.status === 200) {
+      message.success("You have joined this group");
+      router.push(`/groups/${item.notification.notificationable_id}`);
+    }
+  };
+
+  const handleRejectGroupInvite = async (item) => {
+    const res = await axios.post("/groups/reject-invite", {
+      group_id: item.notification.notificationable_id,
+      user_id: user.id,
+    });
+    if (res.status === 200) {
+      message.success("You have rejected this group invite");
+    }
+  };
+
   const handleClick = (item) => {
     if (item.notification.type === "friend_request") {
       router.push("/friends");
-    }
-    else if (item.notification.type === 'reaction' || item.notification.type === 'comment') {
+    } else if (
+      item.notification.type === "reaction" ||
+      item.notification.type === "comment"
+    ) {
       router.push(`/posts/${item.notification.notificationable_id}`);
+    } else if (item.notification.type === "group_invite") {
+      showConfirm(item);
     }
   };
 
