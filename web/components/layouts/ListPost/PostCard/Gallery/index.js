@@ -41,6 +41,7 @@ export default function Gallery({ listImage,boxSize }) {
           style={{
             height: `${(boxSize.width - 48) / 2}px`,
           }}
+          className="flex gap-1"
         >
           <img
             src={listImage[0]}
@@ -49,7 +50,7 @@ export default function Gallery({ listImage,boxSize }) {
           />
         </div>
         <div
-          className="flex "
+          className="flex gap-1"
           style={{
             height: `${(boxSize.width - 48) / 2}px`,
           }}
@@ -81,11 +82,12 @@ export default function Gallery({ listImage,boxSize }) {
     );
   } else if (listImage.length === 4) {
     return (
-      <div className="flex flex-col cursor-pointer">
+      <div className="flex flex-col cursor-pointer gap-1">
         <div
           style={{
             height: `${(boxSize.width - 48) / 2}px`,
           }}
+          className="flex gap-1 "
         >
           <img
             src={listImage[0]}
@@ -99,7 +101,7 @@ export default function Gallery({ listImage,boxSize }) {
           />
         </div>
         <div
-          className="flex "
+          className="flex gap-1"
           style={{
             height: `${(boxSize.width - 48) / 2}px`,
           }}

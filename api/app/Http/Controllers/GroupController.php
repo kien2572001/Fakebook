@@ -8,17 +8,94 @@ use App\Models\Group;
 use App\Models\GroupMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Models\UserFriend;
+use App\Helpers\AppHelper;
 
 class GroupController extends Controller
 {
-    public function getListGroup()
+    public function getListGroup(Request $request)
     {
-        $groups = Group::withCount('groupMembers')
+        if ($request->has('name') && $request->name != '') {
+            $groups = Group::where('name', 'like', '%' . $request->name . '%')
+                ->withCount('groupMembers')
+                ->paginate(6);
+        } else {
+            $groups = Group::withCount('groupMembers')
             ->paginate(6);
+        }
 
         return response()->json([
             'message' => 'Get all groups success',
             'data' => $groups,
+        ], 200);
+    }
+
+    public function getInviteSuggestionFriends(Request $request)
+    {
+        $userId = auth()->user()->id;
+        $groupId = $request->group_id;
+        $name = $request->name;
+        $groupMemberId = GroupMember::where('group_id', $groupId)
+            ->pluck('user_id')
+            ->toArray();
+        
+        $friends = UserFriend::where('source_id', $userId)->with('target', 'source')
+            ->orWhere('target_id', $userId)
+            ->where('status', 'accepted')
+            ->get();
+        $friends = $friends->map(function ($friend) use ($userId) {
+            if ($friend->source_id == $userId) {
+                return $friend->target;
+            } else {
+                return $friend->source;
+            }
+        });
+        $friends = $friends->filter(function ($friend) use ($groupMemberId) {
+            return !in_array($friend->id, $groupMemberId);
+        });
+
+        if ($name != '') {
+            $friends = $friends->filter(function ($friend) use ($name) {
+                return strpos($friend->first_name, $name) !== false || strpos($friend->last_name, $name) !== false;
+            });
+        }
+
+        $friends = $friends->map(function ($friend) use ($userId) {
+            return [
+                'id' => $friend->id,
+                'name' => $friend->first_name . ' ' . $friend->last_name,
+                'avatar' => $friend->avatar,
+            ];
+        });
+
+        return response()->json([
+            'message' => 'Get invite suggestion friends success',
+            'data' => $friends,
+        ], 200);   
+    }
+
+    public function sendInviteToListUser(Request $request){
+        $users = $request->users;
+        $groupId = $request->group_id;
+        for ($i = 0; $i < count($users); $i++) {
+            $groupMember = GroupMember::where('group_id', $groupId)
+                ->where('user_id', $users[$i])
+                ->first();
+            if (!$groupMember) {
+                $groupMember = new GroupMember();
+                $groupMember->group_id = $groupId;
+                $groupMember->user_id = $users[$i];
+                $groupMember->role = GroupMemberRole::MEMBER;
+                $groupMember->status = GroupMemberStatusEnum::PENDING;
+                $groupMember->save();
+            }
+        }
+
+        return response()->json([
+            'message' => 'Send invite to list user success',
+            'data' => null,
         ], 200);
     }
 

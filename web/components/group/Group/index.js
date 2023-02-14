@@ -17,6 +17,7 @@ const Group = ({ userData }) => {
   const [page, setPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
   const router = useRouter();
+  const [searchName, setSearchName] = useState("");
   const clearModal = () => {
     setCreateGroupName("");
     setCreateGroupDescription("");
@@ -43,6 +44,7 @@ const Group = ({ userData }) => {
     const res = await axios.get("/groups/list", {
       params: {
         page: page,
+        name: searchName !== "" ? searchName : null,
       },
     });
     //console.log("groups: ", res.data);
@@ -50,6 +52,21 @@ const Group = ({ userData }) => {
       setGroups([...groups, ...res.data.data.data]);
       setLastPage(res.data.data.last_page);
       setPage(page + 1);
+    }
+  };
+
+  const handleSearch = async (e) => {
+    const res = await axios.get("/groups/list", {
+      params: {
+        page: 1,
+        name: e.target.value !== "" ? e.target.value : null,
+      },
+    });
+    setSearchName(e.target.value);
+    if (res.status === 200) {
+      setGroups(res.data.data.data);
+      setLastPage(res.data.data.last_page);
+      setPage(1);
     }
   };
 
@@ -67,6 +84,7 @@ const Group = ({ userData }) => {
               type="text"
               placeholder="Search here."
               className="outline-none px-4 py-2 bg-gray-100 rounded text-sm pr-8"
+              onChange={(e) => handleSearch(e)}
             />
             <Search width={20} className="absolute right-2" />
           </div>
@@ -86,7 +104,7 @@ const Group = ({ userData }) => {
       <InfiniteScroll
         dataLength={groups.length}
         next={fetchGroups}
-        hasMore={page <= lastPage}
+        hasMore={page < lastPage}
         loader={
           <div className="flex justify-center items-center mt-4">
             <Spin />
@@ -113,9 +131,11 @@ const Group = ({ userData }) => {
                       <Link href={`/groups/${group.id}`}>
                         <p className="font-semibold text-xl">{group.name}</p>
                       </Link>
-                      <p className="text-[14px] text-gray-text">
-                        {"100K members"}
-                      </p>
+                      {group.group_members_count >= 1 && (
+                        <p className="text-[14px] text-gray-text">
+                          {group.group_members_count} members
+                        </p>
+                      )}
                     </div>
                     <div className="flex mr-4">
                       <Button

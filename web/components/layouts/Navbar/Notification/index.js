@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Result } from "antd";
+import { Result, Empty } from "antd";
 import moment from "moment";
 export default function Notification({ data }) {
   return (
@@ -17,10 +17,10 @@ export default function Notification({ data }) {
             } cursor-pointer`}
           >
             {data && data.length === 0 && (
-              <img
-                src="https://fakebook-kien2572001.s3.ap-southeast-1.amazonaws.com/images/default/no-notification.png"
-                alt="no-notification"
-                className="w-full h-full"
+              <Empty
+                description={
+                  <span className="text-gray-600 text-sm">No notification</span>
+                }
               />
             )}
             {data &&

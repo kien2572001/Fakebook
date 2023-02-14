@@ -116,6 +116,8 @@ Route::prefix('notifications')->group(function () {
 });
 
 Route::prefix('groups')->group(function () {
+    Route::get('/invite-suggestion', [GroupController::class, 'getInviteSuggestionFriends']);
+    Route::post('/invite-list', [GroupController::class, 'sendInviteToListUser']);
     Route::get('/list', [GroupController::class, 'getListGroup']);
     Route::get('/{id}/members', [GroupController::class, 'getListMemberOfGroup']);
     Route::get('/{id}/posts', [GroupController::class, 'getListPostOfGroup']);
@@ -125,6 +127,9 @@ Route::prefix('groups')->group(function () {
     Route::post('/join', [GroupController::class, 'joinGroup']);
     Route::post('/leave', [GroupController::class, 'leaveGroup']);
     Route::post('/update', [GroupController::class, 'updateGroup']);
+
+    //recomend friend to join group
+    
 });
 
 
