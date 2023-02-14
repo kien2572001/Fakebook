@@ -110,7 +110,7 @@ export default function Sidebar({ userData }) {
             </div>
           </Link>
           {/* Game button */}
-          <Link className="flex px-[20px] py-3 items-center min-h-[54px]" href="/game/chess">
+          <Link className="flex px-[20px] py-3 items-center min-h-[54px]" href="/game/chessGame">
             <div className="w-[28px] h-[28px] flex justify-center items-center mr-4 ">
               <img
                 src="https://play-lh.googleusercontent.com/tttjvR4K5iwNhHsY1u3IbAYnp4Bw7XT_Y3YjLKmSRb2ReYxjrOH0CbYm1LHeq4yofQ4"

@@ -28,7 +28,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized',
-            ], 401);
+            ], 201);
         }
 
         $user = Auth::user();
@@ -58,7 +58,7 @@ class AuthController extends Controller
                 return response()->json([
                     'status' => 'error',
                     'message' => $validate->errors(),
-                ], 401);
+                ], 201);
             }
 
             $user = User::create([
@@ -83,7 +83,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $th->getMessage(),
-            ], 401);
+            ], 201);
         }
     }
 
